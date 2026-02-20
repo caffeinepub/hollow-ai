@@ -1,0 +1,17 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-20T01:19:06.930Z",
+  "summary": "The diff shows comprehensive branding updates from 'Hollow AI' to 'Axora AI' across multiple frontend files. REQ-16 (index.html title update), REQ-17 (Header component logo text), and REQ-18 (remaining references) appear to be implemented. The changes include updates to the title tag, header component text, welcome message, footer, and accessibility labels (alt text). All three requirements have evidence of implementation in the diff.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.95,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/ChatView.tsx",
+    "frontend/src/components/Header.tsx",
+    "project_state.json"
+  ]
+}

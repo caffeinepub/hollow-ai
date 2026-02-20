@@ -1,0 +1,73 @@
+{
+  "kind": "build_request",
+  "title": "Update app branding from 'Hollow AI' to 'Axora AI' in draft",
+  "projectName": "Axora AI",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-16",
+      "text": "Update the application title in frontend/index.html from 'Hollow AI' to 'Axora AI'",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "you forgot to change the name on the app in the draft"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The <title> tag in index.html displays 'Axora AI'",
+        "Browser tab shows 'Axora AI' when the app is loaded"
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "Update the Header component logo text from 'Hollow AI' to 'Axora AI'",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "you forgot to change the name on the app in the draft"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The header displays 'Axora AI' as the application name",
+        "Logo text is visible and properly styled"
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "text": "Replace any remaining references to 'Hollow AI' with 'Axora AI' throughout the frontend interface including comments and accessibility labels",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "you forgot to change the name on the app in the draft"
+        ]
+      },
+      "acceptanceCriteria": [
+        "No instances of 'Hollow AI' remain in user-facing text",
+        "All branding consistently shows 'Axora AI'"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify backend files for this branding change",
+    "Preserve all existing functionality and styling",
+    "Do not change any immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui"
+  ],
+  "nonGoals": [
+    "Changing the visual design or theme",
+    "Modifying any feature functionality",
+    "Updating backend actor names or canister configurations"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-update-the-application-title-in-frontend-index-html-from-hollow-ai-to-axora-ai",
+      "featureTitle": "Update the application title in frontend/index.html from 'Hollow AI' to 'Axora AI'",
+      "files": [
+        "frontend/index.html"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-16"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-header-component-logo-text-from-hollow-ai-to-axora-ai",
+      "featureTitle": "Update the Header component logo text from 'Hollow AI' to 'Axora AI'",
+      "files": [
+        "frontend/src/components/Header.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-17"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-replace-any-remaining-references-to-hollow-ai-with-axora-ai-throughout-the-frontend-interface-including-comments-and-accessibility-labels",
+      "featureTitle": "Replace any remaining references to 'Hollow AI' with 'Axora AI' throughout the frontend interface including comments and accessibility labels",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ChatView.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

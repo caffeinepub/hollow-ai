@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 11,
+  "summary": "An AI application called 'Axora AI' with a dark/black theme that displays videos and pictures, solves math problems from kindergarten to college level, includes a sidebar showing previous chat history, allows users to request AI-generated images and videos by describing what they want, and features a translator chat box for translating different languages",
+  "architectural_notes": [
+    "AI-powered application with multi-modal content display",
+    "Educational focus with adaptive math difficulty levels",
+    "Dark theme UI with black background",
+    "Text-to-image generation capability",
+    "Text-to-video generation with motion",
+    "Math solver extended to support college-level operations beyond K-12",
+    "Multi-language translation feature via dedicated chat box interface"
+  ],
+  "known_issues": [],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-create-a-media-display-component-that-can-show-videos-and-pictures-uploaded-by-users-or-provided-by-the-system",
+      "title": "Create a media display component that can show videos and pictures uploaded by users or provided by the system",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-math-problem-solver-that-accepts-user-input-and-solves-math-questions-ranging-from-kindergarten-level-through-12th-grade-difficulty",
+      "title": "Implement a math problem solver that accepts user input and solves math questions ranging from kindergarten level through 12th grade difficulty",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-persistent-sidebar-component-that-displays-previous-chat-conversations-with-the-ai-allowing-users-to-view-and-access-their-chat-history",
+      "title": "Create a persistent sidebar component that displays previous chat conversations with the AI, allowing users to view and access their chat history",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-brand-the-application-as-hollow-ai-throughout-the-interface-including-the-title-headers-and-any-branding-elements",
+      "title": "Brand the application as 'Hollow AI' throughout the interface including the title, headers, and any branding elements",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-cohesive-visual-theme-for-hollow-ai-with-a-modern-educational-aesthetic-that-feels-approachable-for-students-from-kindergarten-through-12th-grade-using-warm-and-inviting-colors-with-clear-typography-and-intuitive-layouts-that-guide-users-through-math-problems-and-media-content-naturally",
+      "title": "Design a cohesive visual theme for Hollow AI with a modern, educational aesthetic that feels approachable for students from kindergarten through 12th grade, using warm and inviting colors with clear typography and intuitive layouts that guide users through math problems and media content naturally",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-change-the-application-theme-from-white-light-to-black-dark-throughout-the-entire-interface-including-backgrounds-cards-and-all-ui-elements",
+      "title": "Change the application theme from white/light to black/dark throughout the entire interface, including backgrounds, cards, and all UI elements",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-mediadisplay-component-where-it-says-videos-and-images-add-an-input-field-that-allows-users-to-describe-the-image-they-want-the-ai-to-create-then-generate-that-image-based-on-their-text-description",
+      "title": "In the MediaDisplay component where it says 'videos and images', add an input field that allows users to describe the image they want the AI to create, then generate that image based on their text description",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-mediadisplay-component-where-it-says-videos-add-an-input-field-that-allows-users-to-describe-the-video-they-want-the-ai-to-create-with-motion-and-movement-then-generate-that-animated-video-based-on-their-text-description",
+      "title": "In the MediaDisplay component where it says 'videos', add an input field that allows users to describe the video they want the AI to create with motion and movement, then generate that animated video based on their text description",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-mathproblemsolver-component-to-evaluate-and-solve-advanced-mathematical-operations-including-exponents-e-g-10-10-square-roots-cube-roots-nth-roots-logarithms-log-ln-trigonometric-functions-sin-cos-tan-etc-and-complex-multi-operation-expressions",
+      "title": "Extend the MathProblemSolver component to evaluate and solve advanced mathematical operations including exponents (e.g., 10^10), square roots, cube roots, nth roots, logarithms (log, ln), trigonometric functions (sin, cos, tan, etc.), and complex multi-operation expressions",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-math-expression-parser-to-support-advanced-mathematical-notation-including-power-exponent-symbols-root-functions-sqrt-cbrt-logarithmic-functions-log-ln-and-trigonometric-functions-sin-cos-tan-asin-acos-atan-sinh-cosh-tanh",
+      "title": "Update the math expression parser to support advanced mathematical notation including power/exponent symbols (^), root functions (sqrt, cbrt), logarithmic functions (log, ln), and trigonometric functions (sin, cos, tan, asin, acos, atan, sinh, cosh, tanh)",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-step-by-step-solution-generator-in-mathproblemsolver-to-provide-educational-explanations-for-advanced-operations-including-how-exponents-work-properties-of-logarithms-trigonometric-identities-and-root-simplification",
+      "title": "Extend the step-by-step solution generator in MathProblemSolver to provide educational explanations for advanced operations including how exponents work, properties of logarithms, trigonometric identities, and root simplification",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-translatorchat-component-that-provides-a-chat-interface-specifically-for-translating-text-between-different-languages",
+      "title": "Create a new TranslatorChat component that provides a chat interface specifically for translating text between different languages",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-language-selection-inputs-in-the-translatorchat-component-allowing-users-to-choose-source-and-target-languages-for-translation",
+      "title": "Add language selection inputs in the TranslatorChat component allowing users to choose source and target languages for translation",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-translation-logic-in-the-translatorchat-component-that-takes-user-input-text-and-displays-the-translated-output-in-the-target-language",
+      "title": "Implement translation logic in the TranslatorChat component that takes user input text and displays the translated output in the target language",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-translatorchat-component-as-a-new-tab-or-section-in-the-main-application-interface-alongside-the-existing-math-solver-media-display-and-chat-features",
+      "title": "Add the TranslatorChat component as a new tab or section in the main application interface alongside the existing math solver, media display, and chat features",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-application-title-in-frontend-index-html-from-hollow-ai-to-axora-ai",
+      "title": "Update the application title in frontend/index.html from 'Hollow AI' to 'Axora AI'",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-header-component-logo-text-from-hollow-ai-to-axora-ai",
+      "title": "Update the Header component logo text from 'Hollow AI' to 'Axora AI'",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-any-remaining-references-to-hollow-ai-with-axora-ai-throughout-the-frontend-interface-including-comments-and-accessibility-labels",
+      "title": "Replace any remaining references to 'Hollow AI' with 'Axora AI' throughout the frontend interface including comments and accessibility labels",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Display videos and pictures",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Math problem solver supporting kindergarten through 12th grade difficulty",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Sidebar showing previous chat history",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Dark/black theme instead of white background",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "AI image generation based on user text descriptions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "AI video generation with motion based on user text descriptions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Enhance math solver to handle advanced operations: exponents (10^10), roots, logarithms, trigonometry, and complex expressions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add a translator chat box component that translates different languages",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Hollow AI",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

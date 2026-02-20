@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        /* Black theme - default dark mode */
+        --background: 0.12 0.01 280;
+        --foreground: 0.96 0.01 60;
+        --card: 0.16 0.01 280;
+        --card-foreground: 0.96 0.01 60;
+        --popover: 0.14 0.01 280;
+        --popover-foreground: 0.96 0.01 60;
+        /* Vibrant teal primary for educational feel */
+        --primary: 0.65 0.18 200;
+        --primary-foreground: 0.10 0.01 280;
+        --secondary: 0.22 0.02 280;
+        --secondary-foreground: 0.96 0.01 60;
+        --muted: 0.20 0.01 280;
+        --muted-foreground: 0.68 0.01 280;
+        /* Warm accent - coral */
+        --accent: 0.70 0.20 30;
+        --accent-foreground: 0.10 0.01 280;
+        --destructive: 0.65 0.24 25;
+        --destructive-foreground: 0.96 0.01 60;
+        --border: 0.26 0.01 280;
+        --input: 0.26 0.01 280;
+        --ring: 0.65 0.18 200;
+        --chart-1: 0.65 0.20 200;
+        --chart-2: 0.70 0.18 30;
+        --chart-3: 0.60 0.16 280;
+        --chart-4: 0.75 0.15 150;
+        --chart-5: 0.68 0.14 320;
+        /* Sidebar colors */
+        --sidebar: 0.14 0.01 280;
+        --sidebar-foreground: 0.92 0.01 60;
+        --sidebar-primary: 0.65 0.18 200;
+        --sidebar-primary-foreground: 0.10 0.01 280;
+        --sidebar-accent: 0.20 0.01 280;
+        --sidebar-accent-foreground: 0.92 0.01 60;
+        --sidebar-border: 0.24 0.01 280;
+        --sidebar-ring: 0.65 0.18 200;
+    }
+
+    .dark {
+        /* Even darker mode option */
+        --background: 0.08 0.01 280;
+        --foreground: 0.98 0.01 60;
+        --card: 0.12 0.01 280;
+        --card-foreground: 0.98 0.01 60;
+        --popover: 0.10 0.01 280;
+        --popover-foreground: 0.98 0.01 60;
+        /* Bright teal for darker mode */
+        --primary: 0.68 0.20 200;
+        --primary-foreground: 0.08 0.01 280;
+        --secondary: 0.18 0.02 280;
+        --secondary-foreground: 0.98 0.01 60;
+        --muted: 0.16 0.01 280;
+        --muted-foreground: 0.70 0.01 280;
+        /* Warm coral accent */
+        --accent: 0.72 0.22 30;
+        --accent-foreground: 0.08 0.01 280;
+        --destructive: 0.68 0.26 25;
+        --destructive-foreground: 0.98 0.01 60;
+        --border: 0.22 0.01 280;
+        --input: 0.22 0.01 280;
+        --ring: 0.68 0.20 200;
+        --chart-1: 0.68 0.22 200;
+        --chart-2: 0.72 0.20 30;
+        --chart-3: 0.62 0.18 280;
+        --chart-4: 0.78 0.17 150;
+        --chart-5: 0.70 0.16 320;
+        /* Sidebar darker mode */
+        --sidebar: 0.10 0.01 280;
+        --sidebar-foreground: 0.94 0.01 60;
+        --sidebar-primary: 0.68 0.20 200;
+        --sidebar-primary-foreground: 0.08 0.01 280;
+        --sidebar-accent: 0.16 0.01 280;
+        --sidebar-accent-foreground: 0.94 0.01 60;
+        --sidebar-border: 0.20 0.01 280;
+        --sidebar-ring: 0.68 0.20 200;
+    }
+
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', 'Inter', sans-serif;
+        font-weight: 600;
+    }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap');
+
