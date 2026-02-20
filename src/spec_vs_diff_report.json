@@ -1,35 +1,23 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T22:51:43.622Z",
-  "summary": "The diff partially implements the BuildRequest. REQ-1 (logo replacement) is fully implemented in Header.tsx with the correct image path and responsive sizing. REQ-2 (branding updates) is only partially implemented - the Header component shows 'neroxa ai' branding, but there is no evidence of updates to application title, meta tags, or PWA manifest as required by the acceptance criteria.",
+  "generatedAt": "2026-02-20T23:20:03.610Z",
+  "summary": "The diff shows addition of a standalone HTML file (demo.html) with external font dependencies, violating the self-contained requirement. The file appears to have inline CSS and JavaScript (truncated), HTML5 structure, and feature sections for the Neroxa AI demo. However, Google Fonts links are present as external dependencies.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "The application title and meta tags reflect the new branding",
-      "reason": "No changes shown to frontend/index.html meta tags or title. The file is listed as modified in frontend-file-summaries.txt but the actual diff content is not provided, so cannot confirm if title/meta tags were updated from 'Vantior AI' to 'Neroxa AI'.",
-      "evidence": []
-    },
-    {
-      "id": "REQ-2",
-      "requirement": "The PWA manifest is updated with the new name",
-      "reason": "No changes shown to any PWA manifest file (e.g., manifest.json or manifest.webmanifest). No evidence of manifest updates in the diff summary.",
-      "evidence": []
-    },
-    {
-      "id": "REQ-2",
-      "requirement": "All text references to 'Vantior AI' are replaced with 'Neroxa AI'",
-      "reason": "Only Header.tsx shows the branding change. The frontend-file-summaries.txt references 'Hollow AI design system' in tailwind.config.js description, suggesting incomplete branding updates across the codebase. Without full file diffs, cannot verify all references were updated.",
+      "id": "REQ-1",
+      "requirement": "All functionality works without external file dependencies",
+      "reason": "The demo.html file includes external Google Fonts dependencies via <link> tags to fonts.googleapis.com and fonts.gstatic.com, violating the self-contained requirement",
       "evidence": [
-        "frontend-file-summaries.txt"
+        "frontend/public/demo.html"
       ]
     }
   ],
   "hallucinated_features": [],
-  "confidence": 0.7,
+  "confidence": 0.85,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/components/Header.tsx",
+    "frontend/public/demo.html",
     "project_state.json"
   ]
 }

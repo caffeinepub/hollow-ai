@@ -1,50 +1,72 @@
 {
   "kind": "build_request",
-  "title": "Replace logo with uploaded Neroxa AI image",
+  "title": "Create standalone HTML page",
   "projectName": "Neroxa AI",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Replace the current application logo with the uploaded Neroxa AI logo image (Gemini_Generated_Image_cjqrvscjqr-1.png) showing a golden figure reading surrounded by floating books against a starry blue background",
+      "text": "Generate a standalone HTML file that includes all necessary inline CSS and JavaScript, making it fully self-contained and functional without external dependencies",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-request"
         ],
         "quotes": [
-          "make this the new logo"
+          "can you create a real html for me"
         ]
       },
       "acceptanceCriteria": [
-        "The uploaded Neroxa AI logo image is used as the primary logo in the Header component",
-        "The logo displays correctly in both light and dark themes",
-        "The logo maintains proper aspect ratio and sizing"
+        "HTML file contains inline <style> tags with all necessary CSS",
+        "HTML file contains inline <script> tags with all necessary JavaScript",
+        "File can be opened directly in a browser without a build process",
+        "All functionality works without external file dependencies"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update all branding references from 'Vantior AI' to 'Neroxa AI' throughout the application",
+      "text": "Include proper HTML5 document structure with DOCTYPE, head section containing meta tags for viewport and character encoding, and semantic body elements",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "rename nexora ai"
+          "msg-user-request"
         ]
       },
       "acceptanceCriteria": [
-        "All text references to 'Vantior AI' are replaced with 'Neroxa AI'",
-        "The application title and meta tags reflect the new branding",
-        "The PWA manifest is updated with the new name"
+        "Valid HTML5 DOCTYPE declaration present",
+        "Meta viewport tag configured for responsive design",
+        "UTF-8 character encoding specified",
+        "Semantic HTML5 elements used appropriately"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Create a functional demo page that showcases the Neroxa AI application's core features (chat, math solver, media generation, translation, music, art, code generation, games) in an interactive format",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-request"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Page displays navigation or tabs for different features",
+        "Each feature section is visually distinct and labeled",
+        "Interactive elements (buttons, inputs) are functional",
+        "Page maintains visual consistency across sections"
       ]
     }
   ],
-  "constraints": [],
+  "constraints": [
+    "Must be a single, self-contained HTML file",
+    "No external CSS or JavaScript file dependencies",
+    "Must work without a build process or bundler",
+    "Should maintain the existing dark theme aesthetic"
+  ],
   "nonGoals": [
-    "Do not change the functionality of any existing features",
-    "Do not modify the color scheme or overall design beyond the logo replacement"
+    "Backend integration or API calls",
+    "Internet Identity authentication",
+    "Actual AI functionality (mock/demo implementations acceptable)",
+    "Production-ready deployable application"
   ],
   "imageRequirements": {
     "required": [],

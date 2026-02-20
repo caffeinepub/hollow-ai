@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the application logo with the uploaded Neroxa AI image and update all branding references from Vantior AI to Neroxa AI.
+**Goal:** Create a standalone, self-contained HTML demo page for Neroxa AI that works without external dependencies or build processes.
 
 **Planned changes:**
-- Replace the current logo with the uploaded Neroxa AI logo image (golden figure reading surrounded by floating books)
-- Update all text references from "Vantior AI" to "Neroxa AI" throughout the application
-- Update application title, meta tags, and PWA manifest with the new branding
+- Generate a single HTML file with inline CSS and JavaScript
+- Include proper HTML5 document structure with meta tags
+- Create interactive demo sections showcasing core features (chat, math solver, media generation, translation, music, art, code generation, games)
+- Maintain dark theme aesthetic consistent with existing design
 
-**User-visible outcome:** The application displays the new Neroxa AI branding with the golden figure logo in the header and all references updated to Neroxa AI.
+**User-visible outcome:** Users can open a single HTML file directly in their browser to explore a fully functional demo of Neroxa AI's features without requiring installation, build processes, or internet connectivity.

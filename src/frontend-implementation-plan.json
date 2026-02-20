@@ -1,47 +1,56 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Replace logo with uploaded Neroxa AI image",
+  "title": "Create standalone HTML demo page for Neroxa AI",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Replace current application logo with uploaded Neroxa AI logo image",
+      "summary": "Generate a standalone HTML file with all inline CSS and JavaScript for full self-containment",
       "acceptanceCriteria": [
-        "The uploaded Neroxa AI logo image is used as the primary logo in the Header component",
-        "The logo displays correctly in both light and dark themes",
-        "The logo maintains proper aspect ratio and sizing"
+        "HTML file contains inline <style> tags with all necessary CSS",
+        "HTML file contains inline <script> tags with all necessary JavaScript",
+        "File can be opened directly in a browser without a build process",
+        "All functionality works without external file dependencies"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Replace the current logo reference with the uploaded Neroxa AI logo image (Gemini_Generated_Image_cjqrvscjqr-1.png). Update the logo img element to use the new asset path and ensure proper sizing, aspect ratio preservation, and theme compatibility for both light and dark modes."
+          "path": "frontend/public/demo.html",
+          "operation": "create",
+          "description": "Create a standalone HTML file with inline CSS (incorporating Tailwind-inspired styles from frontend/src/index.css and the dark theme aesthetic) and inline JavaScript for interactive functionality. Include all necessary styles within <style> tags and all scripts within <script> tags to ensure zero external dependencies. The file must be fully functional when opened directly in a browser."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Update all branding references from 'Vantior AI' to 'Neroxa AI'",
+      "summary": "Include proper HTML5 structure with DOCTYPE, meta tags, and semantic elements",
       "acceptanceCriteria": [
-        "All text references to 'Vantior AI' are replaced with 'Neroxa AI'",
-        "The application title and meta tags reflect the new branding",
-        "The PWA manifest is updated with the new name"
+        "Valid HTML5 DOCTYPE declaration present",
+        "Meta viewport tag configured for responsive design",
+        "UTF-8 character encoding specified",
+        "Semantic HTML5 elements used appropriately"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Header.tsx",
+          "path": "frontend/public/demo.html",
           "operation": "modify",
-          "description": "Replace all text references to 'Vantior AI' with 'Neroxa AI' in the header branding text and any aria-labels or accessibility text."
-        },
+          "description": "Ensure the HTML file includes: HTML5 DOCTYPE declaration, <head> section with UTF-8 charset meta tag, viewport meta tag for responsive design (width=device-width, initial-scale=1.0), appropriate title tag, and semantic HTML5 elements throughout the body (header, nav, main, section, footer as applicable)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Create a functional demo showcasing Neroxa AI's core features in an interactive format",
+      "acceptanceCriteria": [
+        "Page displays navigation or tabs for different features",
+        "Each feature section is visually distinct and labeled",
+        "Interactive elements (buttons, inputs) are functional",
+        "Page maintains visual consistency across sections"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/index.html",
+          "path": "frontend/public/demo.html",
           "operation": "modify",
-          "description": "Update the document title, meta tags (title, description, og:title, og:site_name, twitter:title), and any other references from 'Vantior AI' to 'Neroxa AI' to reflect the new branding."
-        },
-        {
-          "path": "frontend/public/manifest.json",
-          "operation": "modify",
-          "description": "Update the PWA manifest name, short_name, and description fields to replace 'Vantior AI' with 'Neroxa AI' for proper installable web app branding."
+          "description": "Implement interactive demo sections for all core features: chat interface, math solver with expression evaluation, media generation showcase, language translator with dropdown selectors, music generator interface, art/drawing canvas, code generation scripter, and games showcase. Include tab navigation or accordion-style sections to switch between features. Add working interactive elements (input fields, buttons, demo outputs) with inline JavaScript event handlers. Maintain visual consistency using the dark theme color scheme (teal primary, coral accents) throughout all sections. Each feature section should have clear labels and demonstrate mock functionality without backend integration."
         }
       ]
     }

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-current-application-logo-with-the-uploaded-neroxa-ai-logo-image-gemini-generated-image-cjqrvscjqr-1-png-showing-a-golden-figure-reading-surrounded-by-floating-books-against-a-starry-blue-background",
-      "featureTitle": "Replace the current application logo with the uploaded Neroxa AI logo image (Gemini_Generated_Image_cjqrvscjqr-1.png) showing a golden figure reading surrounded by floating books against a starry blue background",
+      "featureId": "feature-generate-a-standalone-html-file-that-includes-all-necessary-inline-css-and-javascript-making-it-fully-self-contained-and-functional-without-external-dependencies",
+      "featureTitle": "Generate a standalone HTML file that includes all necessary inline CSS and JavaScript, making it fully self-contained and functional without external dependencies",
       "files": [
-        "frontend/src/components/Header.tsx"
+        "frontend/public/demo.html"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -22,10 +22,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-all-branding-references-from-vantior-ai-to-neroxa-ai-throughout-the-application",
-      "featureTitle": "Update all branding references from 'Vantior AI' to 'Neroxa AI' throughout the application",
+      "featureId": "feature-include-proper-html5-document-structure-with-doctype-head-section-containing-meta-tags-for-viewport-and-character-encoding-and-semantic-body-elements",
+      "featureTitle": "Include proper HTML5 document structure with DOCTYPE, head section containing meta tags for viewport and character encoding, and semantic body elements",
       "files": [
-        "frontend/src/components/Header.tsx"
+        "frontend/public/demo.html"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -38,6 +38,26 @@
       ],
       "testIds": [
         "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-functional-demo-page-that-showcases-the-neroxa-ai-application-s-core-features-chat-math-solver-media-generation-translation-music-art-code-generation-games-in-an-interactive-format",
+      "featureTitle": "Create a functional demo page that showcases the Neroxa AI application's core features (chat, math solver, media generation, translation, music, art, code generation, games) in an interactive format",
+      "files": [
+        "frontend/public/demo.html"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

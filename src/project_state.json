@@ -1,30 +1,45 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "Project to create a real HTML page",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-replace-the-current-application-logo-with-the-uploaded-neroxa-ai-logo-image-gemini-generated-image-cjqrvscjqr-1-png-showing-a-golden-figure-reading-surrounded-by-floating-books-against-a-starry-blue-background",
-      "title": "Replace the current application logo with the uploaded Neroxa AI logo image (Gemini_Generated_Image_cjqrvscjqr-1.png) showing a golden figure reading surrounded by floating books against a starry blue background",
+      "id": "feature-generate-a-standalone-html-file-that-includes-all-necessary-inline-css-and-javascript-making-it-fully-self-contained-and-functional-without-external-dependencies",
+      "title": "Generate a standalone HTML file that includes all necessary inline CSS and JavaScript, making it fully self-contained and functional without external dependencies",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-all-branding-references-from-vantior-ai-to-neroxa-ai-throughout-the-application",
-      "title": "Update all branding references from 'Vantior AI' to 'Neroxa AI' throughout the application",
+      "id": "feature-include-proper-html5-document-structure-with-doctype-head-section-containing-meta-tags-for-viewport-and-character-encoding-and-semantic-body-elements",
+      "title": "Include proper HTML5 document structure with DOCTYPE, head section containing meta tags for viewport and character encoding, and semantic body elements",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-a-functional-demo-page-that-showcases-the-neroxa-ai-application-s-core-features-chat-math-solver-media-generation-translation-music-art-code-generation-games-in-an-interactive-format",
+      "title": "Create a functional demo page that showcases the Neroxa AI application's core features (chat, math solver, media generation, translation, music, art, code generation, games) in an interactive format",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "nexora ai",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create a real HTML page",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Neroxa AI",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
