@@ -1,7 +1,7 @@
 {
   "frontend/src/index.css": "Global styles with black/dark OKLCH color system as default theme, featuring deep blacks and dark grays for backgrounds with vibrant teal and coral accents for educational feel.",
   "frontend/tailwind.config.js": "Extended Tailwind configuration with custom educational color palette, typography settings, soft shadows, glow effects, and animation utilities for a cohesive Hollow AI design system.",
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup including routes for authenticated main app and public shared content viewer pages (/shared/art/:artworkId and /shared/music/:musicId), integrated with React Query and Sonner toast notifications.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup including routes for authenticated main app with six tabs (Math Solver, Translator, Scripter, Media Gallery, Music Generator, Art) and public shared content viewer pages.",
   "frontend/src/components/Header.tsx": "Application header displaying Axora AI branding with the custom uploaded logo image, theme toggle, and sign-out functionality for authenticated users.",
   "frontend/src/components/ChatSidebar.tsx": "Collapsible sidebar component showing chat session history with timestamps, new chat creation, and session selection functionality.",
   "frontend/src/components/ChatView.tsx": "Chat interface component displaying conversation messages with user/AI avatars, message input, real-time updates, and simulated AI responses identifying as Axora AI.",
@@ -21,5 +21,7 @@
   "frontend/src/hooks/useArtworkShare.ts": "Custom React Query hook managing artwork sharing with canvas-to-PNG conversion, ExternalBlob upload via backend.shareArtwork, unique ID generation, and clipboard copy functionality for share URLs with proper nullable ref type support.",
   "frontend/src/hooks/useMusicShare.ts": "Custom React Query hook managing music sharing with audio blob upload via backend.shareMusic, unique ID generation, and clipboard copy functionality for share URLs.",
   "frontend/src/hooks/useSharedContent.ts": "Custom React Query hooks for fetching shared artwork and music by ID using backend.retrieveArtwork and backend.retrieveMusic, returning direct URLs for display with proper error handling.",
-  "frontend/src/components/SharedContentViewer.tsx": "Public viewer component for shared artwork and music accessible via URL parameters, displaying images or audio players with playback controls, error handling for invalid IDs, and no authentication required."
+  "frontend/src/components/SharedContentViewer.tsx": "Public viewer component for shared artwork and music accessible via URL parameters, displaying images or audio players with playback controls, error handling for invalid IDs, and no authentication required.",
+  "frontend/src/hooks/useScriptGeneration.ts": "Custom React hook managing script generation with mock AI code generation based on user requests, supporting various programming languages and patterns with loading states and conversation history.",
+  "frontend/src/components/Scripter.tsx": "Chat-style script generator component with conversation history, code block display with syntax highlighting, copy-to-clipboard functionality, and dark theme styling consistent with other chat components."
 }

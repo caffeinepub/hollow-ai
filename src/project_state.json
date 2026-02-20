@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 21,
-  "summary": "An AI application called 'Axora AI' with a dark/black theme that displays videos and pictures, solves math problems from kindergarten to college level, includes a sidebar showing previous chat history, allows users to request AI-generated images and videos by describing what they want, features a translator chat box for translating different languages, includes a music generator that lets users create beats and music or have the AI generate music for them, and includes an art component with a drawing canvas featuring colors and other tools plus a chat box that provides drawing and painting ideas",
+  "projectStateVersion": 23,
+  "summary": "An AI application called 'Axora AI' with a dark/black theme that displays videos and pictures, solves math problems from kindergarten to college level, includes a sidebar showing previous chat history, allows users to request AI-generated images and videos by describing what they want, features a translator chat box for translating different languages, includes a music generator that lets users create beats and music or have the AI generate music for them, includes an art component with a drawing canvas featuring colors and other tools plus a chat box that provides drawing and painting ideas, and includes a scripter component that allows users to describe scripts they want the AI to generate",
   "architectural_notes": [
     "AI-powered application with multi-modal content display",
     "Educational focus with adaptive math difficulty levels",
@@ -296,6 +296,30 @@
         "REQ-37"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-a-new-scripter-component-that-provides-a-chat-interface-where-users-can-describe-the-scripts-they-want-the-ai-to-generate-for-them",
+      "title": "Create a new Scripter component that provides a chat interface where users can describe the scripts they want the AI to generate for them",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-scripter-component-as-a-new-tab-in-the-main-application-interface-alongside-the-existing-tabs-chat-math-solver-media-gallery-translator-music-generator-art",
+      "title": "Add the Scripter component as a new tab in the main application interface alongside the existing tabs (Chat, Math Solver, Media Gallery, Translator, Music Generator, Art)",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-ai-script-generation-functionality-in-the-scripter-component-that-processes-user-script-requests-and-generates-code-or-script-output-based-on-the-description",
+      "title": "Implement AI script generation functionality in the Scripter component that processes user script requests and generates code or script output based on the description",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -397,6 +421,12 @@
       "reqIds": [
         "REQ-36"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Create a scripter component with a chat interface where users can describe scripts they want the AI to generate",
+      "reqIds": [],
       "status": "pending"
     }
   ],

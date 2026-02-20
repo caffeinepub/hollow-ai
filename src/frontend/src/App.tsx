@@ -9,11 +9,12 @@ import { MediaDisplay } from './components/MediaDisplay';
 import { TranslatorChat } from './components/TranslatorChat';
 import { MusicGenerator } from './components/MusicGenerator';
 import { ArtCanvas } from './components/ArtCanvas';
+import { Scripter } from './components/Scripter';
 import { SharedContentViewer } from './components/SharedContentViewer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useInternetIdentity } from './hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
-import { LogIn, Calculator, Image, Languages, Music2, Palette } from 'lucide-react';
+import { LogIn, Calculator, Image, Languages, Music2, Palette, Code2 } from 'lucide-react';
 import { Toaster } from '@/components/ui/sonner';
 
 const queryClient = new QueryClient();
@@ -91,12 +92,12 @@ function MainApp() {
                     What would you like to learn today?
                   </h1>
                   <p className="text-muted-foreground">
-                    Solve math problems, translate languages, generate AI media, create music, draw art, or start a new conversation
+                    Solve math problems, translate languages, generate AI media, create music, draw art, generate scripts, or start a new conversation
                   </p>
                 </div>
                 
                 <Tabs defaultValue="math" className="w-full">
-                  <TabsList className="grid w-full grid-cols-5 max-w-4xl">
+                  <TabsList className="grid w-full grid-cols-6 max-w-5xl">
                     <TabsTrigger value="math" className="gap-2">
                       <Calculator className="h-4 w-4" />
                       Math Solver
@@ -104,6 +105,10 @@ function MainApp() {
                     <TabsTrigger value="translator" className="gap-2">
                       <Languages className="h-4 w-4" />
                       Translator
+                    </TabsTrigger>
+                    <TabsTrigger value="scripter" className="gap-2">
+                      <Code2 className="h-4 w-4" />
+                      Scripter
                     </TabsTrigger>
                     <TabsTrigger value="media" className="gap-2">
                       <Image className="h-4 w-4" />
@@ -126,6 +131,12 @@ function MainApp() {
                   <TabsContent value="translator" className="mt-6 h-[calc(100vh-16rem)]">
                     <div className="h-full border border-border rounded-lg overflow-hidden">
                       <TranslatorChat />
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="scripter" className="mt-6 h-[calc(100vh-16rem)]">
+                    <div className="h-full border border-border rounded-lg overflow-hidden">
+                      <Scripter />
                     </div>
                   </TabsContent>
                   

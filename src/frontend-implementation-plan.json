@@ -1,117 +1,59 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add save and share functionality for art and music",
+  "title": "Add Scripter component with AI chat interface",
   "requirements": [
     {
-      "id": "REQ-31",
-      "summary": "Add Save button to ArtCanvas for downloading artwork as PNG",
+      "id": "REQ-38",
+      "summary": "Create a new Scripter component that provides a chat interface where users can describe the scripts they want the AI to generate for them",
       "acceptanceCriteria": [
-        "A clearly labeled 'Save' button is visible in the ArtCanvas component toolbar",
-        "Clicking the Save button triggers a download of the current canvas content as a PNG file",
-        "The downloaded file has a meaningful filename (e.g., 'axora-art-[timestamp].png')",
-        "The saved image preserves the full canvas content and quality"
+        "A new Scripter component exists with a chat-style interface similar to TranslatorChat and ArtCanvas",
+        "The component includes a text input area where users can describe what script they want",
+        "The component displays a conversation history of user requests and AI-generated script responses",
+        "The chat interface follows the existing dark theme design patterns used in other components"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ArtCanvas.tsx",
-          "operation": "modify",
-          "description": "Add a Save button to the toolbar that converts the canvas content to a PNG blob using canvas.toBlob() and triggers a browser download with a timestamped filename (e.g., 'axora-art-[timestamp].png'). Use URL.createObjectURL() and a temporary anchor element to initiate the download."
-        }
-      ]
-    },
-    {
-      "id": "REQ-32",
-      "summary": "Add Share button to ArtCanvas for generating shareable links",
-      "acceptanceCriteria": [
-        "A clearly labeled 'Share' button is visible in the ArtCanvas component toolbar",
-        "Clicking the Share button uploads the canvas data to the backend and returns a unique identifier",
-        "The user receives a shareable URL or code that can be copied to clipboard",
-        "Shared artwork can be viewed by anyone with the link/code without requiring authentication"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ArtCanvas.tsx",
-          "operation": "modify",
-          "description": "Add a Share button to the toolbar that converts canvas to PNG blob, creates an ExternalBlob using ExternalBlob.fromBytes(), generates a unique artwork ID, calls backend.shareArtwork(artworkId, externalBlob), and displays a shareable URL (e.g., '/shared/art/[artworkId]') with a copy-to-clipboard button. Use the blob-storage component to handle the upload. Verify the component's usage instructions before implementing. Show loading state during upload and success/error feedback."
-        },
-        {
-          "path": "frontend/src/hooks/useArtworkShare.ts",
+          "path": "frontend/src/components/Scripter.tsx",
           "operation": "create",
-          "description": "Create a custom hook that manages artwork sharing state and logic. Export functions for sharing artwork (converting canvas to blob, generating UUID, uploading via backend.shareArtwork), copying share URL to clipboard, and managing loading/error states. Use React Query for mutation handling and the blob-storage ExternalBlob class for upload operations."
-        }
-      ]
-    },
-    {
-      "id": "REQ-34",
-      "summary": "Add Save button to MusicGenerator for downloading audio as WAV",
-      "acceptanceCriteria": [
-        "A clearly labeled 'Save' button is visible in the MusicGenerator component interface",
-        "Clicking the Save button triggers a download of the current audio as a WAV file",
-        "The downloaded file has a meaningful filename (e.g., 'axora-music-[timestamp].wav')",
-        "Both AI-generated music and beat sequencer patterns can be saved"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MusicGenerator.tsx",
-          "operation": "modify",
-          "description": "Add a Save button to the interface that downloads the current audio (either generated music or beat pattern) as a WAV file with a timestamped filename (e.g., 'axora-music-[timestamp].wav'). For beat patterns, render the current pattern to an AudioBuffer using Web Audio API, convert to WAV blob, and trigger download. For AI-generated music, use the existing audio blob from useAudioGeneration."
+          "description": "Create a new Scripter component with a chat-style interface for script generation. The component should include a conversation history display area showing user requests and AI-generated code responses, a text input area with a submit button for describing script requirements, loading states during generation, and dark theme styling consistent with TranslatorChat and ArtCanvas. Follow the existing component architecture patterns used in TranslatorChat.tsx and ArtCanvas.tsx."
         },
         {
-          "path": "frontend/src/hooks/useAudioGeneration.ts",
-          "operation": "modify",
-          "description": "Expose the generated audio blob from the hook so it can be saved by the MusicGenerator component. Ensure the WAV conversion logic is reusable for both AI-generated music and beat sequencer patterns."
-        }
-      ]
-    },
-    {
-      "id": "REQ-35",
-      "summary": "Add Share button to MusicGenerator for generating shareable links",
-      "acceptanceCriteria": [
-        "A clearly labeled 'Share' button is visible in the MusicGenerator component interface",
-        "Clicking the Share button uploads the audio data to the backend and returns a unique identifier",
-        "The user receives a shareable URL that can be copied to clipboard",
-        "Shared music can be played by anyone with the link without requiring authentication",
-        "Both AI-generated music and beat sequencer patterns can be shared"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/MusicGenerator.tsx",
-          "operation": "modify",
-          "description": "Add a Share button that converts the current audio (AI-generated or beat pattern) to a WAV blob, creates an ExternalBlob using ExternalBlob.fromBytes(), generates a unique music ID, calls backend.shareMusic(musicId, externalBlob), and displays a shareable URL (e.g., '/shared/music/[musicId]') with a copy-to-clipboard button. Use the blob-storage component to handle the upload. Verify the component's usage instructions before implementing. Show loading state during upload and success/error feedback."
-        },
-        {
-          "path": "frontend/src/hooks/useMusicShare.ts",
+          "path": "frontend/src/hooks/useScriptGeneration.ts",
           "operation": "create",
-          "description": "Create a custom hook that manages music sharing state and logic. Export functions for sharing music (converting audio to WAV blob, generating UUID, uploading via backend.shareMusic), copying share URL to clipboard, and managing loading/error states. Use React Query for mutation handling and the blob-storage ExternalBlob class for upload operations."
+          "description": "Create a custom hook for handling script generation logic. The hook should accept user script descriptions, simulate AI processing with appropriate delays (similar to useTranslation.ts patterns), generate mock code/script responses based on common programming patterns and user input keywords, manage loading states, and return formatted script responses. This hook provides the core script generation capability for the Scripter component."
         }
       ]
     },
     {
-      "id": "REQ-37",
-      "summary": "Create viewer page for shared artwork and music with playback controls",
+      "id": "REQ-39",
+      "summary": "Add the Scripter component as a new tab in the main application interface alongside the existing tabs",
       "acceptanceCriteria": [
-        "A dedicated route/page exists for viewing shared content by ID",
-        "Shared artwork is displayed with proper image rendering",
-        "Shared music includes playback controls (play, pause, volume)",
-        "The viewer page works without requiring user authentication",
-        "Error handling is implemented for invalid or non-existent share IDs"
+        "A new 'Scripter' tab appears in the tab navigation in App.tsx",
+        "Clicking the Scripter tab displays the Scripter component",
+        "The tab ordering and styling is consistent with existing tabs"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/components/SharedContentViewer.tsx",
-          "operation": "create",
-          "description": "Create a viewer component that accepts a content type ('art' or 'music') and ID from URL parameters. For artwork, fetch via backend.retrieveArtwork() and display the image using ExternalBlob.getDirectURL(). For music, fetch via backend.retrieveMusic() and render an audio player with play/pause/volume controls using the blob's direct URL. Include loading states, error handling for invalid IDs, and responsive layout. Use the blob-storage component's getDirectURL() method to leverage streaming and caching."
-        },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add routes for '/shared/art/:artworkId' and '/shared/music/:musicId' that render the SharedContentViewer component with appropriate content type. These routes should be accessible without authentication and should not be wrapped in the authenticated layout. Use React Router's Route component to register these new routes."
-        },
+          "description": "Add a new 'Scripter' tab to the tab navigation alongside existing tabs (Chat, Math Solver, Media Gallery, Translator, Music Generator, Art). Import the Scripter component and add it to the tabs array with appropriate label and content. Ensure the tab styling and ordering matches the existing tab pattern. Position the Scripter tab logically within the existing tab sequence."
+        }
+      ]
+    },
+    {
+      "id": "REQ-40",
+      "summary": "Implement AI script generation functionality in the Scripter component that processes user script requests and generates code or script output based on the description",
+      "acceptanceCriteria": [
+        "When a user submits a script request, the component generates a simulated code/script response",
+        "The generated script is displayed in the chat history with appropriate formatting (code blocks, syntax highlighting if possible)",
+        "The script generation process shows a loading state while processing"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/hooks/useSharedContent.ts",
-          "operation": "create",
-          "description": "Create a custom hook that fetches shared content (artwork or music) by ID using React Query. Export functions for fetching artwork (backend.retrieveArtwork) and music (backend.retrieveMusic), with proper error handling, loading states, and caching. Handle the ExternalBlob type returned from the backend and provide methods to get direct URLs for display."
+          "path": "frontend/src/components/Scripter.tsx",
+          "operation": "modify",
+          "description": "Integrate the useScriptGeneration hook into the Scripter component to process user script requests. Add message submission handling that calls the script generation hook, display loading states with appropriate UI indicators during generation, and render generated scripts in the chat history with code block formatting using <pre> and <code> tags with monospace font and proper indentation. Apply dark theme styling to code blocks for readability. Ensure the chat history scrolls to show new responses."
         }
       ]
     }

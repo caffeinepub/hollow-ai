@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-save-button-to-the-artcanvas-component-that-allows-users-to-download-their-canvas-artwork-as-a-png-image-file-to-their-local-device",
-      "featureTitle": "Add a 'Save' button to the ArtCanvas component that allows users to download their canvas artwork as a PNG image file to their local device",
+      "featureId": "feature-create-a-new-scripter-component-that-provides-a-chat-interface-where-users-can-describe-the-scripts-they-want-the-ai-to-generate-for-them",
+      "featureTitle": "Create a new Scripter component that provides a chat interface where users can describe the scripts they want the AI to generate for them",
       "files": [
-        "frontend/src/components/ArtCanvas.tsx"
+        "frontend/src/components/Scripter.tsx",
+        "frontend/src/hooks/useScriptGeneration.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -17,16 +18,15 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-31"
+        "REQ-38"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-share-button-to-the-artcanvas-component-that-generates-a-shareable-link-or-code-allowing-users-to-share-their-artwork-with-others",
-      "featureTitle": "Add a 'Share' button to the ArtCanvas component that generates a shareable link or code allowing users to share their artwork with others",
+      "featureId": "feature-add-the-scripter-component-as-a-new-tab-in-the-main-application-interface-alongside-the-existing-tabs-chat-math-solver-media-gallery-translator-music-generator-art",
+      "featureTitle": "Add the Scripter component as a new tab in the main application interface alongside the existing tabs (Chat, Math Solver, Media Gallery, Translator, Music Generator, Art)",
       "files": [
-        "frontend/src/components/ArtCanvas.tsx",
-        "frontend/src/hooks/useArtworkShare.ts"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -38,16 +38,15 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-32"
+        "REQ-39"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-save-button-to-the-musicgenerator-component-that-allows-users-to-download-their-generated-music-as-an-audio-file-wav-format-to-their-local-device",
-      "featureTitle": "Add a 'Save' button to the MusicGenerator component that allows users to download their generated music as an audio file (WAV format) to their local device",
+      "featureId": "feature-implement-ai-script-generation-functionality-in-the-scripter-component-that-processes-user-script-requests-and-generates-code-or-script-output-based-on-the-description",
+      "featureTitle": "Implement AI script generation functionality in the Scripter component that processes user script requests and generates code or script output based on the description",
       "files": [
-        "frontend/src/components/MusicGenerator.tsx",
-        "frontend/src/hooks/useAudioGeneration.ts"
+        "frontend/src/components/Scripter.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -59,50 +58,7 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-34"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-share-button-to-the-musicgenerator-component-that-generates-a-shareable-link-allowing-users-to-share-their-music-creations-with-others",
-      "featureTitle": "Add a 'Share' button to the MusicGenerator component that generates a shareable link allowing users to share their music creations with others",
-      "files": [
-        "frontend/src/components/MusicGenerator.tsx",
-        "frontend/src/hooks/useMusicShare.ts"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-35"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-gallery-or-viewer-page-that-displays-shared-artwork-and-music-when-accessed-via-the-shareable-link-with-playback-controls-for-music-and-image-display-for-artwork",
-      "featureTitle": "Create a gallery or viewer page that displays shared artwork and music when accessed via the shareable link, with playback controls for music and image display for artwork",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/SharedContentViewer.tsx",
-        "frontend/src/hooks/useSharedContent.ts"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-37"
+        "REQ-40"
       ],
       "confidence": "high"
     }
