@@ -26,6 +26,9 @@ export const Message = IDL.Record({
   'content' : IDL.Text,
   'timestamp' : IDL.Nat64,
 });
+export const ArtworkId = IDL.Text;
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const MusicId = IDL.Text;
 export const SessionView = IDL.Record({
   'id' : SessionId,
   'messages' : IDL.Vec(Message),
@@ -60,9 +63,23 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   'addMessageToSession' : IDL.Func([SessionId, Message], [], []),
+  'getAllArtworks' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(ArtworkId, ExternalBlob))],
+      ['query'],
+    ),
+  'getAllMusic' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(MusicId, ExternalBlob))],
+      ['query'],
+    ),
   'getSession' : IDL.Func([SessionId], [SessionView], ['query']),
   'getUserSessions' : IDL.Func([], [IDL.Vec(SessionView)], ['query']),
   'registerUser' : IDL.Func([], [], []),
+  'retrieveArtwork' : IDL.Func([ArtworkId], [ExternalBlob], ['query']),
+  'retrieveMusic' : IDL.Func([MusicId], [ExternalBlob], ['query']),
+  'shareArtwork' : IDL.Func([ArtworkId, ExternalBlob], [], []),
+  'shareMusic' : IDL.Func([MusicId, ExternalBlob], [], []),
   'solveMathProblem' : IDL.Func([IDL.Text], [IDL.Text], []),
 });
 
@@ -87,6 +104,9 @@ export const idlFactory = ({ IDL }) => {
     'content' : IDL.Text,
     'timestamp' : IDL.Nat64,
   });
+  const ArtworkId = IDL.Text;
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const MusicId = IDL.Text;
   const SessionView = IDL.Record({
     'id' : SessionId,
     'messages' : IDL.Vec(Message),
@@ -121,9 +141,23 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     'addMessageToSession' : IDL.Func([SessionId, Message], [], []),
+    'getAllArtworks' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(ArtworkId, ExternalBlob))],
+        ['query'],
+      ),
+    'getAllMusic' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(MusicId, ExternalBlob))],
+        ['query'],
+      ),
     'getSession' : IDL.Func([SessionId], [SessionView], ['query']),
     'getUserSessions' : IDL.Func([], [IDL.Vec(SessionView)], ['query']),
     'registerUser' : IDL.Func([], [], []),
+    'retrieveArtwork' : IDL.Func([ArtworkId], [ExternalBlob], ['query']),
+    'retrieveMusic' : IDL.Func([MusicId], [ExternalBlob], ['query']),
+    'shareArtwork' : IDL.Func([ArtworkId, ExternalBlob], [], []),
+    'shareMusic' : IDL.Func([MusicId, ExternalBlob], [], []),
     'solveMathProblem' : IDL.Func([IDL.Text], [IDL.Text], []),
   });
 };

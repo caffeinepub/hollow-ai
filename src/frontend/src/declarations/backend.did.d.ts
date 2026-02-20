@@ -10,12 +10,15 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export type ArtworkId = string;
+export type ExternalBlob = Uint8Array;
 export interface Message {
   'id' : MessageId,
   'content' : string,
   'timestamp' : bigint,
 }
 export type MessageId = string;
+export type MusicId = string;
 export type SessionId = string;
 export interface SessionView {
   'id' : SessionId,
@@ -50,9 +53,15 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   'addMessageToSession' : ActorMethod<[SessionId, Message], undefined>,
+  'getAllArtworks' : ActorMethod<[], Array<[ArtworkId, ExternalBlob]>>,
+  'getAllMusic' : ActorMethod<[], Array<[MusicId, ExternalBlob]>>,
   'getSession' : ActorMethod<[SessionId], SessionView>,
   'getUserSessions' : ActorMethod<[], Array<SessionView>>,
   'registerUser' : ActorMethod<[], undefined>,
+  'retrieveArtwork' : ActorMethod<[ArtworkId], ExternalBlob>,
+  'retrieveMusic' : ActorMethod<[MusicId], ExternalBlob>,
+  'shareArtwork' : ActorMethod<[ArtworkId, ExternalBlob], undefined>,
+  'shareMusic' : ActorMethod<[MusicId, ExternalBlob], undefined>,
   'solveMathProblem' : ActorMethod<[string], string>,
 }
 export declare const idlService: IDL.ServiceClass;

@@ -1,16 +1,24 @@
 import { useState } from 'react';
+import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Header } from './components/Header';
 import { ChatSidebar } from './components/ChatSidebar';
 import { ChatView } from './components/ChatView';
 import { MathProblemSolver } from './components/MathProblemSolver';
 import { MediaDisplay } from './components/MediaDisplay';
 import { TranslatorChat } from './components/TranslatorChat';
+import { MusicGenerator } from './components/MusicGenerator';
+import { ArtCanvas } from './components/ArtCanvas';
+import { SharedContentViewer } from './components/SharedContentViewer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useInternetIdentity } from './hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
-import { LogIn, Calculator, Image, Languages } from 'lucide-react';
+import { LogIn, Calculator, Image, Languages, Music2, Palette } from 'lucide-react';
+import { Toaster } from '@/components/ui/sonner';
 
-function App() {
+const queryClient = new QueryClient();
+
+function MainApp() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { identity, login, isLoginIdle } = useInternetIdentity();
@@ -83,12 +91,12 @@ function App() {
                     What would you like to learn today?
                   </h1>
                   <p className="text-muted-foreground">
-                    Solve math problems, translate languages, generate AI media, or start a new conversation
+                    Solve math problems, translate languages, generate AI media, create music, draw art, or start a new conversation
                   </p>
                 </div>
                 
                 <Tabs defaultValue="math" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 max-w-2xl">
+                  <TabsList className="grid w-full grid-cols-5 max-w-4xl">
                     <TabsTrigger value="math" className="gap-2">
                       <Calculator className="h-4 w-4" />
                       Math Solver
@@ -100,6 +108,14 @@ function App() {
                     <TabsTrigger value="media" className="gap-2">
                       <Image className="h-4 w-4" />
                       Media Gallery
+                    </TabsTrigger>
+                    <TabsTrigger value="music" className="gap-2">
+                      <Music2 className="h-4 w-4" />
+                      Music Generator
+                    </TabsTrigger>
+                    <TabsTrigger value="art" className="gap-2">
+                      <Palette className="h-4 w-4" />
+                      Art
                     </TabsTrigger>
                   </TabsList>
                   
@@ -116,6 +132,14 @@ function App() {
                   <TabsContent value="media" className="mt-6">
                     <MediaDisplay />
                   </TabsContent>
+                  
+                  <TabsContent value="music" className="mt-6">
+                    <MusicGenerator />
+                  </TabsContent>
+                  
+                  <TabsContent value="art" className="mt-6 h-[calc(100vh-16rem)]">
+                    <ArtCanvas />
+                  </TabsContent>
                 </Tabs>
               </div>
             </div>
@@ -123,6 +147,59 @@ function App() {
         </main>
       </div>
     </div>
+  );
+}
+
+// Router setup
+const rootRoute = createRootRoute({
+  component: () => (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <Toaster />
+    </QueryClientProvider>
+  ),
+});
+
+const indexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: MainApp,
+});
+
+const sharedArtRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/shared/art/$artworkId',
+  component: () => {
+    const { artworkId } = sharedArtRoute.useParams();
+    return <SharedContentViewer type="art" id={artworkId} />;
+  },
+});
+
+const sharedMusicRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/shared/music/$musicId',
+  component: () => {
+    const { musicId } = sharedMusicRoute.useParams();
+    return <SharedContentViewer type="music" id={musicId} />;
+  },
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, sharedArtRoute, sharedMusicRoute]);
+
+const router = createRouter({ routeTree });
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <Toaster />
+    </QueryClientProvider>
   );
 }
 

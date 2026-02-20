@@ -1,75 +1,156 @@
 {
   "kind": "build_request",
-  "title": "Add Teacher Mode to Math Problem Solver",
+  "title": "Add save and share functionality for art and music",
   "projectName": "Axora AI",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-21",
-      "text": "Add a 'Teacher Mode' toggle control in the MathProblemSolver component that users can enable or disable",
+      "id": "REQ-31",
+      "text": "Add a 'Save' button to the ArtCanvas component that allows users to download their canvas artwork as a PNG image file to their local device",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-latest"
+          "msg-user-final"
         ],
         "quotes": [
-          "make a thing on the math problem solver thing that says teacher mode"
+          "make it so you can save and share your art"
         ]
       },
       "acceptanceCriteria": [
-        "A toggle or checkbox labeled 'Teacher Mode' is visible in the MathProblemSolver interface",
-        "The toggle state persists during the user's session",
-        "The toggle is accessible and clearly labeled"
+        "A clearly labeled 'Save' button is visible in the ArtCanvas component toolbar",
+        "Clicking the Save button triggers a download of the current canvas content as a PNG file",
+        "The downloaded file has a meaningful filename (e.g., 'axora-art-[timestamp].png')",
+        "The saved image preserves the full canvas content and quality"
       ]
     },
     {
-      "id": "REQ-22",
-      "text": "When Teacher Mode is enabled, enhance the step-by-step solution explanations to use clear, pedagogical language that explains mathematical concepts in an accessible way suitable for students",
-      "target": "frontend",
+      "id": "REQ-32",
+      "text": "Add a 'Share' button to the ArtCanvas component that generates a shareable link or code allowing users to share their artwork with others",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-user-latest"
+          "msg-user-final"
         ],
         "quotes": [
-          "make it explain the meaning and answers in a way that people will understand"
+          "make it so you can save and share your art"
         ]
       },
       "acceptanceCriteria": [
-        "Solutions include explanations of why each step is performed, not just what operation is applied",
-        "Mathematical terminology is explained in simple terms",
-        "Explanations use everyday language and relatable examples where appropriate",
-        "Each step connects to the overall problem-solving strategy"
+        "A clearly labeled 'Share' button is visible in the ArtCanvas component toolbar",
+        "Clicking the Share button uploads the canvas data to the backend and returns a unique identifier",
+        "The user receives a shareable URL or code that can be copied to clipboard",
+        "Shared artwork can be viewed by anyone with the link/code without requiring authentication"
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "In Teacher Mode, provide contextual explanations for mathematical concepts encountered in the problem, such as defining what an exponent means, explaining the purpose of logarithms, or describing trigonometric relationships",
-      "target": "frontend",
+      "id": "REQ-33",
+      "text": "Implement backend storage and retrieval functions for shared artwork, storing canvas image data with unique identifiers and allowing public read access",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-latest"
+          "msg-user-final"
         ],
         "quotes": [
-          "make it explain the meaning and answers in a way that people will understand"
+          "make it so you can save and share your art"
         ]
       },
       "acceptanceCriteria": [
-        "When advanced operations like exponents, logarithms, or trigonometry appear, Teacher Mode includes brief educational context about what these operations represent",
-        "Explanations are appropriate for the selected grade level",
-        "Concept explanations are clearly distinguished from solution steps"
+        "Backend actor includes a function to store artwork data with a unique ID",
+        "Backend actor includes a function to retrieve artwork by ID",
+        "Artwork data is stored as blob data in the backend",
+        "Shared artwork can be accessed without user authentication"
+      ]
+    },
+    {
+      "id": "REQ-34",
+      "text": "Add a 'Save' button to the MusicGenerator component that allows users to download their generated music as an audio file (WAV format) to their local device",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "make it so you can save and share your music that you made"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A clearly labeled 'Save' button is visible in the MusicGenerator component interface",
+        "Clicking the Save button triggers a download of the current audio as a WAV file",
+        "The downloaded file has a meaningful filename (e.g., 'axora-music-[timestamp].wav')",
+        "Both AI-generated music and beat sequencer patterns can be saved"
+      ]
+    },
+    {
+      "id": "REQ-35",
+      "text": "Add a 'Share' button to the MusicGenerator component that generates a shareable link allowing users to share their music creations with others",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "make it so you can save and share your music that you made"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A clearly labeled 'Share' button is visible in the MusicGenerator component interface",
+        "Clicking the Share button uploads the audio data to the backend and returns a unique identifier",
+        "The user receives a shareable URL that can be copied to clipboard",
+        "Shared music can be played by anyone with the link without requiring authentication",
+        "Both AI-generated music and beat sequencer patterns can be shared"
+      ]
+    },
+    {
+      "id": "REQ-36",
+      "text": "Implement backend storage and retrieval functions for shared music, storing audio blob data with unique identifiers and allowing public read access",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "make it so you can save and share your music that you made"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend actor includes a function to store audio data with a unique ID",
+        "Backend actor includes a function to retrieve audio by ID",
+        "Audio data is stored as blob data in the backend",
+        "Shared music can be accessed without user authentication"
+      ]
+    },
+    {
+      "id": "REQ-37",
+      "text": "Create a gallery or viewer page that displays shared artwork and music when accessed via the shareable link, with playback controls for music and image display for artwork",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "make it so you can save and share your art and music"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A dedicated route/page exists for viewing shared content by ID",
+        "Shared artwork is displayed with proper image rendering",
+        "Shared music includes playback controls (play, pause, volume)",
+        "The viewer page works without requiring user authentication",
+        "Error handling is implemented for invalid or non-existent share IDs"
       ]
     }
   ],
   "constraints": [
-    "Teacher Mode must be a client-side feature that enhances existing solution generation logic",
-    "Do not modify the core mathematical evaluation functionality",
-    "Maintain compatibility with the existing grade level selector in MathProblemSolver"
+    "All Motoko backend logic must remain in the single main actor (backend/main.mo)",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui",
+    "Shared content must be accessible without authentication for public viewing"
   ],
   "nonGoals": [
-    "Adding backend storage for Teacher Mode preferences",
-    "Creating lesson plans or full curriculum content",
-    "Generating practice problems or quizzes",
-    "Adding multimedia content like videos or diagrams to explanations"
+    "Social media integration or sharing to external platforms",
+    "User galleries or profiles showing all of a user's creations",
+    "Editing or modifying shared artwork/music after it has been shared",
+    "Comments, likes, or other social features on shared content",
+    "Content moderation or reporting functionality"
   ],
   "imageRequirements": {
     "required": [],

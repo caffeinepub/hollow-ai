@@ -89,6 +89,8 @@ export class ExternalBlob {
         return this;
     }
 }
+export type ArtworkId = string;
+export type MusicId = string;
 export type MessageId = string;
 export interface _CaffeineStorageRefillInformation {
     proposed_top_up_amount?: bigint;
@@ -120,12 +122,18 @@ export interface backendInterface {
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     addMessageToSession(sessionId: SessionId, message: Message): Promise<void>;
+    getAllArtworks(): Promise<Array<[ArtworkId, ExternalBlob]>>;
+    getAllMusic(): Promise<Array<[MusicId, ExternalBlob]>>;
     getSession(sessionId: SessionId): Promise<SessionView>;
     getUserSessions(): Promise<Array<SessionView>>;
     registerUser(): Promise<void>;
+    retrieveArtwork(artworkId: ArtworkId): Promise<ExternalBlob>;
+    retrieveMusic(musicId: MusicId): Promise<ExternalBlob>;
+    shareArtwork(artworkId: ArtworkId, imageBlob: ExternalBlob): Promise<void>;
+    shareMusic(musicId: MusicId, audioBlob: ExternalBlob): Promise<void>;
     solveMathProblem(expression: string): Promise<string>;
 }
-import type { _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
+import type { ArtworkId as _ArtworkId, ExternalBlob as _ExternalBlob, MusicId as _MusicId, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _caffeineStorageBlobIsLive(arg0: Uint8Array): Promise<boolean> {
@@ -226,6 +234,34 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getAllArtworks(): Promise<Array<[ArtworkId, ExternalBlob]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllArtworks();
+                return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllArtworks();
+            return from_candid_vec_n8(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getAllMusic(): Promise<Array<[MusicId, ExternalBlob]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllMusic();
+                return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllMusic();
+            return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getSession(arg0: SessionId): Promise<SessionView> {
         if (this.processError) {
             try {
@@ -268,6 +304,62 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async retrieveArtwork(arg0: ArtworkId): Promise<ExternalBlob> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.retrieveArtwork(arg0);
+                return from_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.retrieveArtwork(arg0);
+            return from_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async retrieveMusic(arg0: MusicId): Promise<ExternalBlob> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.retrieveMusic(arg0);
+                return from_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.retrieveMusic(arg0);
+            return from_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async shareArtwork(arg0: ArtworkId, arg1: ExternalBlob): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.shareArtwork(arg0, await to_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.shareArtwork(arg0, await to_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async shareMusic(arg0: MusicId, arg1: ExternalBlob): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.shareMusic(arg0, await to_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, arg1));
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.shareMusic(arg0, await to_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
     async solveMathProblem(arg0: string): Promise<string> {
         if (this.processError) {
             try {
@@ -282,6 +374,9 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+}
+async function from_candid_ExternalBlob_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ExternalBlob): Promise<ExternalBlob> {
+    return await _downloadFile(value);
 }
 function from_candid__CaffeineStorageRefillResult_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: __CaffeineStorageRefillResult): _CaffeineStorageRefillResult {
     return from_candid_record_n5(_uploadFile, _downloadFile, value);
@@ -303,6 +398,27 @@ function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint
         success: record_opt_to_undefined(from_candid_opt_n6(_uploadFile, _downloadFile, value.success)),
         topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
     };
+}
+async function from_candid_tuple_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [_MusicId, _ExternalBlob]): Promise<[MusicId, ExternalBlob]> {
+    return [
+        value[0],
+        await from_candid_ExternalBlob_n10(_uploadFile, _downloadFile, value[1])
+    ];
+}
+async function from_candid_tuple_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [_ArtworkId, _ExternalBlob]): Promise<[ArtworkId, ExternalBlob]> {
+    return [
+        value[0],
+        await from_candid_ExternalBlob_n10(_uploadFile, _downloadFile, value[1])
+    ];
+}
+async function from_candid_vec_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[_MusicId, _ExternalBlob]>): Promise<Array<[MusicId, ExternalBlob]>> {
+    return await Promise.all(value.map(async (x)=>await from_candid_tuple_n12(_uploadFile, _downloadFile, x)));
+}
+async function from_candid_vec_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[_ArtworkId, _ExternalBlob]>): Promise<Array<[ArtworkId, ExternalBlob]>> {
+    return await Promise.all(value.map(async (x)=>await from_candid_tuple_n9(_uploadFile, _downloadFile, x)));
+}
+async function to_candid_ExternalBlob_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ExternalBlob): Promise<_ExternalBlob> {
+    return await _uploadFile(value);
 }
 function to_candid__CaffeineStorageRefillInformation_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CaffeineStorageRefillInformation): __CaffeineStorageRefillInformation {
     return to_candid_record_n3(_uploadFile, _downloadFile, value);

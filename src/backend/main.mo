@@ -8,6 +8,7 @@ import Nat64 "mo:core/Nat64";
 import Time "mo:core/Time";
 import Principal "mo:core/Principal";
 import MixinStorage "blob-storage/Mixin";
+import Storage "blob-storage/Storage";
 
 actor {
   include MixinStorage();
@@ -15,6 +16,8 @@ actor {
   type UserId = Principal;
   type MessageId = Text;
   type SessionId = Text;
+  type ArtworkId = Text;
+  type MusicId = Text;
 
   type Message = {
     id : MessageId;
@@ -60,6 +63,8 @@ actor {
   };
 
   let users = Map.empty<UserId, UserData>();
+  let artworks = Map.empty<ArtworkId, Storage.ExternalBlob>();
+  let music = Map.empty<MusicId, Storage.ExternalBlob>();
 
   func toSessionView(session : Session) : SessionView {
     {
@@ -119,8 +124,51 @@ actor {
     };
   };
 
+  public shared ({ caller }) func shareArtwork(artworkId : ArtworkId, imageBlob : Storage.ExternalBlob) : async () {
+    switch (artworks.get(artworkId)) {
+      case (null) {
+        artworks.add(artworkId, imageBlob);
+      };
+      case (?_existing) { Runtime.trap("Artwork already exists") };
+    };
+  };
+
+  public query ({ caller }) func retrieveArtwork(artworkId : ArtworkId) : async Storage.ExternalBlob {
+    switch (artworks.get(artworkId)) {
+      case (null) {
+        Runtime.trap("Artwork not found: " # artworkId);
+      };
+      case (?imageBlob) { imageBlob };
+    };
+  };
+
+  public query ({ caller }) func getAllArtworks() : async [(ArtworkId, Storage.ExternalBlob)] {
+    artworks.toArray();
+  };
+
+  public shared ({ caller }) func shareMusic(musicId : MusicId, audioBlob : Storage.ExternalBlob) : async () {
+    switch (music.get(musicId)) {
+      case (null) {
+        music.add(musicId, audioBlob);
+      };
+      case (?_existing) { Runtime.trap("Music already exists") };
+    };
+  };
+
+  public query ({ caller }) func retrieveMusic(musicId : MusicId) : async Storage.ExternalBlob {
+    switch (music.get(musicId)) {
+      case (null) {
+        Runtime.trap("Music not found: " # musicId);
+      };
+      case (?audioBlob) { audioBlob };
+    };
+  };
+
+  public query ({ caller }) func getAllMusic() : async [(MusicId, Storage.ExternalBlob)] {
+    music.toArray();
+  };
+
   public shared ({ caller }) func solveMathProblem(expression : Text) : async Text {
-    // Placeholder: Actual math evaluation happens in the TypeScript client
     expression;
   };
 };

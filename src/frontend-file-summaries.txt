@@ -1,7 +1,7 @@
 {
   "frontend/src/index.css": "Global styles with black/dark OKLCH color system as default theme, featuring deep blacks and dark grays for backgrounds with vibrant teal and coral accents for educational feel.",
   "frontend/tailwind.config.js": "Extended Tailwind configuration with custom educational color palette, typography settings, soft shadows, glow effects, and animation utilities for a cohesive Hollow AI design system.",
-  "frontend/src/App.tsx": "Main application component managing authentication state, sidebar navigation, session selection, and tabbed interface for math solver, translator, and AI media gallery with Axora AI branding throughout.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup including routes for authenticated main app and public shared content viewer pages (/shared/art/:artworkId and /shared/music/:musicId), integrated with React Query and Sonner toast notifications.",
   "frontend/src/components/Header.tsx": "Application header displaying Axora AI branding with the custom uploaded logo image, theme toggle, and sign-out functionality for authenticated users.",
   "frontend/src/components/ChatSidebar.tsx": "Collapsible sidebar component showing chat session history with timestamps, new chat creation, and session selection functionality.",
   "frontend/src/components/ChatView.tsx": "Chat interface component displaying conversation messages with user/AI avatars, message input, real-time updates, and simulated AI responses identifying as Axora AI.",
@@ -12,5 +12,14 @@
   "frontend/src/hooks/useMediaGeneration.ts": "Custom hook managing AI image and video generation with client-side canvas-based placeholder generation, state management for generated media, and loading states.",
   "frontend/src/hooks/useTranslation.ts": "Custom hook managing translation state with mock translation generation, translation history storage, and loading states for the translator chat interface.",
   "frontend/src/components/TranslatorChat.tsx": "Chat-style translator component with language selection dropdowns, message input with keyboard shortcuts, translation history display in chat format, and clear history functionality following the dark theme design.",
-  "frontend/index.html": "HTML entry point with updated page title \"Axora AI\" for browser tab display."
+  "frontend/index.html": "HTML entry point with updated page title \"Axora AI\" for browser tab display.",
+  "frontend/src/hooks/useAudioGeneration.ts": "Custom React hook managing AI music generation using Web Audio API with WAV conversion, beat pattern rendering to audio blob, and state management for generated audio history with blob storage.",
+  "frontend/src/components/MusicGenerator.tsx": "Music generator component featuring beat sequencer with tempo control, AI music generation from text prompts, audio playback controls, and Save/Share buttons for both AI-generated music and beat patterns with shareable URL generation.",
+  "frontend/src/components/ArtCanvas.tsx": "Art canvas component with HTML5 canvas drawing interface, color palette, brush controls, eraser tool, integrated AI chat panel, and Save/Share buttons with shareable URL generation and clipboard copy functionality.",
+  "frontend/src/hooks/useCanvasDrawing.ts": "Custom React hook managing canvas drawing state and operations including mouse/touch event handling, brush color and size management, eraser mode, and canvas clearing functionality with proper nullable ref type support.",
+  "frontend/src/hooks/useArtIdeaGenerator.ts": "Custom React hook providing AI-powered art prompt generation based on user input categories like animals, landscapes, abstract patterns, portraits, fantasy, space, flowers, and food with contextual creative suggestions.",
+  "frontend/src/hooks/useArtworkShare.ts": "Custom React Query hook managing artwork sharing with canvas-to-PNG conversion, ExternalBlob upload via backend.shareArtwork, unique ID generation, and clipboard copy functionality for share URLs with proper nullable ref type support.",
+  "frontend/src/hooks/useMusicShare.ts": "Custom React Query hook managing music sharing with audio blob upload via backend.shareMusic, unique ID generation, and clipboard copy functionality for share URLs.",
+  "frontend/src/hooks/useSharedContent.ts": "Custom React Query hooks for fetching shared artwork and music by ID using backend.retrieveArtwork and backend.retrieveMusic, returning direct URLs for display with proper error handling.",
+  "frontend/src/components/SharedContentViewer.tsx": "Public viewer component for shared artwork and music accessible via URL parameters, displaying images or audio players with playback controls, error handling for invalid IDs, and no authentication required."
 }

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-teacher-mode-toggle-control-in-the-mathproblemsolver-component-that-users-can-enable-or-disable",
-      "featureTitle": "Add a 'Teacher Mode' toggle control in the MathProblemSolver component that users can enable or disable",
+      "featureId": "feature-add-a-save-button-to-the-artcanvas-component-that-allows-users-to-download-their-canvas-artwork-as-a-png-image-file-to-their-local-device",
+      "featureTitle": "Add a 'Save' button to the ArtCanvas component that allows users to download their canvas artwork as a PNG image file to their local device",
       "files": [
-        "frontend/src/components/MathProblemSolver.tsx"
+        "frontend/src/components/ArtCanvas.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -17,15 +17,16 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-21"
+        "REQ-31"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-when-teacher-mode-is-enabled-enhance-the-step-by-step-solution-explanations-to-use-clear-pedagogical-language-that-explains-mathematical-concepts-in-an-accessible-way-suitable-for-students",
-      "featureTitle": "When Teacher Mode is enabled, enhance the step-by-step solution explanations to use clear, pedagogical language that explains mathematical concepts in an accessible way suitable for students",
+      "featureId": "feature-add-a-share-button-to-the-artcanvas-component-that-generates-a-shareable-link-or-code-allowing-users-to-share-their-artwork-with-others",
+      "featureTitle": "Add a 'Share' button to the ArtCanvas component that generates a shareable link or code allowing users to share their artwork with others",
       "files": [
-        "frontend/src/components/MathProblemSolver.tsx"
+        "frontend/src/components/ArtCanvas.tsx",
+        "frontend/src/hooks/useArtworkShare.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -37,15 +38,16 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-32"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-in-teacher-mode-provide-contextual-explanations-for-mathematical-concepts-encountered-in-the-problem-such-as-defining-what-an-exponent-means-explaining-the-purpose-of-logarithms-or-describing-trigonometric-relationships",
-      "featureTitle": "In Teacher Mode, provide contextual explanations for mathematical concepts encountered in the problem, such as defining what an exponent means, explaining the purpose of logarithms, or describing trigonometric relationships",
+      "featureId": "feature-add-a-save-button-to-the-musicgenerator-component-that-allows-users-to-download-their-generated-music-as-an-audio-file-wav-format-to-their-local-device",
+      "featureTitle": "Add a 'Save' button to the MusicGenerator component that allows users to download their generated music as an audio file (WAV format) to their local device",
       "files": [
-        "frontend/src/components/MathProblemSolver.tsx"
+        "frontend/src/components/MusicGenerator.tsx",
+        "frontend/src/hooks/useAudioGeneration.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -57,7 +59,50 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-23"
+        "REQ-34"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-share-button-to-the-musicgenerator-component-that-generates-a-shareable-link-allowing-users-to-share-their-music-creations-with-others",
+      "featureTitle": "Add a 'Share' button to the MusicGenerator component that generates a shareable link allowing users to share their music creations with others",
+      "files": [
+        "frontend/src/components/MusicGenerator.tsx",
+        "frontend/src/hooks/useMusicShare.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-35"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-gallery-or-viewer-page-that-displays-shared-artwork-and-music-when-accessed-via-the-shareable-link-with-playback-controls-for-music-and-image-display-for-artwork",
+      "featureTitle": "Create a gallery or viewer page that displays shared artwork and music when accessed via the shareable link, with playback controls for music and image display for artwork",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/SharedContentViewer.tsx",
+        "frontend/src/hooks/useSharedContent.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-37"
       ],
       "confidence": "high"
     }
