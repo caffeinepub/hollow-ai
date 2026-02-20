@@ -1,48 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
-import { Card } from '@/components/ui/card';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Send, Loader2, Languages, Trash2 } from 'lucide-react';
+import { Send, Loader2, Trash2, Languages } from 'lucide-react';
 import { useTranslation } from '../hooks/useTranslation';
 import { cn } from '@/lib/utils';
 
-const LANGUAGES = [
-  'English',
-  'Spanish',
-  'French',
-  'German',
-  'Chinese',
-  'Japanese',
-  'Arabic',
-  'Italian',
-  'Portuguese',
-  'Russian',
-  'Korean',
-  'Hindi',
-];
-
 export function TranslatorChat() {
   const [input, setInput] = useState('');
-  const [sourceLanguage, setSourceLanguage] = useState('English');
-  const [targetLanguage, setTargetLanguage] = useState('Spanish');
-  const { translations, isTranslating, translate, clearHistory } = useTranslation();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [sourceLang, setSourceLang] = useState('en');
+  const [targetLang, setTargetLang] = useState('es');
+  
+  const { translations, translate, isTranslating, clearHistory } = useTranslation();
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  const handleTranslate = () => {
+    if (input.trim()) {
+      translate(input, sourceLang, targetLang);
+      setInput('');
     }
-  }, [translations]);
-
-  const handleTranslate = async () => {
-    if (!input.trim() || isTranslating) return;
-
-    const textToTranslate = input.trim();
-    setInput('');
-
-    await translate(textToTranslate, sourceLanguage, targetLanguage);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -52,147 +28,133 @@ export function TranslatorChat() {
     }
   };
 
-  const formatTimestamp = (timestamp: number) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  };
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'fr', name: 'French' },
+    { code: 'de', name: 'German' },
+    { code: 'it', name: 'Italian' },
+    { code: 'pt', name: 'Portuguese' },
+    { code: 'ru', name: 'Russian' },
+    { code: 'ja', name: 'Japanese' },
+    { code: 'ko', name: 'Korean' },
+    { code: 'zh', name: 'Chinese' },
+  ];
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="border-b border-border p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <Languages className="h-5 w-5 text-primary" />
-              Translator
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Translate text between different languages
-            </p>
-          </div>
+    <div className="h-full flex flex-col bg-background">
+      <div className="border-b border-border p-3 sm:p-4 space-y-3 sm:space-y-4">
+        <div className="flex items-center gap-2">
+          <Languages className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+          <h2 className="text-base sm:text-lg font-semibold text-foreground">Translator</h2>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+          <Select value={sourceLang} onValueChange={setSourceLang}>
+            <SelectTrigger className="w-full sm:flex-1 min-h-[44px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {languages.map((lang) => (
+                <SelectItem key={lang.code} value={lang.code}>
+                  {lang.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <span className="text-muted-foreground text-sm self-center">→</span>
+          
+          <Select value={targetLang} onValueChange={setTargetLang}>
+            <SelectTrigger className="w-full sm:flex-1 min-h-[44px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {languages.map((lang) => (
+                <SelectItem key={lang.code} value={lang.code}>
+                  {lang.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
           {translations.length > 0 && (
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               onClick={clearHistory}
-              className="gap-2"
+              className="min-h-[44px] min-w-[44px] self-center"
+              title="Clear history"
             >
               <Trash2 className="h-4 w-4" />
-              Clear History
             </Button>
           )}
         </div>
       </div>
 
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-        <div className="max-w-3xl mx-auto space-y-4">
-          {translations.length === 0 ? (
-            <div className="text-center py-12">
-              <Languages className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-muted-foreground">
-                Enter text below to start translating
+      <ScrollArea className="flex-1 p-3 sm:p-4">
+        {translations.length === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center space-y-2 p-4">
+              <Languages className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mx-auto" />
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Enter text below to translate
               </p>
             </div>
-          ) : (
-            translations.map((translation) => (
-              <div key={translation.id} className="space-y-2">
+          </div>
+        ) : (
+          <div className="space-y-3 sm:space-y-4">
+            {translations.map((translation, index) => (
+              <div key={index} className="space-y-2 sm:space-y-3">
                 <div className="flex justify-end">
-                  <Card className="p-4 max-w-[80%] bg-primary text-primary-foreground">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-semibold opacity-90">
-                        {translation.sourceLanguage}
-                      </span>
-                    </div>
-                    <p className="text-sm whitespace-pre-wrap">{translation.sourceText}</p>
-                    <p className="text-xs mt-2 opacity-70">
-                      {formatTimestamp(translation.timestamp)}
+                  <div className="max-w-[85%] sm:max-w-[80%] bg-primary text-primary-foreground rounded-lg p-2 sm:p-3">
+                    <p className="text-xs sm:text-sm break-words">{translation.sourceText}</p>
+                    <p className="text-[10px] sm:text-xs opacity-70 mt-1">
+                      {languages.find(l => l.code === translation.sourceLanguage)?.name}
                     </p>
-                  </Card>
+                  </div>
                 </div>
-
+                
                 <div className="flex justify-start">
-                  <Card className="p-4 max-w-[80%] bg-card">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Languages className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-semibold text-primary">
-                        {translation.targetLanguage}
-                      </span>
-                    </div>
-                    <p className="text-sm whitespace-pre-wrap">{translation.translatedText}</p>
-                    <p className="text-xs mt-2 text-muted-foreground">
-                      {formatTimestamp(translation.timestamp)}
+                  <div className="max-w-[85%] sm:max-w-[80%] bg-muted rounded-lg p-2 sm:p-3">
+                    <p className="text-xs sm:text-sm text-foreground break-words">{translation.translatedText}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+                      {languages.find(l => l.code === translation.targetLanguage)?.name}
                     </p>
-                  </Card>
+                  </div>
                 </div>
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </ScrollArea>
 
-      <div className="border-t border-border p-4">
-        <div className="max-w-3xl mx-auto space-y-3">
-          <div className="flex gap-3 items-center">
-            <div className="flex-1 space-y-1">
-              <label className="text-xs font-medium text-muted-foreground">From</label>
-              <Select value={sourceLanguage} onValueChange={setSourceLanguage}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {LANGUAGES.map((lang) => (
-                    <SelectItem key={lang} value={lang}>
-                      {lang}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="pt-5">
-              <Languages className="h-5 w-5 text-muted-foreground" />
-            </div>
-
-            <div className="flex-1 space-y-1">
-              <label className="text-xs font-medium text-muted-foreground">To</label>
-              <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {LANGUAGES.map((lang) => (
-                    <SelectItem key={lang} value={lang}>
-                      {lang}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <Textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type text to translate..."
-              className="min-h-[60px] max-h-[200px] resize-none"
-              disabled={isTranslating}
-            />
-            <Button
-              onClick={handleTranslate}
-              disabled={!input.trim() || isTranslating}
-              size="icon"
-              className="h-[60px] w-[60px] shrink-0"
-            >
-              {isTranslating ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <Send className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
+      <div className="border-t border-border p-3 sm:p-4">
+        <div className="flex gap-2">
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type text to translate..."
+            className="min-h-[44px] max-h-32 resize-none text-sm sm:text-base"
+            rows={2}
+          />
+          <Button
+            onClick={handleTranslate}
+            disabled={isTranslating || !input.trim()}
+            size="icon"
+            className="shrink-0 min-h-[44px] min-w-[44px]"
+          >
+            {isTranslating ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
         </div>
+        <p className="text-[10px] sm:text-xs text-muted-foreground mt-2">
+          Press Enter to translate, Shift+Enter for new line
+        </p>
       </div>
     </div>
   );

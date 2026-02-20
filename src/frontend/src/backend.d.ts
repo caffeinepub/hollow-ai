@@ -22,16 +22,36 @@ export interface Message {
     content: string;
     timestamp: bigint;
 }
+export interface GameMetadata {
+    id: GameId;
+    title: string;
+    thumbnail: ExternalBlob;
+    playable: boolean;
+    description: string;
+    category: string;
+}
 export type SessionId = string;
+export type GameId = string;
 export interface SessionView {
     id: SessionId;
     messages: Array<Message>;
     lastActive: bigint;
 }
+export interface GameCatalogueView {
+    id: GameId;
+    title: string;
+    playable: boolean;
+    description: string;
+    hasThumbnail: boolean;
+    category: string;
+}
 export interface backendInterface {
+    addGameMetadata(gameMetadata: GameMetadata): Promise<void>;
     addMessageToSession(sessionId: SessionId, message: Message): Promise<void>;
     getAllArtworks(): Promise<Array<[ArtworkId, ExternalBlob]>>;
     getAllMusic(): Promise<Array<[MusicId, ExternalBlob]>>;
+    getGameCatalogue(): Promise<Array<GameCatalogueView>>;
+    getGameMetadata(gameId: GameId): Promise<GameMetadata>;
     getSession(sessionId: SessionId): Promise<SessionView>;
     getUserSessions(): Promise<Array<SessionView>>;
     registerUser(): Promise<void>;
@@ -39,5 +59,4 @@ export interface backendInterface {
     retrieveMusic(musicId: MusicId): Promise<ExternalBlob>;
     shareArtwork(artworkId: ArtworkId, imageBlob: ExternalBlob): Promise<void>;
     shareMusic(musicId: MusicId, audioBlob: ExternalBlob): Promise<void>;
-    solveMathProblem(expression: string): Promise<string>;
 }

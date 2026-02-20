@@ -182,28 +182,28 @@ export function MusicGenerator() {
   }, [shareSuccess, sharedMusicId]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Music2 className="h-5 w-5 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Music2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
             Music Generator
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Create beats manually with the sequencer or let AI generate music for you
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6">
           {/* Beat Sequencer */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
               <h3 className="text-sm font-semibold text-foreground">Beat Sequencer</h3>
-              <div className="flex gap-2">
-                <Button onClick={handleSaveBeat} size="sm" variant="outline">
+              <div className="flex gap-2 flex-wrap">
+                <Button onClick={handleSaveBeat} size="sm" variant="outline" className="min-h-[44px]">
                   <Download className="h-4 w-4 mr-2" />
                   Save
                 </Button>
-                <Button onClick={handleShareBeat} size="sm" variant="outline" disabled={isSharing}>
+                <Button onClick={handleShareBeat} size="sm" variant="outline" disabled={isSharing} className="min-h-[44px]">
                   {isSharing ? (
                     <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   ) : (
@@ -211,7 +211,7 @@ export function MusicGenerator() {
                   )}
                   Share
                 </Button>
-                <Button onClick={playBeatPattern} size="sm" variant="outline">
+                <Button onClick={playBeatPattern} size="sm" variant="outline" className="min-h-[44px]">
                   <Play className="h-4 w-4 mr-2" />
                   Play Pattern
                 </Button>
@@ -220,7 +220,7 @@ export function MusicGenerator() {
 
             <div className="space-y-2">
               <div className="flex items-center gap-4">
-                <Label className="w-20 text-sm">Tempo:</Label>
+                <Label className="w-16 sm:w-20 text-xs sm:text-sm">Tempo:</Label>
                 <Slider
                   value={tempo}
                   onValueChange={setTempo}
@@ -229,20 +229,20 @@ export function MusicGenerator() {
                   step={1}
                   className="flex-1"
                 />
-                <span className="text-sm font-mono w-16 text-right">{tempo[0]} BPM</span>
+                <span className="text-xs sm:text-sm font-mono w-16 text-right">{tempo[0]} BPM</span>
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 overflow-x-auto">
               {['Kick', 'Snare', 'Hi-Hat'].map((soundName, soundIndex) => (
-                <div key={soundName} className="flex items-center gap-2">
-                  <span className="text-xs font-medium w-16 text-muted-foreground">{soundName}</span>
+                <div key={soundName} className="flex items-center gap-2 min-w-[300px]">
+                  <span className="text-xs font-medium w-12 sm:w-16 text-muted-foreground">{soundName}</span>
                   <div className="flex gap-1 flex-1">
                     {beatPattern[soundIndex].map((isActive, beatIndex) => (
                       <button
                         key={beatIndex}
                         onClick={() => toggleBeat(soundIndex, beatIndex)}
-                        className={`h-8 flex-1 rounded border transition-colors ${
+                        className={`h-10 sm:h-8 flex-1 min-w-[32px] rounded border transition-colors ${
                           isActive
                             ? 'bg-primary border-primary'
                             : 'bg-muted border-border hover:bg-muted/80'
@@ -257,15 +257,15 @@ export function MusicGenerator() {
 
           {/* Sound Selection */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold">Sound Selection</Label>
-            <div className="flex gap-2">
+            <Label className="text-xs sm:text-sm font-semibold">Sound Selection</Label>
+            <div className="flex gap-2 flex-wrap">
               {(['kick', 'snare', 'hihat'] as SoundType[]).map((sound) => (
                 <Button
                   key={sound}
                   variant={selectedSound === sound ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedSound(sound)}
-                  className="capitalize"
+                  className="capitalize min-h-[44px]"
                 >
                   <Volume2 className="h-4 w-4 mr-2" />
                   {sound}
@@ -279,30 +279,30 @@ export function MusicGenerator() {
       {/* AI Music Generation */}
       <Card className="border-accent/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-accent" />
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-accent" />
             AI Music Generation
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Describe the music you want and let AI generate it for you
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="music-prompt">Describe your music</Label>
+            <Label htmlFor="music-prompt" className="text-xs sm:text-sm">Describe your music</Label>
             <Textarea
               id="music-prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="e.g., upbeat electronic dance music with a catchy melody"
-              className="min-h-[100px]"
+              className="min-h-[80px] sm:min-h-[100px] text-sm sm:text-base"
             />
           </div>
 
           <Button
             onClick={handleGenerateMusic}
             disabled={isGenerating || !prompt.trim()}
-            className="w-full"
+            className="w-full min-h-[44px]"
           >
             {isGenerating ? (
               <>
@@ -318,21 +318,21 @@ export function MusicGenerator() {
           </Button>
 
           {currentAudioUrl && (
-            <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-foreground">Generated Music</p>
-                <div className="flex gap-2">
-                  <Button onClick={handleSaveAI} size="sm" variant="outline">
+            <div className="p-3 sm:p-4 bg-accent/10 border border-accent/20 rounded-lg space-y-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                <p className="text-xs sm:text-sm font-semibold text-foreground">Generated Music</p>
+                <div className="flex gap-2 flex-wrap">
+                  <Button onClick={handleSaveAI} size="sm" variant="outline" className="min-h-[44px]">
                     <Download className="h-4 w-4" />
                   </Button>
-                  <Button onClick={handleShareAI} size="sm" variant="outline" disabled={isSharing}>
+                  <Button onClick={handleShareAI} size="sm" variant="outline" disabled={isSharing} className="min-h-[44px]">
                     {isSharing ? (
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                     ) : (
                       <Share2 className="h-4 w-4" />
                     )}
                   </Button>
-                  <Button onClick={togglePlayPause} size="sm" variant="outline">
+                  <Button onClick={togglePlayPause} size="sm" variant="outline" className="min-h-[44px]">
                     {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                   </Button>
                 </div>
@@ -349,17 +349,18 @@ export function MusicGenerator() {
 
           {showShareUrl && sharedMusicId && (
             <div className="p-3 bg-accent/10 border border-accent/20 rounded-lg space-y-2">
-              <p className="text-sm font-semibold text-foreground">Share your music:</p>
-              <div className="flex gap-2">
+              <p className="text-xs sm:text-sm font-semibold text-foreground">Share your music:</p>
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Input
                   value={`${window.location.origin}/shared/music/${sharedMusicId}`}
                   readOnly
-                  className="flex-1 text-sm"
+                  className="flex-1 text-xs sm:text-sm min-h-[44px]"
                 />
                 <Button
                   size="sm"
                   onClick={handleCopyUrl}
                   variant={urlCopied ? 'default' : 'outline'}
+                  className="min-h-[44px]"
                 >
                   {urlCopied ? (
                     <>
@@ -379,14 +380,14 @@ export function MusicGenerator() {
 
           {generatedAudio.length > 0 && (
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-foreground">Previously Generated</p>
+              <p className="text-xs sm:text-sm font-semibold text-foreground">Previously Generated</p>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {generatedAudio.map((audio, index) => (
                   <div
                     key={index}
-                    className="p-3 bg-muted rounded-lg border border-border space-y-2"
+                    className="p-2 sm:p-3 bg-muted rounded-lg border border-border space-y-2"
                   >
-                    <p className="text-xs text-muted-foreground line-clamp-2">{audio.prompt}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2">{audio.prompt}</p>
                     <audio src={audio.url} controls className="w-full h-8" />
                   </div>
                 ))}
@@ -398,10 +399,10 @@ export function MusicGenerator() {
 
       <Card className="bg-accent/5 border-accent/20">
         <CardHeader>
-          <CardTitle className="text-base">Quick Prompts</CardTitle>
+          <CardTitle className="text-sm sm:text-base">Quick Prompts</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {[
               'Relaxing piano melody',
               'Energetic electronic beat',
@@ -415,7 +416,7 @@ export function MusicGenerator() {
                 variant="outline"
                 size="sm"
                 onClick={() => setPrompt(example)}
-                className="justify-start text-left"
+                className="justify-start text-left h-auto py-2 sm:py-3 min-h-[44px] text-xs sm:text-sm"
               >
                 {example}
               </Button>

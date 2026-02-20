@@ -47,25 +47,25 @@ export function ChatSidebar({
     <aside
       className={cn(
         'border-r border-sidebar-border bg-sidebar transition-all duration-300 flex flex-col',
-        collapsed ? 'w-16' : 'w-80'
+        collapsed ? 'w-12 sm:w-16' : 'w-64 sm:w-72 md:w-80'
       )}
     >
-      <div className="p-4 flex items-center justify-between gap-2">
+      <div className="p-2 sm:p-4 flex items-center justify-between gap-2">
         {!collapsed && (
           <Button
             onClick={handleNewChat}
-            className="flex-1 gap-2"
+            className="flex-1 gap-2 min-h-[44px] text-xs sm:text-sm"
             size="sm"
           >
             <MessageSquarePlus className="h-4 w-4" />
-            New Chat
+            <span className="hidden sm:inline">New Chat</span>
           </Button>
         )}
         <Button
           variant="ghost"
           size="icon"
           onClick={onToggleCollapse}
-          className="shrink-0"
+          className="shrink-0 min-h-[44px] min-w-[44px]"
         >
           {collapsed ? (
             <ChevronRight className="h-4 w-4" />
@@ -86,7 +86,7 @@ export function ChatSidebar({
                 </div>
               ) : sessions.length === 0 ? (
                 <div className="text-center py-8 px-4">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     No conversations yet. Start a new chat!
                   </p>
                 </div>
@@ -103,16 +103,16 @@ export function ChatSidebar({
                       key={session.id}
                       onClick={() => onSelectSession(session.id)}
                       className={cn(
-                        'w-full text-left p-3 rounded-lg transition-colors',
+                        'w-full text-left p-2 sm:p-3 rounded-lg transition-colors min-h-[44px]',
                         'hover:bg-sidebar-accent',
                         isSelected && 'bg-sidebar-accent'
                       )}
                     >
                       <div className="space-y-1">
-                        <p className="text-sm font-medium text-sidebar-foreground line-clamp-1">
+                        <p className="text-xs sm:text-sm font-medium text-sidebar-foreground line-clamp-1">
                           {preview}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-[10px] sm:text-xs text-muted-foreground">
                           {formatTimestamp(session.lastActive)}
                         </p>
                       </div>
@@ -127,4 +127,3 @@ export function ChatSidebar({
     </aside>
   );
 }
-

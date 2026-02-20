@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add a new Scripter component with an AI chat interface where users can describe scripts they want generated.
+**Goal:** Replace the application logo with the uploaded Neroxa AI image and update all branding references from Vantior AI to Neroxa AI.
 
 **Planned changes:**
-- Create a new Scripter component with a chat-style interface for script generation requests
-- Add a "Scripter" tab to the main navigation alongside existing tabs
-- Implement simulated AI script generation that displays formatted code responses in the chat history
-- Follow existing dark theme and component patterns from TranslatorChat and ArtCanvas
+- Replace the current logo with the uploaded Neroxa AI logo image (golden figure reading surrounded by floating books)
+- Update all text references from "Vantior AI" to "Neroxa AI" throughout the application
+- Update application title, meta tags, and PWA manifest with the new branding
 
-**User-visible outcome:** Users can click a new "Scripter" tab, describe the script they want in a chat interface, and receive AI-generated code responses displayed in a conversation format.
+**User-visible outcome:** The application displays the new Neroxa AI branding with the golden figure logo in the header and all references updated to Neroxa AI.

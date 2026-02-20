@@ -18,6 +18,7 @@ actor {
   type SessionId = Text;
   type ArtworkId = Text;
   type MusicId = Text;
+  type GameId = Text;
 
   type Message = {
     id : MessageId;
@@ -57,6 +58,31 @@ actor {
     };
   };
 
+  // Game types and modules
+  type GameMetadata = {
+    id : GameId;
+    title : Text;
+    description : Text;
+    thumbnail : Storage.ExternalBlob;
+    category : Text;
+    playable : Bool;
+  };
+
+  type GameCatalogueView = {
+    id : GameId;
+    title : Text;
+    description : Text;
+    category : Text;
+    hasThumbnail : Bool;
+    playable : Bool;
+  };
+
+  module GameMetadata {
+    public func compareByCategory(game1 : GameMetadata, game2 : GameMetadata) : Order.Order {
+      Text.compare(game1.category, game2.category);
+    };
+  };
+
   type UserData = {
     id : UserId;
     sessions : Map.Map<SessionId, Session>;
@@ -65,6 +91,7 @@ actor {
   let users = Map.empty<UserId, UserData>();
   let artworks = Map.empty<ArtworkId, Storage.ExternalBlob>();
   let music = Map.empty<MusicId, Storage.ExternalBlob>();
+  let games = Map.empty<GameId, GameMetadata>();
 
   func toSessionView(session : Session) : SessionView {
     {
@@ -168,7 +195,32 @@ actor {
     music.toArray();
   };
 
-  public shared ({ caller }) func solveMathProblem(expression : Text) : async Text {
-    expression;
+  // Games catalogue backend
+  public shared ({ caller }) func addGameMetadata(gameMetadata : GameMetadata) : async () {
+    games.add(gameMetadata.id, gameMetadata);
+  };
+
+  public query ({ caller }) func getGameMetadata(gameId : GameId) : async GameMetadata {
+    switch (games.get(gameId)) {
+      case (null) { Runtime.trap("Game not found") };
+      case (?gameMetadata) { gameMetadata };
+    };
+  };
+
+  public query ({ caller }) func getGameCatalogue() : async [GameCatalogueView] {
+    let entries = games.toArray();
+
+    entries.map<(GameId, GameMetadata), GameCatalogueView>(
+      func((_gameId, metadata)) {
+        {
+          id = metadata.id;
+          title = metadata.title;
+          description = metadata.description;
+          category = metadata.category;
+          hasThumbnail = true;
+          playable = metadata.playable;
+        };
+      }
+    );
   };
 };

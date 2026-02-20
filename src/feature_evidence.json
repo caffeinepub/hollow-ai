@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-a-new-scripter-component-that-provides-a-chat-interface-where-users-can-describe-the-scripts-they-want-the-ai-to-generate-for-them",
-      "featureTitle": "Create a new Scripter component that provides a chat interface where users can describe the scripts they want the AI to generate for them",
+      "featureId": "feature-replace-the-current-application-logo-with-the-uploaded-neroxa-ai-logo-image-gemini-generated-image-cjqrvscjqr-1-png-showing-a-golden-figure-reading-surrounded-by-floating-books-against-a-starry-blue-background",
+      "featureTitle": "Replace the current application logo with the uploaded Neroxa AI logo image (Gemini_Generated_Image_cjqrvscjqr-1.png) showing a golden figure reading surrounded by floating books against a starry blue background",
       "files": [
-        "frontend/src/components/Scripter.tsx",
-        "frontend/src/hooks/useScriptGeneration.ts"
+        "frontend/src/components/Header.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -18,15 +17,15 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-38"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-the-scripter-component-as-a-new-tab-in-the-main-application-interface-alongside-the-existing-tabs-chat-math-solver-media-gallery-translator-music-generator-art",
-      "featureTitle": "Add the Scripter component as a new tab in the main application interface alongside the existing tabs (Chat, Math Solver, Media Gallery, Translator, Music Generator, Art)",
+      "featureId": "feature-update-all-branding-references-from-vantior-ai-to-neroxa-ai-throughout-the-application",
+      "featureTitle": "Update all branding references from 'Vantior AI' to 'Neroxa AI' throughout the application",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/components/Header.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -38,27 +37,7 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-39"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-ai-script-generation-functionality-in-the-scripter-component-that-processes-user-script-requests-and-generates-code-or-script-output-based-on-the-description",
-      "featureTitle": "Implement AI script generation functionality in the Scripter component that processes user script requests and generates code or script output based on the description",
-      "files": [
-        "frontend/src/components/Scripter.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-40"
+        "REQ-2"
       ],
       "confidence": "high"
     }

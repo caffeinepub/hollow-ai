@@ -19,6 +19,16 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const GameId = IDL.Text;
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const GameMetadata = IDL.Record({
+  'id' : GameId,
+  'title' : IDL.Text,
+  'thumbnail' : ExternalBlob,
+  'playable' : IDL.Bool,
+  'description' : IDL.Text,
+  'category' : IDL.Text,
+});
 export const SessionId = IDL.Text;
 export const MessageId = IDL.Text;
 export const Message = IDL.Record({
@@ -27,8 +37,15 @@ export const Message = IDL.Record({
   'timestamp' : IDL.Nat64,
 });
 export const ArtworkId = IDL.Text;
-export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const MusicId = IDL.Text;
+export const GameCatalogueView = IDL.Record({
+  'id' : GameId,
+  'title' : IDL.Text,
+  'playable' : IDL.Bool,
+  'description' : IDL.Text,
+  'hasThumbnail' : IDL.Bool,
+  'category' : IDL.Text,
+});
 export const SessionView = IDL.Record({
   'id' : SessionId,
   'messages' : IDL.Vec(Message),
@@ -62,6 +79,7 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+  'addGameMetadata' : IDL.Func([GameMetadata], [], []),
   'addMessageToSession' : IDL.Func([SessionId, Message], [], []),
   'getAllArtworks' : IDL.Func(
       [],
@@ -73,6 +91,8 @@ export const idlService = IDL.Service({
       [IDL.Vec(IDL.Tuple(MusicId, ExternalBlob))],
       ['query'],
     ),
+  'getGameCatalogue' : IDL.Func([], [IDL.Vec(GameCatalogueView)], ['query']),
+  'getGameMetadata' : IDL.Func([GameId], [GameMetadata], ['query']),
   'getSession' : IDL.Func([SessionId], [SessionView], ['query']),
   'getUserSessions' : IDL.Func([], [IDL.Vec(SessionView)], ['query']),
   'registerUser' : IDL.Func([], [], []),
@@ -80,7 +100,6 @@ export const idlService = IDL.Service({
   'retrieveMusic' : IDL.Func([MusicId], [ExternalBlob], ['query']),
   'shareArtwork' : IDL.Func([ArtworkId, ExternalBlob], [], []),
   'shareMusic' : IDL.Func([MusicId, ExternalBlob], [], []),
-  'solveMathProblem' : IDL.Func([IDL.Text], [IDL.Text], []),
 });
 
 export const idlInitArgs = [];
@@ -97,6 +116,16 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
+  const GameId = IDL.Text;
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const GameMetadata = IDL.Record({
+    'id' : GameId,
+    'title' : IDL.Text,
+    'thumbnail' : ExternalBlob,
+    'playable' : IDL.Bool,
+    'description' : IDL.Text,
+    'category' : IDL.Text,
+  });
   const SessionId = IDL.Text;
   const MessageId = IDL.Text;
   const Message = IDL.Record({
@@ -105,8 +134,15 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : IDL.Nat64,
   });
   const ArtworkId = IDL.Text;
-  const ExternalBlob = IDL.Vec(IDL.Nat8);
   const MusicId = IDL.Text;
+  const GameCatalogueView = IDL.Record({
+    'id' : GameId,
+    'title' : IDL.Text,
+    'playable' : IDL.Bool,
+    'description' : IDL.Text,
+    'hasThumbnail' : IDL.Bool,
+    'category' : IDL.Text,
+  });
   const SessionView = IDL.Record({
     'id' : SessionId,
     'messages' : IDL.Vec(Message),
@@ -140,6 +176,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+    'addGameMetadata' : IDL.Func([GameMetadata], [], []),
     'addMessageToSession' : IDL.Func([SessionId, Message], [], []),
     'getAllArtworks' : IDL.Func(
         [],
@@ -151,6 +188,8 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(IDL.Tuple(MusicId, ExternalBlob))],
         ['query'],
       ),
+    'getGameCatalogue' : IDL.Func([], [IDL.Vec(GameCatalogueView)], ['query']),
+    'getGameMetadata' : IDL.Func([GameId], [GameMetadata], ['query']),
     'getSession' : IDL.Func([SessionId], [SessionView], ['query']),
     'getUserSessions' : IDL.Func([], [IDL.Vec(SessionView)], ['query']),
     'registerUser' : IDL.Func([], [], []),
@@ -158,7 +197,6 @@ export const idlFactory = ({ IDL }) => {
     'retrieveMusic' : IDL.Func([MusicId], [ExternalBlob], ['query']),
     'shareArtwork' : IDL.Func([ArtworkId, ExternalBlob], [], []),
     'shareMusic' : IDL.Func([MusicId, ExternalBlob], [], []),
-    'solveMathProblem' : IDL.Func([IDL.Text], [IDL.Text], []),
   });
 };
 

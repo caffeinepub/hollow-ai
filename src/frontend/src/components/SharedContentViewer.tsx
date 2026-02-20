@@ -1,9 +1,9 @@
-import { useParams, useNavigate } from '@tanstack/react-router';
+import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useSharedArtwork, useSharedMusic } from '@/hooks/useSharedContent';
-import { ArrowLeft, Palette, Music2, Loader2, AlertCircle } from 'lucide-react';
-import { useState } from 'react';
+import { Loader2, AlertCircle, ArrowLeft, Image as ImageIcon, Music } from 'lucide-react';
+import { useSharedArtwork, useSharedMusic } from '../hooks/useSharedContent';
+import { useNavigate } from '@tanstack/react-router';
 
 interface SharedContentViewerProps {
   type: 'art' | 'music';
@@ -12,168 +12,121 @@ interface SharedContentViewerProps {
 
 export function SharedContentViewer({ type, id }: SharedContentViewerProps) {
   const navigate = useNavigate();
-  const [isPlaying, setIsPlaying] = useState(false);
-
   const artworkQuery = useSharedArtwork(type === 'art' ? id : '');
   const musicQuery = useSharedMusic(type === 'music' ? id : '');
 
-  const query = type === 'art' ? artworkQuery : musicQuery;
-  const { data, isLoading, error } = query;
-
-  const handleBack = () => {
-    navigate({ to: '/' });
-  };
+  const isLoading = type === 'art' ? artworkQuery.isLoading : musicQuery.isLoading;
+  const error = type === 'art' ? artworkQuery.error : musicQuery.error;
+  const artwork = type === 'art' ? artworkQuery.data?.url : undefined;
+  const music = type === 'music' ? musicQuery.data?.url : undefined;
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <header className="border-b border-border py-4 px-6">
-          <div className="max-w-5xl mx-auto flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={handleBack}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <h1 className="text-xl font-semibold text-foreground flex items-center gap-2">
-              {type === 'art' ? (
-                <>
-                  <Palette className="h-5 w-5 text-primary" />
-                  Shared Artwork
-                </>
-              ) : (
-                <>
-                  <Music2 className="h-5 w-5 text-primary" />
-                  Shared Music
-                </>
-              )}
-            </h1>
-          </div>
-        </header>
-        <main className="flex-1 flex items-center justify-center p-6">
-          <div className="text-center space-y-4">
-            <Loader2 className="h-12 w-12 mx-auto animate-spin text-primary" />
-            <p className="text-muted-foreground">Loading {type === 'art' ? 'artwork' : 'music'}...</p>
-          </div>
-        </main>
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-10 w-10 sm:h-12 sm:w-12 animate-spin text-primary mx-auto" />
+          <p className="text-sm sm:text-base text-muted-foreground">Loading shared content...</p>
+        </div>
       </div>
     );
   }
 
-  if (error || !data) {
+  if (error) {
     return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <header className="border-b border-border py-4 px-6">
-          <div className="max-w-5xl mx-auto flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={handleBack}>
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Card className="max-w-md w-full">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive text-lg sm:text-xl">
+              <AlertCircle className="h-5 w-5" />
+              Content Not Found
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              The shared {type === 'art' ? 'artwork' : 'music'} you're looking for doesn't exist or has been removed.
+            </p>
+            <Button onClick={() => navigate({ to: '/' })} className="w-full min-h-[44px]">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
+              Go to Home
             </Button>
-            <h1 className="text-xl font-semibold text-foreground flex items-center gap-2">
-              {type === 'art' ? (
-                <>
-                  <Palette className="h-5 w-5 text-primary" />
-                  Shared Artwork
-                </>
-              ) : (
-                <>
-                  <Music2 className="h-5 w-5 text-primary" />
-                  Shared Music
-                </>
-              )}
-            </h1>
-          </div>
-        </header>
-        <main className="flex-1 flex items-center justify-center p-6">
-          <Card className="max-w-md w-full">
-            <CardContent className="pt-6 text-center space-y-4">
-              <AlertCircle className="h-12 w-12 mx-auto text-destructive" />
-              <div className="space-y-2">
-                <h2 className="text-lg font-semibold text-foreground">Content Not Found</h2>
-                <p className="text-sm text-muted-foreground">
-                  The {type === 'art' ? 'artwork' : 'music'} you're looking for doesn't exist or has been removed.
-                </p>
-              </div>
-              <Button onClick={handleBack} className="w-full">
-                Go Back Home
-              </Button>
-            </CardContent>
-          </Card>
-        </main>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <header className="border-b border-border py-4 px-6">
-        <div className="max-w-5xl mx-auto flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={handleBack}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <h1 className="text-xl font-semibold text-foreground flex items-center gap-2">
-            {type === 'art' ? (
-              <>
-                <Palette className="h-5 w-5 text-primary" />
-                Shared Artwork
-              </>
-            ) : (
-              <>
-                <Music2 className="h-5 w-5 text-primary" />
-                Shared Music
-              </>
-            )}
-          </h1>
-        </div>
-      </header>
-      <main className="flex-1 flex items-center justify-center p-6">
-        <Card className="max-w-4xl w-full">
+    <div className="min-h-screen bg-background p-3 sm:p-4 md:p-6">
+      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+        <Button
+          onClick={() => navigate({ to: '/' })}
+          variant="outline"
+          size="sm"
+          className="min-h-[44px]"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Button>
+
+        <Card>
           <CardHeader>
-            <CardTitle>
-              {type === 'art' ? 'Artwork' : 'Music'} by Axora AI User
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              {type === 'art' ? (
+                <>
+                  <ImageIcon className="h-5 w-5 text-primary" />
+                  Shared Artwork
+                </>
+              ) : (
+                <>
+                  <Music className="h-5 w-5 text-primary" />
+                  Shared Music
+                </>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {type === 'art' ? (
-              <div className="rounded-lg overflow-hidden border border-border bg-white">
-                <img
-                  src={data.url}
-                  alt="Shared artwork"
-                  className="w-full h-auto"
-                />
-              </div>
-            ) : (
+            {type === 'art' && artwork && (
               <div className="space-y-4">
-                <div className="p-6 bg-accent/10 border border-accent/20 rounded-lg">
-                  <audio
-                    src={data.url}
-                    controls
-                    className="w-full"
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    onEnded={() => setIsPlaying(false)}
+                <div className="bg-muted rounded-lg overflow-hidden">
+                  <img
+                    src={artwork}
+                    alt="Shared artwork"
+                    className="w-full h-auto max-h-[70vh] object-contain"
                   />
                 </div>
-                <p className="text-sm text-muted-foreground text-center">
-                  {isPlaying ? 'Now playing...' : 'Click play to listen'}
+                <p className="text-xs sm:text-sm text-muted-foreground text-center">
+                  Created with Neroxa AI Art Canvas
+                </p>
+              </div>
+            )}
+
+            {type === 'music' && music && (
+              <div className="space-y-4">
+                <div className="p-4 sm:p-6 bg-muted rounded-lg">
+                  <audio src={music} controls className="w-full" />
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground text-center">
+                  Created with Neroxa AI Music Generator
                 </p>
               </div>
             )}
           </CardContent>
         </Card>
-      </main>
-      <footer className="border-t border-border py-6 px-6 text-center text-sm text-muted-foreground">
-        <p>
-          © {new Date().getFullYear()} Axora AI • Built with ❤️ using{' '}
-          <a
-            href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline"
-          >
-            caffeine.ai
-          </a>
-        </p>
-      </footer>
+
+        <footer className="text-center text-xs sm:text-sm text-muted-foreground py-4">
+          <p>
+            © {new Date().getFullYear()} Neroxa AI • Built with ❤️ using{' '}
+            <a
+              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              caffeine.ai
+            </a>
+          </p>
+        </footer>
+      </div>
     </div>
   );
 }

@@ -12,6 +12,23 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export type ArtworkId = string;
 export type ExternalBlob = Uint8Array;
+export interface GameCatalogueView {
+  'id' : GameId,
+  'title' : string,
+  'playable' : boolean,
+  'description' : string,
+  'hasThumbnail' : boolean,
+  'category' : string,
+}
+export type GameId = string;
+export interface GameMetadata {
+  'id' : GameId,
+  'title' : string,
+  'thumbnail' : ExternalBlob,
+  'playable' : boolean,
+  'description' : string,
+  'category' : string,
+}
 export interface Message {
   'id' : MessageId,
   'content' : string,
@@ -52,9 +69,12 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
+  'addGameMetadata' : ActorMethod<[GameMetadata], undefined>,
   'addMessageToSession' : ActorMethod<[SessionId, Message], undefined>,
   'getAllArtworks' : ActorMethod<[], Array<[ArtworkId, ExternalBlob]>>,
   'getAllMusic' : ActorMethod<[], Array<[MusicId, ExternalBlob]>>,
+  'getGameCatalogue' : ActorMethod<[], Array<GameCatalogueView>>,
+  'getGameMetadata' : ActorMethod<[GameId], GameMetadata>,
   'getSession' : ActorMethod<[SessionId], SessionView>,
   'getUserSessions' : ActorMethod<[], Array<SessionView>>,
   'registerUser' : ActorMethod<[], undefined>,
@@ -62,7 +82,6 @@ export interface _SERVICE {
   'retrieveMusic' : ActorMethod<[MusicId], ExternalBlob>,
   'shareArtwork' : ActorMethod<[ArtworkId, ExternalBlob], undefined>,
   'shareMusic' : ActorMethod<[MusicId, ExternalBlob], undefined>,
-  'solveMathProblem' : ActorMethod<[string], string>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

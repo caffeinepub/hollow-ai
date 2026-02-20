@@ -1,59 +1,47 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Scripter component with AI chat interface",
+  "title": "Replace logo with uploaded Neroxa AI image",
   "requirements": [
     {
-      "id": "REQ-38",
-      "summary": "Create a new Scripter component that provides a chat interface where users can describe the scripts they want the AI to generate for them",
+      "id": "REQ-1",
+      "summary": "Replace current application logo with uploaded Neroxa AI logo image",
       "acceptanceCriteria": [
-        "A new Scripter component exists with a chat-style interface similar to TranslatorChat and ArtCanvas",
-        "The component includes a text input area where users can describe what script they want",
-        "The component displays a conversation history of user requests and AI-generated script responses",
-        "The chat interface follows the existing dark theme design patterns used in other components"
+        "The uploaded Neroxa AI logo image is used as the primary logo in the Header component",
+        "The logo displays correctly in both light and dark themes",
+        "The logo maintains proper aspect ratio and sizing"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Scripter.tsx",
-          "operation": "create",
-          "description": "Create a new Scripter component with a chat-style interface for script generation. The component should include a conversation history display area showing user requests and AI-generated code responses, a text input area with a submit button for describing script requirements, loading states during generation, and dark theme styling consistent with TranslatorChat and ArtCanvas. Follow the existing component architecture patterns used in TranslatorChat.tsx and ArtCanvas.tsx."
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Replace the current logo reference with the uploaded Neroxa AI logo image (Gemini_Generated_Image_cjqrvscjqr-1.png). Update the logo img element to use the new asset path and ensure proper sizing, aspect ratio preservation, and theme compatibility for both light and dark modes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Update all branding references from 'Vantior AI' to 'Neroxa AI'",
+      "acceptanceCriteria": [
+        "All text references to 'Vantior AI' are replaced with 'Neroxa AI'",
+        "The application title and meta tags reflect the new branding",
+        "The PWA manifest is updated with the new name"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Replace all text references to 'Vantior AI' with 'Neroxa AI' in the header branding text and any aria-labels or accessibility text."
         },
         {
-          "path": "frontend/src/hooks/useScriptGeneration.ts",
-          "operation": "create",
-          "description": "Create a custom hook for handling script generation logic. The hook should accept user script descriptions, simulate AI processing with appropriate delays (similar to useTranslation.ts patterns), generate mock code/script responses based on common programming patterns and user input keywords, manage loading states, and return formatted script responses. This hook provides the core script generation capability for the Scripter component."
-        }
-      ]
-    },
-    {
-      "id": "REQ-39",
-      "summary": "Add the Scripter component as a new tab in the main application interface alongside the existing tabs",
-      "acceptanceCriteria": [
-        "A new 'Scripter' tab appears in the tab navigation in App.tsx",
-        "Clicking the Scripter tab displays the Scripter component",
-        "The tab ordering and styling is consistent with existing tabs"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Add a new 'Scripter' tab to the tab navigation alongside existing tabs (Chat, Math Solver, Media Gallery, Translator, Music Generator, Art). Import the Scripter component and add it to the tabs array with appropriate label and content. Ensure the tab styling and ordering matches the existing tab pattern. Position the Scripter tab logically within the existing tab sequence."
-        }
-      ]
-    },
-    {
-      "id": "REQ-40",
-      "summary": "Implement AI script generation functionality in the Scripter component that processes user script requests and generates code or script output based on the description",
-      "acceptanceCriteria": [
-        "When a user submits a script request, the component generates a simulated code/script response",
-        "The generated script is displayed in the chat history with appropriate formatting (code blocks, syntax highlighting if possible)",
-        "The script generation process shows a loading state while processing"
-      ],
-      "file_operations": [
+          "description": "Update the document title, meta tags (title, description, og:title, og:site_name, twitter:title), and any other references from 'Vantior AI' to 'Neroxa AI' to reflect the new branding."
+        },
         {
-          "path": "frontend/src/components/Scripter.tsx",
+          "path": "frontend/public/manifest.json",
           "operation": "modify",
-          "description": "Integrate the useScriptGeneration hook into the Scripter component to process user script requests. Add message submission handling that calls the script generation hook, display loading states with appropriate UI indicators during generation, and render generated scripts in the chat history with code block formatting using <pre> and <code> tags with monospace font and proper indentation. Apply dark theme styling to code blocks for readability. Ensure the chat history scrolls to show new responses."
+          "description": "Update the PWA manifest name, short_name, and description fields to replace 'Vantior AI' with 'Neroxa AI' for proper installable web app branding."
         }
       ]
     }

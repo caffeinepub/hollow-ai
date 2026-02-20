@@ -1,318 +1,157 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Image, Video, Upload, Loader2, Sparkles } from 'lucide-react';
+import { Image, Video, Sparkles, Loader2, Upload } from 'lucide-react';
 import { useMediaGeneration } from '../hooks/useMediaGeneration';
+import { Progress } from '@/components/ui/progress';
 
 export function MediaDisplay() {
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [uploadingVideo, setUploadingVideo] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [imagePrompt, setImagePrompt] = useState('');
   const [videoPrompt, setVideoPrompt] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
+  
+  const {
+    generatedImages,
+    generatedVideos,
+    generateImage,
+    generateVideo,
+    isGeneratingImage,
+    isGeneratingVideo,
+  } = useMediaGeneration();
 
-  const { generateImage, generateVideo, generatedImages, generatedVideos, isGeneratingImage, isGeneratingVideo } = useMediaGeneration();
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingImage(true);
-    setUploadProgress(0);
-
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setUploadingImage(false);
-          return 0;
-        }
-        return prev + 10;
-      });
-    }, 200);
+  const handleGenerateImage = () => {
+    if (imagePrompt.trim()) {
+      generateImage(imagePrompt);
+      setImagePrompt('');
+    }
   };
 
-  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingVideo(true);
-    setUploadProgress(0);
-
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setUploadingVideo(false);
-          return 0;
-        }
-        return prev + 10;
-      });
-    }, 200);
-  };
-
-  const handleGenerateImage = async () => {
-    if (!imagePrompt.trim()) return;
-    await generateImage(imagePrompt);
-    setImagePrompt('');
-  };
-
-  const handleGenerateVideo = async () => {
-    if (!videoPrompt.trim()) return;
-    await generateVideo(videoPrompt);
-    setVideoPrompt('');
+  const handleGenerateVideo = () => {
+    if (videoPrompt.trim()) {
+      generateVideo(videoPrompt);
+      setVideoPrompt('');
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Image className="h-5 w-5 text-primary" />
-            Media Gallery
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+            AI Media Generator
           </CardTitle>
-          <CardDescription>
-            Generate AI images and videos or upload your own educational media
+          <CardDescription className="text-xs sm:text-sm">
+            Generate images and videos using AI or upload your own media
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="images" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 max-w-md">
-              <TabsTrigger value="images">Images</TabsTrigger>
-              <TabsTrigger value="videos">Videos</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 h-auto min-h-[44px]">
+              <TabsTrigger value="images" className="gap-2 min-h-[44px] text-xs sm:text-sm">
+                <Image className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span>Images</span>
+              </TabsTrigger>
+              <TabsTrigger value="videos" className="gap-2 min-h-[44px] text-xs sm:text-sm">
+                <Video className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span>Videos</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="images" className="space-y-4 mt-4">
-              {/* AI Image Generation */}
-              <Card className="border-primary/30 bg-primary/5">
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-primary" />
-                    AI Image Generation
-                  </CardTitle>
-                  <CardDescription>
-                    Describe the image you want to create
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      value={imagePrompt}
-                      onChange={(e) => setImagePrompt(e.target.value)}
-                      placeholder="e.g., A colorful diagram of the solar system"
-                      className="flex-1"
-                      disabled={isGeneratingImage}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleGenerateImage();
-                        }
-                      }}
-                    />
-                    <Button
-                      onClick={handleGenerateImage}
-                      disabled={!imagePrompt.trim() || isGeneratingImage}
-                      className="gap-2"
-                    >
-                      {isGeneratingImage ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Generating...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="h-4 w-4" />
-                          Generate
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Upload Section */}
-              <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                <Image className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground mb-4">
-                  Or upload your own images
-                </p>
-                <label htmlFor="image-upload">
-                  <Button asChild disabled={uploadingImage}>
-                    <span className="cursor-pointer">
-                      {uploadingImage ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Uploading {uploadProgress}%
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="mr-2 h-4 w-4" />
-                          Upload Image
-                        </>
-                      )}
-                    </span>
-                  </Button>
-                </label>
-                <input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageUpload}
-                  disabled={uploadingImage}
+              <div className="space-y-2">
+                <Textarea
+                  value={imagePrompt}
+                  onChange={(e) => setImagePrompt(e.target.value)}
+                  placeholder="Describe the image you want to generate..."
+                  className="min-h-[80px] sm:min-h-[100px] text-sm sm:text-base"
                 />
+                <Button
+                  onClick={handleGenerateImage}
+                  disabled={isGeneratingImage || !imagePrompt.trim()}
+                  className="w-full min-h-[44px]"
+                >
+                  {isGeneratingImage ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Generate Image
+                    </>
+                  )}
+                </Button>
               </div>
 
-              {/* Generated Images Gallery */}
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {generatedImages.length > 0 ? (
-                  generatedImages.map((img, index) => (
-                    <Card key={index} className="overflow-hidden">
-                      <div className="aspect-square bg-muted flex items-center justify-center relative">
+              {generatedImages.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-4">
+                  {generatedImages.map((image, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="aspect-square bg-muted rounded-lg overflow-hidden">
                         <img
-                          src={img.url}
-                          alt={img.prompt}
+                          src={image.url}
+                          alt={image.prompt}
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <CardContent className="p-3">
-                        <p className="text-xs text-muted-foreground line-clamp-2">{img.prompt}</p>
-                      </CardContent>
-                    </Card>
-                  ))
-                ) : (
-                  <Card className="overflow-hidden">
-                    <div className="aspect-square bg-muted flex items-center justify-center">
-                      <Image className="h-12 w-12 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {image.prompt}
+                      </p>
                     </div>
-                    <CardContent className="p-3">
-                      <p className="text-sm text-muted-foreground">No images yet</p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="videos" className="space-y-4 mt-4">
-              {/* AI Video Generation */}
-              <Card className="border-accent/30 bg-accent/5">
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-accent" />
-                    AI Video Generation
-                  </CardTitle>
-                  <CardDescription>
-                    Describe the animated video you want to create
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      value={videoPrompt}
-                      onChange={(e) => setVideoPrompt(e.target.value)}
-                      placeholder="e.g., An animated explanation of photosynthesis"
-                      className="flex-1"
-                      disabled={isGeneratingVideo}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleGenerateVideo();
-                        }
-                      }}
-                    />
-                    <Button
-                      onClick={handleGenerateVideo}
-                      disabled={!videoPrompt.trim() || isGeneratingVideo}
-                      className="gap-2"
-                    >
-                      {isGeneratingVideo ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Generating...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="h-4 w-4" />
-                          Generate
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                  {isGeneratingVideo && (
-                    <p className="text-xs text-muted-foreground">
-                      Video generation may take a moment...
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Upload Section */}
-              <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                <Video className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground mb-4">
-                  Or upload your own videos
-                </p>
-                <label htmlFor="video-upload">
-                  <Button asChild disabled={uploadingVideo}>
-                    <span className="cursor-pointer">
-                      {uploadingVideo ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Uploading {uploadProgress}%
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="mr-2 h-4 w-4" />
-                          Upload Video
-                        </>
-                      )}
-                    </span>
-                  </Button>
-                </label>
-                <input
-                  id="video-upload"
-                  type="file"
-                  accept="video/*"
-                  className="hidden"
-                  onChange={handleVideoUpload}
-                  disabled={uploadingVideo}
+              <div className="space-y-2">
+                <Textarea
+                  value={videoPrompt}
+                  onChange={(e) => setVideoPrompt(e.target.value)}
+                  placeholder="Describe the video you want to generate..."
+                  className="min-h-[80px] sm:min-h-[100px] text-sm sm:text-base"
                 />
+                <Button
+                  onClick={handleGenerateVideo}
+                  disabled={isGeneratingVideo || !videoPrompt.trim()}
+                  className="w-full min-h-[44px]"
+                >
+                  {isGeneratingVideo ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Generate Video
+                    </>
+                  )}
+                </Button>
               </div>
 
-              {/* Generated Videos Gallery */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {generatedVideos.length > 0 ? (
-                  generatedVideos.map((vid, index) => (
-                    <Card key={index} className="overflow-hidden">
-                      <div className="aspect-video bg-muted flex items-center justify-center relative">
+              {generatedVideos.length > 0 && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mt-4">
+                  {generatedVideos.map((video, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="aspect-video bg-muted rounded-lg overflow-hidden">
                         <video
-                          src={vid.url}
+                          src={video.url}
                           controls
-                          className="w-full h-full object-cover"
-                        >
-                          Your browser does not support the video tag.
-                        </video>
+                          className="w-full h-full"
+                        />
                       </div>
-                      <CardContent className="p-3">
-                        <p className="text-xs text-muted-foreground line-clamp-2">{vid.prompt}</p>
-                      </CardContent>
-                    </Card>
-                  ))
-                ) : (
-                  <Card className="overflow-hidden">
-                    <div className="aspect-video bg-muted flex items-center justify-center">
-                      <Video className="h-12 w-12 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {video.prompt}
+                      </p>
                     </div>
-                    <CardContent className="p-3">
-                      <p className="text-sm text-muted-foreground">No videos yet</p>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </CardContent>
@@ -320,16 +159,29 @@ export function MediaDisplay() {
 
       <Card className="bg-accent/5 border-accent/20">
         <CardHeader>
-          <CardTitle className="text-base">About AI Media Generation</CardTitle>
+          <CardTitle className="text-sm sm:text-base">Quick Prompts</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Use AI to generate educational images and animated videos based on your descriptions. 
-            All generated media is stored securely and can be accessed anytime from your gallery.
-          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {[
+              'A serene mountain landscape at sunset',
+              'A futuristic city with flying cars',
+              'A cute robot learning to paint',
+              'An underwater coral reef scene',
+            ].map((example) => (
+              <Button
+                key={example}
+                variant="outline"
+                size="sm"
+                onClick={() => setImagePrompt(example)}
+                className="justify-start text-left h-auto py-2 sm:py-3 min-h-[44px] text-xs sm:text-sm"
+              >
+                {example}
+              </Button>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>
   );
 }
-

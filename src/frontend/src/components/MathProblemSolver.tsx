@@ -3,10 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calculator, Loader2, CheckCircle2, GraduationCap, Lightbulb } from 'lucide-react';
+import { Calculator, Loader2, CheckCircle2, GraduationCap, Lightbulb, MessageSquare, Send } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type DifficultyLevel = 'K-2' | '3-5' | '6-8' | '9-10' | '11-12';
 
@@ -23,13 +25,26 @@ interface ConceptExplanation {
   explanation: string;
 }
 
+interface HomeworkMessage {
+  id: string;
+  question: string;
+  solution: MathSolution | null;
+  timestamp: number;
+}
+
 export function MathProblemSolver() {
   const [expression, setExpression] = useState('');
   const [difficulty, setDifficulty] = useState<DifficultyLevel>('6-8');
+  const [homeworkHelperMode, setHomeworkHelperMode] = useState(false);
   const [teacherMode, setTeacherMode] = useState(false);
   const [solution, setSolution] = useState<MathSolution | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Homework helper state
+  const [homeworkQuestion, setHomeworkQuestion] = useState('');
+  const [homeworkHistory, setHomeworkHistory] = useState<HomeworkMessage[]>([]);
+  const [isProcessingHomework, setIsProcessingHomework] = useState(false);
 
   const solveProblem = async () => {
     if (!expression.trim()) return;
@@ -65,28 +80,104 @@ export function MathProblemSolver() {
     }
   };
 
+  const submitHomeworkQuestion = async () => {
+    if (!homeworkQuestion.trim()) return;
+
+    setIsProcessingHomework(true);
+    const messageId = Date.now().toString();
+    
+    try {
+      // Extract math expression from the homework question
+      const mathExpression = extractMathExpression(homeworkQuestion);
+      
+      // Solve the problem
+      const result = evaluateMathExpression(mathExpression);
+      const steps = generateSteps(mathExpression, result, difficulty, teacherMode);
+      const conceptExplanations = teacherMode ? generateConceptExplanations(mathExpression, difficulty) : [];
+
+      const homeworkSolution: MathSolution = {
+        expression: mathExpression,
+        result: result.toString(),
+        steps,
+        conceptExplanations,
+        difficulty,
+      };
+
+      // Add to history
+      const newMessage: HomeworkMessage = {
+        id: messageId,
+        question: homeworkQuestion,
+        solution: homeworkSolution,
+        timestamp: Date.now(),
+      };
+
+      setHomeworkHistory(prev => [...prev, newMessage]);
+      setHomeworkQuestion('');
+    } catch (err) {
+      // Add error message to history
+      const newMessage: HomeworkMessage = {
+        id: messageId,
+        question: homeworkQuestion,
+        solution: null,
+        timestamp: Date.now(),
+      };
+      setHomeworkHistory(prev => [...prev, newMessage]);
+      setHomeworkQuestion('');
+    } finally {
+      setIsProcessingHomework(false);
+    }
+  };
+
+  const handleHomeworkKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      submitHomeworkQuestion();
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calculator className="h-5 w-5 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+            <Calculator className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
             Math Problem Solver
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Enter a math expression and select your grade level for step-by-step solutions. Supports basic arithmetic, exponents, roots, logarithms, and trigonometry.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-3 p-3 bg-accent/10 rounded-lg border border-accent/20">
-            <GraduationCap className="h-5 w-5 text-accent" />
+          {/* Homework Helper Mode Toggle */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 p-3 bg-secondary/10 rounded-lg border border-secondary/20">
+            <MessageSquare className="h-5 w-5 text-secondary shrink-0" />
+            <div className="flex items-center gap-2 flex-1">
+              <Switch
+                id="homework-helper-mode"
+                checked={homeworkHelperMode}
+                onCheckedChange={setHomeworkHelperMode}
+                className="min-h-[44px]"
+              />
+              <Label htmlFor="homework-helper-mode" className="cursor-pointer font-medium text-sm">
+                Homework Helper Mode
+              </Label>
+            </div>
+            <Badge variant="outline" className="text-xs">
+              {homeworkHelperMode ? 'Chat interface active' : 'Standard input'}
+            </Badge>
+          </div>
+
+          {/* Teacher Mode Toggle */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 p-3 bg-accent/10 rounded-lg border border-accent/20">
+            <GraduationCap className="h-5 w-5 text-accent shrink-0" />
             <div className="flex items-center gap-2 flex-1">
               <Switch
                 id="teacher-mode"
                 checked={teacherMode}
                 onCheckedChange={setTeacherMode}
+                className="min-h-[44px]"
               />
-              <Label htmlFor="teacher-mode" className="cursor-pointer font-medium">
+              <Label htmlFor="teacher-mode" className="cursor-pointer font-medium text-sm">
                 Teacher Mode
               </Label>
             </div>
@@ -95,76 +186,194 @@ export function MathProblemSolver() {
             </Badge>
           </div>
 
-          <div className="flex gap-2">
-            <Input
-              value={expression}
-              onChange={(e) => setExpression(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="e.g., 10^10, sqrt(144), log(100), sin(30)"
-              className="flex-1"
-            />
-            <Select value={difficulty} onValueChange={(v) => setDifficulty(v as DifficultyLevel)}>
-              <SelectTrigger className="w-32">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="K-2">K-2</SelectItem>
-                <SelectItem value="3-5">3-5</SelectItem>
-                <SelectItem value="6-8">6-8</SelectItem>
-                <SelectItem value="9-10">9-10</SelectItem>
-                <SelectItem value="11-12">11-12</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button onClick={solveProblem} disabled={isLoading || !expression.trim()}>
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                'Solve'
-              )}
-            </Button>
-          </div>
+          {/* Homework Helper Chat Interface */}
+          {homeworkHelperMode ? (
+            <div className="space-y-4">
+              {/* Chat History */}
+              {homeworkHistory.length > 0 && (
+                <ScrollArea className="h-[400px] w-full rounded-lg border border-border p-4">
+                  <div className="space-y-4">
+                    {homeworkHistory.map((message) => (
+                      <div key={message.id} className="space-y-3">
+                        {/* User Question */}
+                        <div className="flex justify-end">
+                          <div className="max-w-[80%] p-3 bg-primary/20 rounded-lg">
+                            <p className="text-sm text-foreground">{message.question}</p>
+                          </div>
+                        </div>
 
-          {error && (
-            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-              <p className="text-sm text-destructive">{error}</p>
+                        {/* AI Solution */}
+                        {message.solution ? (
+                          <div className="flex justify-start">
+                            <div className="max-w-[80%] space-y-3">
+                              <div className="p-3 bg-muted rounded-lg">
+                                <p className="text-xs text-muted-foreground mb-1">Expression:</p>
+                                <p className="text-lg font-semibold font-display">{message.solution.expression}</p>
+                              </div>
+
+                              <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
+                                <p className="text-xs text-muted-foreground mb-1">Answer:</p>
+                                <p className="text-xl font-bold font-display text-primary">{message.solution.result}</p>
+                              </div>
+
+                              {message.solution.conceptExplanations.length > 0 && (
+                                <div className="space-y-2">
+                                  <p className="text-xs font-semibold text-foreground flex items-center gap-2">
+                                    <Lightbulb className="h-3 w-3 text-accent" />
+                                    Key Concepts:
+                                  </p>
+                                  {message.solution.conceptExplanations.map((concept, index) => (
+                                    <div
+                                      key={index}
+                                      className="p-2 bg-accent/10 border border-accent/20 rounded-lg"
+                                    >
+                                      <p className="text-xs font-semibold text-accent mb-1">{concept.concept}</p>
+                                      <p className="text-xs text-foreground/90">{concept.explanation}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              <div className="space-y-2">
+                                <p className="text-xs font-semibold text-foreground">Steps:</p>
+                                <ol className="space-y-1">
+                                  {message.solution.steps.map((step, index) => (
+                                    <li key={index} className="flex gap-2">
+                                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/20 text-primary text-xs font-semibold shrink-0">
+                                        {index + 1}
+                                      </span>
+                                      <span className="text-xs text-foreground pt-0.5">{step}</span>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex justify-start">
+                            <div className="max-w-[80%] p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                              <p className="text-xs text-destructive">Unable to solve this problem. Please check the math expression and try again.</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              )}
+
+              {/* Grade Level Selector */}
+              <Select value={difficulty} onValueChange={(v) => setDifficulty(v as DifficultyLevel)}>
+                <SelectTrigger className="w-full sm:w-48 min-h-[44px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="K-2">K-2 Grade</SelectItem>
+                  <SelectItem value="3-5">3-5 Grade</SelectItem>
+                  <SelectItem value="6-8">6-8 Grade</SelectItem>
+                  <SelectItem value="9-10">9-10 Grade</SelectItem>
+                  <SelectItem value="11-12">11-12 Grade</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Homework Input */}
+              <div className="flex gap-2">
+                <Textarea
+                  value={homeworkQuestion}
+                  onChange={(e) => setHomeworkQuestion(e.target.value)}
+                  onKeyDown={handleHomeworkKeyDown}
+                  placeholder="Type your homework question here... (e.g., 'What is 10 to the power of 10?' or 'Solve sqrt(144)')"
+                  className="flex-1 min-h-[80px] text-sm sm:text-base resize-none"
+                />
+                <Button 
+                  onClick={submitHomeworkQuestion} 
+                  disabled={isProcessingHomework || !homeworkQuestion.trim()} 
+                  className="min-h-[44px] self-end"
+                  size="icon"
+                >
+                  {isProcessingHomework ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
             </div>
+          ) : (
+            /* Standard Math Solver Interface */
+            <>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Input
+                  value={expression}
+                  onChange={(e) => setExpression(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="e.g., 10^10, sqrt(144), log(100), sin(30)"
+                  className="flex-1 min-h-[44px] text-sm sm:text-base"
+                />
+                <Select value={difficulty} onValueChange={(v) => setDifficulty(v as DifficultyLevel)}>
+                  <SelectTrigger className="w-full sm:w-32 min-h-[44px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="K-2">K-2</SelectItem>
+                    <SelectItem value="3-5">3-5</SelectItem>
+                    <SelectItem value="6-8">6-8</SelectItem>
+                    <SelectItem value="9-10">9-10</SelectItem>
+                    <SelectItem value="11-12">11-12</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button onClick={solveProblem} disabled={isLoading || !expression.trim()} className="min-h-[44px] w-full sm:w-auto">
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    'Solve'
+                  )}
+                </Button>
+              </div>
+
+              {error && (
+                <div className="p-3 sm:p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                  <p className="text-xs sm:text-sm text-destructive">{error}</p>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
 
-      {solution && (
+      {!homeworkHelperMode && solution && (
         <Card className="border-primary/20 shadow-glow animate-fade-in">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-primary" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Solution
               </CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 {teacherMode && (
-                  <Badge variant="secondary" className="gap-1">
+                  <Badge variant="secondary" className="gap-1 text-xs">
                     <GraduationCap className="h-3 w-3" />
                     Teacher Mode
                   </Badge>
                 )}
-                <Badge variant="outline">{solution.difficulty} Grade</Badge>
+                <Badge variant="outline" className="text-xs">{solution.difficulty} Grade</Badge>
               </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="p-4 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground mb-1">Expression:</p>
-              <p className="text-2xl font-semibold font-display">{solution.expression}</p>
+            <div className="p-3 sm:p-4 bg-muted rounded-lg">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-1">Expression:</p>
+              <p className="text-xl sm:text-2xl font-semibold font-display break-all">{solution.expression}</p>
             </div>
 
-            <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
-              <p className="text-sm text-muted-foreground mb-1">Answer:</p>
-              <p className="text-3xl font-bold font-display text-primary">{solution.result}</p>
+            <div className="p-3 sm:p-4 bg-primary/10 rounded-lg border border-primary/20">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-1">Answer:</p>
+              <p className="text-2xl sm:text-3xl font-bold font-display text-primary break-all">{solution.result}</p>
             </div>
 
             {solution.conceptExplanations.length > 0 && (
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <p className="text-xs sm:text-sm font-semibold text-foreground flex items-center gap-2">
                   <Lightbulb className="h-4 w-4 text-accent" />
                   Key Concepts:
                 </p>
@@ -174,8 +383,8 @@ export function MathProblemSolver() {
                       key={index}
                       className="p-3 bg-accent/10 border border-accent/20 rounded-lg"
                     >
-                      <p className="text-sm font-semibold text-accent mb-1">{concept.concept}</p>
-                      <p className="text-sm text-foreground/90">{concept.explanation}</p>
+                      <p className="text-xs sm:text-sm font-semibold text-accent mb-1">{concept.concept}</p>
+                      <p className="text-xs sm:text-sm text-foreground/90">{concept.explanation}</p>
                     </div>
                   ))}
                 </div>
@@ -183,14 +392,14 @@ export function MathProblemSolver() {
             )}
 
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-foreground">Step-by-step solution:</p>
+              <p className="text-xs sm:text-sm font-semibold text-foreground">Step-by-step solution:</p>
               <ol className="space-y-2">
                 {solution.steps.map((step, index) => (
-                  <li key={index} className="flex gap-3">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-sm font-semibold shrink-0">
+                  <li key={index} className="flex gap-2 sm:gap-3">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs sm:text-sm font-semibold shrink-0">
                       {index + 1}
                     </span>
-                    <span className="text-sm text-foreground pt-0.5">{step}</span>
+                    <span className="text-xs sm:text-sm text-foreground pt-0.5">{step}</span>
                   </li>
                 ))}
               </ol>
@@ -201,10 +410,10 @@ export function MathProblemSolver() {
 
       <Card className="bg-accent/5 border-accent/20">
         <CardHeader>
-          <CardTitle className="text-base">Quick Examples</CardTitle>
+          <CardTitle className="text-sm sm:text-base">Quick Examples</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {[
               '10^10',
               'sqrt(144)',
@@ -219,8 +428,8 @@ export function MathProblemSolver() {
                 key={example}
                 variant="outline"
                 size="sm"
-                onClick={() => setExpression(example)}
-                className="font-mono text-xs"
+                onClick={() => homeworkHelperMode ? setHomeworkQuestion(example) : setExpression(example)}
+                className="font-mono text-[10px] sm:text-xs min-h-[44px]"
               >
                 {example}
               </Button>
@@ -230,6 +439,32 @@ export function MathProblemSolver() {
       </Card>
     </div>
   );
+}
+
+// Helper function to extract math expression from natural language
+function extractMathExpression(question: string): string {
+  // Remove common question words and phrases
+  let expr = question
+    .toLowerCase()
+    .replace(/what is|solve|calculate|find|compute|evaluate/gi, '')
+    .replace(/the answer to|the result of|the value of/gi, '')
+    .replace(/\?/g, '')
+    .trim();
+
+  // Convert common natural language patterns to math expressions
+  expr = expr
+    .replace(/(\d+)\s*to\s*the\s*power\s*of\s*(\d+)/gi, '$1^$2')
+    .replace(/(\d+)\s*raised\s*to\s*(\d+)/gi, '$1^$2')
+    .replace(/square\s*root\s*of\s*(\d+)/gi, 'sqrt($1)')
+    .replace(/cube\s*root\s*of\s*(\d+)/gi, 'cbrt($1)')
+    .replace(/log\s*of\s*(\d+)/gi, 'log($1)')
+    .replace(/natural\s*log\s*of\s*(\d+)/gi, 'ln($1)')
+    .replace(/sine\s*of\s*(\d+)/gi, 'sin($1)')
+    .replace(/cosine\s*of\s*(\d+)/gi, 'cos($1)')
+    .replace(/tangent\s*of\s*(\d+)/gi, 'tan($1)');
+
+  // If no math expression found, return the original trimmed input
+  return expr || question.trim();
 }
 
 function evaluateMathExpression(expr: string): number {
@@ -551,7 +786,7 @@ function generateConceptExplanations(expression: string, difficulty: DifficultyL
     } else {
       explanations.push({
         concept: 'Cube Root',
-        explanation: 'The cube root ∛x = x^(1/3) finds the number that when multiplied by itself three times gives x. Unlike square roots, cube roots can be negative (e.g., ∛(-8) = -2). Cube roots are used in volume calculations and solving cubic equations.'
+        explanation: 'The cube root ∛x is the inverse of cubing. If x³ = y, then ∛y = x. Unlike square roots, cube roots can be negative. Cube roots are used in volume calculations and solving cubic equations.'
       });
     }
   }
@@ -560,64 +795,35 @@ function generateConceptExplanations(expression: string, difficulty: DifficultyL
     if (difficulty === '6-8') {
       explanations.push({
         concept: 'Logarithm',
-        explanation: 'A logarithm answers the question: "What power do we raise 10 to, to get this number?" For example, log(100) = 2 because 10² = 100. Logarithms help us work with very large numbers and are used in science to measure things like earthquakes and sound.'
+        explanation: 'A logarithm asks: "What power do we need to raise 10 to get this number?" For example, log(100) = 2 because 10² = 100. Logarithms help us work with very large numbers.'
       });
     } else {
       explanations.push({
         concept: 'Logarithm (Base 10)',
-        explanation: 'The logarithm log(x) asks "10 to what power equals x?" It\'s the inverse of exponentiation: if 10ʸ = x, then log(x) = y. Logarithms compress large ranges of values and are essential in measuring pH, decibels, earthquake magnitude (Richter scale), and analyzing exponential growth.'
+        explanation: 'The logarithm log(x) is the inverse of exponentiation with base 10. If 10ʸ = x, then log(x) = y. Logarithms are used in science to measure pH, earthquake magnitude (Richter scale), and sound intensity (decibels).'
       });
     }
   }
   
   if (exprLower.includes('ln')) {
-    if (difficulty === '6-8') {
-      explanations.push({
-        concept: 'Natural Logarithm',
-        explanation: 'The natural logarithm (ln) is similar to log, but uses a special number called "e" (about 2.718) instead of 10. It\'s used a lot in science and mathematics, especially when things grow or decay naturally over time.'
-      });
-    } else {
-      explanations.push({
-        concept: 'Natural Logarithm',
-        explanation: 'The natural logarithm ln(x) uses base e ≈ 2.71828 (Euler\'s number). It\'s the inverse of eˣ. Natural logarithms appear naturally in calculus, continuous compound interest, radioactive decay, population growth, and many differential equations. The derivative of ln(x) is 1/x, making it fundamental in integration.'
-      });
-    }
-  }
-  
-  if (/sin|cos|tan/i.test(expression) && !/asin|acos|atan/i.test(expression)) {
-    if (difficulty === '6-8') {
-      explanations.push({
-        concept: 'Trigonometric Functions',
-        explanation: 'Trigonometric functions (sine, cosine, tangent) relate angles to the sides of right triangles. They help us find missing sides or angles in triangles and are used in navigation, construction, and understanding waves and circles.'
-      });
-    } else {
-      explanations.push({
-        concept: 'Trigonometry',
-        explanation: 'Trigonometric functions relate angles to ratios in right triangles. In a right triangle: sin(θ) = opposite/hypotenuse, cos(θ) = adjacent/hypotenuse, tan(θ) = opposite/adjacent. On the unit circle, these represent coordinates and slopes. Trig functions model periodic phenomena like sound waves, light, tides, and circular motion.'
-      });
-    }
-  }
-  
-  if (/asin|acos|atan|arcsin|arccos|arctan/i.test(expression)) {
     if (difficulty === '9-10' || difficulty === '11-12') {
       explanations.push({
-        concept: 'Inverse Trigonometric Functions',
-        explanation: 'Inverse trig functions (arcsin, arccos, arctan) work backwards from regular trig functions. They take a ratio and return the angle. For example, if sin(30°) = 0.5, then arcsin(0.5) = 30°. These are essential for finding angles when you know the sides of a triangle.'
+        concept: 'Natural Logarithm',
+        explanation: 'The natural logarithm ln(x) uses the special number e (≈2.718) as its base. If eʸ = x, then ln(x) = y. Natural logarithms appear in calculus, compound interest calculations, exponential growth/decay, and many physics formulas.'
       });
     }
   }
   
-  // Add explanation about order of operations for complex expressions
-  if ((expression.match(/[+\-*/^()]/g) || []).length > 2) {
-    if (difficulty === '3-5' || difficulty === '6-8') {
+  if (exprLower.includes('sin') || exprLower.includes('cos') || exprLower.includes('tan')) {
+    if (difficulty === '6-8') {
       explanations.push({
-        concept: 'Order of Operations (PEMDAS)',
-        explanation: 'We follow the order of operations to ensure everyone solves problems the same way. PEMDAS stands for: Parentheses first, then Exponents, then Multiplication and Division (left to right), and finally Addition and Subtraction (left to right). This order is like a set of rules everyone agrees to follow.'
+        concept: 'Trigonometry',
+        explanation: 'Trigonometric functions (sine, cosine, tangent) relate angles to the sides of right triangles. They help us find missing sides and angles in triangles and are used in navigation, construction, and physics.'
       });
-    } else if (difficulty === '9-10' || difficulty === '11-12') {
+    } else {
       explanations.push({
-        concept: 'Order of Operations',
-        explanation: 'Mathematical expressions are evaluated following a strict hierarchy: Parentheses (innermost first), Exponents (right to left), Multiplication and Division (left to right, equal precedence), Addition and Subtraction (left to right, equal precedence). This convention ensures unambiguous interpretation of mathematical notation across all contexts.'
+        concept: 'Trigonometric Functions',
+        explanation: 'Sine, cosine, and tangent are fundamental trigonometric functions. In a right triangle: sin(θ) = opposite/hypotenuse, cos(θ) = adjacent/hypotenuse, tan(θ) = opposite/adjacent. These functions are periodic and appear in wave phenomena, circular motion, and oscillations.'
       });
     }
   }
@@ -629,205 +835,74 @@ function generateSteps(expression: string, result: number, difficulty: Difficult
   const steps: string[] = [];
   const exprLower = expression.toLowerCase();
   
-  // Detect operation type
-  const hasExponent = expression.includes('^');
-  const hasSqrt = exprLower.includes('sqrt');
-  const hasCbrt = exprLower.includes('cbrt');
-  const hasLog = exprLower.includes('log');
-  const hasLn = exprLower.includes('ln');
-  const hasTrig = /sin|cos|tan|asin|acos|atan/i.test(expression);
-  const hasComplex = (expression.match(/[+\-*/^()]/g) || []).length > 2;
+  // Add initial step
+  steps.push(`Start with the expression: ${expression}`);
   
-  // Generate appropriate steps based on difficulty, operation type, and teacher mode
-  if (difficulty === 'K-2') {
-    steps.push(`Look at the problem: ${expression}`);
-    
-    if (teacherMode) {
-      if (hasExponent) {
-        steps.push(`This uses powers - it means we multiply a number by itself several times. This is a shortcut for repeated multiplication!`);
-      } else if (hasSqrt) {
-        steps.push(`This finds what number times itself equals the number inside. We're looking for a special number that makes a perfect square!`);
-      } else {
-        steps.push(`Let's break this down into simple steps we can understand`);
+  // Detect and explain operations
+  if (expression.includes('^')) {
+    const match = expression.match(/(\d+)\^(\d+)/);
+    if (match) {
+      const base = match[1];
+      const exp = match[2];
+      if (teacherMode) {
+        steps.push(`This is an exponent problem. We need to multiply ${base} by itself ${exp} times.`);
       }
-      steps.push(`We'll work through this carefully, one step at a time`);
-    } else {
-      if (hasExponent) {
-        steps.push(`This uses powers - multiplying a number by itself`);
-      } else if (hasSqrt) {
-        steps.push(`This finds what number times itself equals the number inside`);
-      }
+      steps.push(`Calculate ${base}^${exp} = ${Math.pow(Number(base), Number(exp))}`);
     }
-    
-    steps.push(`Calculate the answer`);
-    steps.push(`The answer is ${result}`);
-  } else if (difficulty === '3-5') {
-    steps.push(`Write down the expression: ${expression}`);
-    
-    if (teacherMode) {
-      if (hasExponent) {
-        const match = expression.match(/(\d+)\^(\d+)/);
-        if (match) {
-          steps.push(`Exponents mean repeated multiplication. When we see ${match[1]}^${match[2]}, we multiply ${match[1]} by itself ${match[2]} times. This is much easier than writing out ${match[1]} × ${match[1]} × ... many times!`);
-        } else {
-          steps.push(`Exponents mean repeated multiplication (e.g., 2³ = 2 × 2 × 2). We use exponents because they make it easier to write and work with numbers that are multiplied many times.`);
-        }
-      } else if (hasSqrt) {
-        steps.push(`Square root finds a number that when multiplied by itself gives the original number. Think of it as asking: "What number makes a perfect square with this area?"`);
-      }
-      
-      steps.push(`Follow the order of operations (PEMDAS) - this ensures everyone solves the problem the same way and gets the same answer`);
-      steps.push(`Calculate step by step, checking our work as we go`);
-    } else {
-      if (hasExponent) {
-        steps.push(`Exponents mean repeated multiplication (e.g., 2³ = 2 × 2 × 2)`);
-      } else if (hasSqrt) {
-        steps.push(`Square root finds a number that when multiplied by itself gives the original number`);
-      }
-      
-      steps.push(`Follow the order of operations (PEMDAS)`);
-      steps.push(`Calculate step by step`);
-    }
-    
-    steps.push(`Final answer: ${result}`);
-  } else if (difficulty === '6-8') {
-    steps.push(`Given expression: ${expression}`);
-    
-    if (teacherMode) {
-      if (hasExponent) {
-        const match = expression.match(/(\d+)\^(\d+)/);
-        if (match) {
-          steps.push(`Exponent ${match[1]}^${match[2]} means ${match[1]} multiplied by itself ${match[2]} times. We evaluate exponents first (after parentheses) because they represent a more "powerful" operation than multiplication or addition.`);
-        } else {
-          steps.push(`Evaluate exponents using the power rule: a^b means multiply 'a' by itself 'b' times. Exponents grow very quickly - that's why they're useful for representing large numbers compactly!`);
-        }
-      } else if (hasSqrt) {
-        steps.push(`Square root (√) is the inverse operation of squaring a number. When we square a number, we multiply it by itself. The square root asks: "What number was squared to get this result?"`);
-        steps.push(`Find the number that when squared equals the value under the radical. We're essentially working backwards from squaring.`);
-      } else if (hasCbrt) {
-        steps.push(`Cube root (∛) finds the number that when cubed (multiplied by itself three times) equals the original value. This is like asking: "What's the side length of a cube with this volume?"`);
-      } else if (hasLog) {
-        steps.push(`Logarithm (log) asks: "10 to what power equals this number?" It's the inverse of raising 10 to a power. Logarithms help us work with very large numbers by converting multiplication into addition.`);
-      } else if (hasTrig) {
-        steps.push(`Trigonometric functions relate angles to ratios in right triangles. These ratios stay the same for any size triangle with the same angle - that's what makes them so useful!`);
-      }
-      
-      if (hasComplex) {
-        steps.push(`Apply order of operations: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction. This order exists because some operations are more "binding" than others - we need to do the stronger operations first.`);
-        steps.push(`Work from innermost parentheses outward, evaluating each operation in the correct order`);
-      }
-      
-      steps.push(`Simplify each operation in order, keeping track of our intermediate results`);
-    } else {
-      if (hasExponent) {
-        const match = expression.match(/(\d+)\^(\d+)/);
-        if (match) {
-          steps.push(`Exponent ${match[1]}^${match[2]} means ${match[1]} multiplied by itself ${match[2]} times`);
-        } else {
-          steps.push(`Evaluate exponents using the power rule: a^b = a × a × ... (b times)`);
-        }
-      } else if (hasSqrt) {
-        steps.push(`Square root (√) is the inverse operation of squaring a number`);
-        steps.push(`Find the number that when squared equals the value under the radical`);
-      } else if (hasCbrt) {
-        steps.push(`Cube root (∛) finds the number that when cubed equals the original value`);
-      } else if (hasLog) {
-        steps.push(`Logarithm (log) asks: "10 to what power equals this number?"`);
-      } else if (hasTrig) {
-        steps.push(`Trigonometric functions relate angles to ratios in right triangles`);
-      }
-      
-      if (hasComplex) {
-        steps.push(`Apply order of operations: Parentheses, Exponents, Multiplication/Division, Addition/Subtraction`);
-        steps.push(`Work from innermost parentheses outward`);
-      }
-      
-      steps.push(`Simplify each operation in order`);
-    }
-    
-    steps.push(`Solution: ${result}`);
-  } else {
-    // 9-12 grade level
-    steps.push(`Given expression: ${expression}`);
-    
-    if (teacherMode) {
-      if (hasExponent) {
-        steps.push(`Apply exponentiation: For a^b, multiply base 'a' by itself 'b' times. This operation has important algebraic properties that make it fundamental to higher mathematics.`);
-        steps.push(`Key properties to remember: a^m × a^n = a^(m+n) (we add exponents when multiplying same bases), (a^m)^n = a^(mn) (we multiply exponents when raising a power to a power), and a^0 = 1 (any non-zero number to the zero power equals 1).`);
-      } else if (hasSqrt) {
-        steps.push(`Square root operation: √x = x^(1/2), representing the principal (positive) root. The square root function is the inverse of the squaring function, which is why they "undo" each other.`);
-        steps.push(`Verify the relationship: (√x)² = x. This inverse relationship is fundamental to solving quadratic equations and understanding function composition.`);
-      } else if (hasCbrt) {
-        steps.push(`Cube root operation: ∛x = x^(1/3). This is one of the family of nth root functions.`);
-        steps.push(`Unlike square roots, cube roots can be negative because a negative number cubed remains negative. This makes the cube root function defined for all real numbers.`);
-      } else if (hasLog) {
-        steps.push(`Logarithm base 10: log(x) asks "10 to what power equals x?" This transforms exponential relationships into linear ones, which are easier to analyze.`);
-        steps.push(`Inverse relationship: 10^(log(x)) = x and log(10^x) = x. These identities show that logarithm and exponentiation are inverse functions.`);
-        steps.push(`Important properties: log(ab) = log(a) + log(b) (multiplication becomes addition), log(a/b) = log(a) - log(b) (division becomes subtraction). These properties make logarithms powerful tools for simplifying complex calculations.`);
-      } else if (hasLn) {
-        steps.push(`Natural logarithm: ln(x) uses base e ≈ 2.718 (Euler's number). The natural logarithm appears naturally in calculus because the derivative of e^x is itself.`);
-        steps.push(`Inverse relationship: e^(ln(x)) = x and ln(e^x) = x. The natural logarithm is the inverse function of the natural exponential function.`);
-      } else if (hasTrig) {
-        if (exprLower.includes('sin')) {
-          steps.push(`Sine function: sin(θ) = opposite/hypotenuse in a right triangle. This ratio remains constant for a given angle regardless of triangle size.`);
-          steps.push(`On the unit circle, sin(θ) represents the y-coordinate of the point at angle θ. This geometric interpretation connects trigonometry to coordinate geometry.`);
-        } else if (exprLower.includes('cos')) {
-          steps.push(`Cosine function: cos(θ) = adjacent/hypotenuse in a right triangle. Like sine, this ratio is constant for a given angle.`);
-          steps.push(`On the unit circle, cos(θ) represents the x-coordinate of the point at angle θ. Together with sine, it parameterizes circular motion.`);
-        } else if (exprLower.includes('tan')) {
-          steps.push(`Tangent function: tan(θ) = opposite/adjacent = sin(θ)/cos(θ). Tangent represents the slope of the line from the origin at angle θ.`);
-        }
-        steps.push(`Angle is measured in degrees. (Note: In calculus, we typically use radians, where 180° = π radians.)`);
-      }
-      
-      if (hasComplex) {
-        steps.push(`Apply order of operations (PEMDAS): Parentheses → Exponents → Multiplication/Division → Addition/Subtraction. This hierarchy ensures unambiguous evaluation of expressions.`);
-        steps.push(`Evaluate nested functions from innermost to outermost, maintaining precision throughout the calculation to minimize rounding errors.`);
-      }
-      
-      steps.push(`Perform the calculation with proper precision, being mindful of significant figures and rounding only at the final step.`);
-      steps.push(`Verify the result satisfies the original expression by checking if substituting our answer back makes sense mathematically.`);
-    } else {
-      if (hasExponent) {
-        steps.push(`Apply exponentiation: For a^b, multiply base 'a' by itself 'b' times`);
-        steps.push(`Properties: a^m × a^n = a^(m+n), (a^m)^n = a^(mn), a^0 = 1`);
-      } else if (hasSqrt) {
-        steps.push(`Square root operation: √x = x^(1/2), the principal (positive) root`);
-        steps.push(`Verify: (√x)² = x`);
-      } else if (hasCbrt) {
-        steps.push(`Cube root operation: ∛x = x^(1/3)`);
-        steps.push(`Unlike square roots, cube roots can be negative`);
-      } else if (hasLog) {
-        steps.push(`Logarithm base 10: log(x) asks "10^? = x"`);
-        steps.push(`Inverse relationship: 10^(log(x)) = x and log(10^x) = x`);
-        steps.push(`Properties: log(ab) = log(a) + log(b), log(a/b) = log(a) - log(b)`);
-      } else if (hasLn) {
-        steps.push(`Natural logarithm: ln(x) uses base e ≈ 2.718`);
-        steps.push(`Inverse relationship: e^(ln(x)) = x and ln(e^x) = x`);
-      } else if (hasTrig) {
-        if (exprLower.includes('sin')) {
-          steps.push(`Sine function: sin(θ) = opposite/hypotenuse in a right triangle`);
-          steps.push(`On the unit circle, sin(θ) is the y-coordinate`);
-        } else if (exprLower.includes('cos')) {
-          steps.push(`Cosine function: cos(θ) = adjacent/hypotenuse in a right triangle`);
-          steps.push(`On the unit circle, cos(θ) is the x-coordinate`);
-        } else if (exprLower.includes('tan')) {
-          steps.push(`Tangent function: tan(θ) = opposite/adjacent = sin(θ)/cos(θ)`);
-        }
-        steps.push(`Angle is measured in degrees`);
-      }
-      
-      if (hasComplex) {
-        steps.push(`Apply order of operations (PEMDAS): Parentheses → Exponents → Multiplication/Division → Addition/Subtraction`);
-        steps.push(`Evaluate nested functions from innermost to outermost`);
-      }
-      
-      steps.push(`Perform the calculation with proper precision`);
-      steps.push(`Verify the result satisfies the original expression`);
-    }
-    
-    steps.push(`Final solution: ${result}`);
   }
+  
+  if (exprLower.includes('sqrt')) {
+    const match = expression.match(/sqrt\((\d+)\)/i);
+    if (match) {
+      const num = match[1];
+      if (teacherMode) {
+        steps.push(`Find the square root of ${num}. This means: what number times itself equals ${num}?`);
+      }
+      steps.push(`√${num} = ${Math.sqrt(Number(num))}`);
+    }
+  }
+  
+  if (exprLower.includes('cbrt')) {
+    const match = expression.match(/cbrt\((\d+)\)/i);
+    if (match) {
+      const num = match[1];
+      if (teacherMode) {
+        steps.push(`Find the cube root of ${num}. This means: what number times itself three times equals ${num}?`);
+      }
+      steps.push(`∛${num} = ${Math.cbrt(Number(num))}`);
+    }
+  }
+  
+  if (exprLower.includes('log')) {
+    const match = expression.match(/log\((\d+)\)/i);
+    if (match) {
+      const num = match[1];
+      if (teacherMode) {
+        steps.push(`Find log base 10 of ${num}. This means: 10 to what power equals ${num}?`);
+      }
+      steps.push(`log(${num}) = ${Math.log10(Number(num))}`);
+    }
+  }
+  
+  if (exprLower.includes('ln')) {
+    const match = expression.match(/ln\((\d+\.?\d*)\)/i);
+    if (match) {
+      const num = match[1];
+      if (teacherMode) {
+        steps.push(`Find the natural logarithm of ${num}. This uses base e (≈2.718).`);
+      }
+      steps.push(`ln(${num}) = ${Math.log(Number(num))}`);
+    }
+  }
+  
+  if (exprLower.includes('sin') || exprLower.includes('cos') || exprLower.includes('tan')) {
+    if (teacherMode) {
+      steps.push(`Evaluate the trigonometric function. The angle is in degrees.`);
+    }
+  }
+  
+  // Add final result
+  steps.push(`Final answer: ${result}`);
   
   return steps;
 }
