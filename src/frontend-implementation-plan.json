@@ -1,75 +1,54 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update app branding from 'Hollow AI' to 'Axora AI'",
+  "title": "Add Teacher Mode to Math Problem Solver",
   "requirements": [
     {
-      "id": "REQ-16",
-      "summary": "Update the application title in index.html from 'Hollow AI' to 'Axora AI'",
+      "id": "REQ-21",
+      "summary": "Add a 'Teacher Mode' toggle control in the MathProblemSolver component that users can enable or disable",
       "acceptanceCriteria": [
-        "The <title> tag in index.html displays 'Axora AI'",
-        "Browser tab shows 'Axora AI' when the app is loaded"
+        "A toggle or checkbox labeled 'Teacher Mode' is visible in the MathProblemSolver interface",
+        "The toggle state persists during the user's session",
+        "The toggle is accessible and clearly labeled"
       ],
       "file_operations": [
-        {
-          "path": "frontend/index.html",
-          "operation": "modify",
-          "description": "Change the <title> tag content from 'Hollow AI' to 'Axora AI' to update the browser tab title"
-        }
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "summary": "Update the Header component logo text from 'Hollow AI' to 'Axora AI'",
-      "acceptanceCriteria": [
-        "The header displays 'Axora AI' as the application name",
-        "Logo text is visible and properly styled"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Replace 'Hollow AI' text with 'Axora AI' in the logo/branding section of the header component"
-        }
-      ]
-    },
-    {
-      "id": "REQ-18",
-      "summary": "Replace any remaining references to 'Hollow AI' with 'Axora AI' throughout the frontend interface",
-      "acceptanceCriteria": [
-        "No instances of 'Hollow AI' remain in user-facing text",
-        "All branding consistently shows 'Axora AI'"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Search for and replace any 'Hollow AI' references with 'Axora AI' in comments, alt text, aria-labels, and user-facing strings"
-        },
-        {
-          "path": "frontend/src/components/ChatSidebar.tsx",
-          "operation": "modify",
-          "description": "Replace any 'Hollow AI' references with 'Axora AI' in accessibility labels or text content"
-        },
-        {
-          "path": "frontend/src/components/ChatView.tsx",
-          "operation": "modify",
-          "description": "Update any 'Hollow AI' references to 'Axora AI' in bot avatar labels or system messages"
-        },
         {
           "path": "frontend/src/components/MathProblemSolver.tsx",
           "operation": "modify",
-          "description": "Replace 'Hollow AI' with 'Axora AI' in any instructional text or labels"
-        },
+          "description": "Add a Teacher Mode toggle control (using a switch/checkbox component) above or near the grade level selector. Store the toggle state in component state using useState. Position the toggle prominently so users can easily enable or disable Teacher Mode. Label it clearly as 'Teacher Mode' with appropriate styling to match the existing UI design."
+        }
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "summary": "When Teacher Mode is enabled, enhance the step-by-step solution explanations to use clear, pedagogical language that explains mathematical concepts in an accessible way suitable for students",
+      "acceptanceCriteria": [
+        "Solutions include explanations of why each step is performed, not just what operation is applied",
+        "Mathematical terminology is explained in simple terms",
+        "Explanations use everyday language and relatable examples where appropriate",
+        "Each step connects to the overall problem-solving strategy"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/MediaDisplay.tsx",
+          "path": "frontend/src/components/MathProblemSolver.tsx",
           "operation": "modify",
-          "description": "Update 'Hollow AI' to 'Axora AI' in any UI text or generation labels"
-        },
+          "description": "Modify the generateSteps function to check the Teacher Mode state. When Teacher Mode is enabled, enhance each step's explanation to include pedagogical context: explain why the operation is performed (not just what), use simple everyday language, provide rationale connecting to the overall strategy, and ensure mathematical terms are explained accessibly. For example, instead of 'Apply PEMDAS', say 'We follow the order of operations (PEMDAS) because this ensures everyone solves the problem the same way - we do Parentheses first, then Exponents, then Multiplication and Division from left to right, and finally Addition and Subtraction from left to right.' Keep existing step generation logic intact for when Teacher Mode is disabled."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "In Teacher Mode, provide contextual explanations for mathematical concepts encountered in the problem, such as defining what an exponent means, explaining the purpose of logarithms, or describing trigonometric relationships",
+      "acceptanceCriteria": [
+        "When advanced operations like exponents, logarithms, or trigonometry appear, Teacher Mode includes brief educational context about what these operations represent",
+        "Explanations are appropriate for the selected grade level",
+        "Concept explanations are clearly distinguished from solution steps"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/components/TranslatorChat.tsx",
+          "path": "frontend/src/components/MathProblemSolver.tsx",
           "operation": "modify",
-          "description": "Replace 'Hollow AI' with 'Axora AI' in any interface text or placeholders"
+          "description": "When Teacher Mode is enabled, add logic to detect advanced mathematical operations in the expression (exponents using ^, logarithms, trigonometric functions like sin/cos/tan, square roots, fractions). When detected, inject brief concept explanations before or alongside the relevant solution steps. For example, if an exponent is found, add: 'An exponent tells us how many times to multiply a number by itself. For example, 2^3 means 2 × 2 × 2.' Tailor explanation complexity to the selected grade level. Render concept explanations with distinct visual styling (e.g., a different background color, icon, or border) to differentiate them from solution steps."
         }
       ]
     }

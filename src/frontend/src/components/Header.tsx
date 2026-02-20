@@ -25,9 +25,11 @@ export function Header() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="/assets/generated/hollow-ai-logo.dim_200x200.png"
+              src="/assets/Gemini_Generated_Image_hpg3d6hpg3d6hpg3.png"
               alt="Axora AI Logo"
-              className="h-10 w-10 rounded-lg"
+              className="h-10 w-10 md:h-12 md:w-12 object-contain"
+              width="48"
+              height="48"
             />
             <div>
               <h1 className="text-2xl font-display font-bold text-foreground">

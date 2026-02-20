@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
+  "projectStateVersion": 15,
   "summary": "An AI application called 'Axora AI' with a dark/black theme that displays videos and pictures, solves math problems from kindergarten to college level, includes a sidebar showing previous chat history, allows users to request AI-generated images and videos by describing what they want, and features a translator chat box for translating different languages",
   "architectural_notes": [
     "AI-powered application with multi-modal content display",
@@ -9,10 +9,11 @@
     "Text-to-image generation capability",
     "Text-to-video generation with motion",
     "Math solver extended to support college-level operations beyond K-12",
-    "Multi-language translation feature via dedicated chat box interface"
+    "Multi-language translation feature via dedicated chat box interface",
+    "Teacher Mode feature in math solver provides pedagogical explanations alongside solutions"
   ],
   "known_issues": [],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-create-a-media-display-component-that-can-show-videos-and-pictures-uploaded-by-users-or-provided-by-the-system",
@@ -157,6 +158,46 @@
         "REQ-18"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-axora-ai-logo-in-the-header-component-with-the-user-provided-logo-image-gemini-generated-image-hpg3d6hpg3d6hpg3-png",
+      "title": "Replace the current Axora AI logo in the Header component with the user-provided logo image (Gemini_Generated_Image_hpg3d6hpg3d6hpg3.png)",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-logo-image-is-optimized-for-display-with-proper-dimensions-and-is-visible-against-the-dark-background-theme",
+      "title": "Ensure the logo image is optimized for display with proper dimensions and is visible against the dark background theme",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-teacher-mode-toggle-control-in-the-mathproblemsolver-component-that-users-can-enable-or-disable",
+      "title": "Add a 'Teacher Mode' toggle control in the MathProblemSolver component that users can enable or disable",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-when-teacher-mode-is-enabled-enhance-the-step-by-step-solution-explanations-to-use-clear-pedagogical-language-that-explains-mathematical-concepts-in-an-accessible-way-suitable-for-students",
+      "title": "When Teacher Mode is enabled, enhance the step-by-step solution explanations to use clear, pedagogical language that explains mathematical concepts in an accessible way suitable for students",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-teacher-mode-provide-contextual-explanations-for-mathematical-concepts-encountered-in-the-problem-such-as-defining-what-an-exponent-means-explaining-the-purpose-of-logarithms-or-describing-trigonometric-relationships",
+      "title": "In Teacher Mode, provide contextual explanations for mathematical concepts encountered in the problem, such as defining what an exponent means, explaining the purpose of logarithms, or describing trigonometric relationships",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -205,6 +246,18 @@
     {
       "id": "AR-8",
       "summary": "Add a translator chat box component that translates different languages",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update Axora AI logo to user-provided image",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add 'Teacher Mode' toggle to math solver that provides explanations in an easy-to-understand, educational format",
       "reqIds": [],
       "status": "pending"
     }

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-application-title-in-frontend-index-html-from-hollow-ai-to-axora-ai",
-      "featureTitle": "Update the application title in frontend/index.html from 'Hollow AI' to 'Axora AI'",
+      "featureId": "feature-add-a-teacher-mode-toggle-control-in-the-mathproblemsolver-component-that-users-can-enable-or-disable",
+      "featureTitle": "Add a 'Teacher Mode' toggle control in the MathProblemSolver component that users can enable or disable",
       "files": [
-        "frontend/index.html"
+        "frontend/src/components/MathProblemSolver.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -17,15 +17,15 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-16"
+        "REQ-21"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-header-component-logo-text-from-hollow-ai-to-axora-ai",
-      "featureTitle": "Update the Header component logo text from 'Hollow AI' to 'Axora AI'",
+      "featureId": "feature-when-teacher-mode-is-enabled-enhance-the-step-by-step-solution-explanations-to-use-clear-pedagogical-language-that-explains-mathematical-concepts-in-an-accessible-way-suitable-for-students",
+      "featureTitle": "When Teacher Mode is enabled, enhance the step-by-step solution explanations to use clear, pedagogical language that explains mathematical concepts in an accessible way suitable for students",
       "files": [
-        "frontend/src/components/Header.tsx"
+        "frontend/src/components/MathProblemSolver.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -37,16 +37,15 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-17"
+        "REQ-22"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-replace-any-remaining-references-to-hollow-ai-with-axora-ai-throughout-the-frontend-interface-including-comments-and-accessibility-labels",
-      "featureTitle": "Replace any remaining references to 'Hollow AI' with 'Axora AI' throughout the frontend interface including comments and accessibility labels",
+      "featureId": "feature-in-teacher-mode-provide-contextual-explanations-for-mathematical-concepts-encountered-in-the-problem-such-as-defining-what-an-exponent-means-explaining-the-purpose-of-logarithms-or-describing-trigonometric-relationships",
+      "featureTitle": "In Teacher Mode, provide contextual explanations for mathematical concepts encountered in the problem, such as defining what an exponent means, explaining the purpose of logarithms, or describing trigonometric relationships",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ChatView.tsx"
+        "frontend/src/components/MathProblemSolver.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -58,7 +57,7 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-18"
+        "REQ-23"
       ],
       "confidence": "high"
     }

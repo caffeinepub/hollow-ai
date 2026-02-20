@@ -1,70 +1,75 @@
 {
   "kind": "build_request",
-  "title": "Update app branding from 'Hollow AI' to 'Axora AI' in draft",
+  "title": "Add Teacher Mode to Math Problem Solver",
   "projectName": "Axora AI",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-16",
-      "text": "Update the application title in frontend/index.html from 'Hollow AI' to 'Axora AI'",
+      "id": "REQ-21",
+      "text": "Add a 'Teacher Mode' toggle control in the MathProblemSolver component that users can enable or disable",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ],
         "quotes": [
-          "you forgot to change the name on the app in the draft"
+          "make a thing on the math problem solver thing that says teacher mode"
         ]
       },
       "acceptanceCriteria": [
-        "The <title> tag in index.html displays 'Axora AI'",
-        "Browser tab shows 'Axora AI' when the app is loaded"
+        "A toggle or checkbox labeled 'Teacher Mode' is visible in the MathProblemSolver interface",
+        "The toggle state persists during the user's session",
+        "The toggle is accessible and clearly labeled"
       ]
     },
     {
-      "id": "REQ-17",
-      "text": "Update the Header component logo text from 'Hollow AI' to 'Axora AI'",
+      "id": "REQ-22",
+      "text": "When Teacher Mode is enabled, enhance the step-by-step solution explanations to use clear, pedagogical language that explains mathematical concepts in an accessible way suitable for students",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ],
         "quotes": [
-          "you forgot to change the name on the app in the draft"
+          "make it explain the meaning and answers in a way that people will understand"
         ]
       },
       "acceptanceCriteria": [
-        "The header displays 'Axora AI' as the application name",
-        "Logo text is visible and properly styled"
+        "Solutions include explanations of why each step is performed, not just what operation is applied",
+        "Mathematical terminology is explained in simple terms",
+        "Explanations use everyday language and relatable examples where appropriate",
+        "Each step connects to the overall problem-solving strategy"
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Replace any remaining references to 'Hollow AI' with 'Axora AI' throughout the frontend interface including comments and accessibility labels",
+      "id": "REQ-23",
+      "text": "In Teacher Mode, provide contextual explanations for mathematical concepts encountered in the problem, such as defining what an exponent means, explaining the purpose of logarithms, or describing trigonometric relationships",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ],
         "quotes": [
-          "you forgot to change the name on the app in the draft"
+          "make it explain the meaning and answers in a way that people will understand"
         ]
       },
       "acceptanceCriteria": [
-        "No instances of 'Hollow AI' remain in user-facing text",
-        "All branding consistently shows 'Axora AI'"
+        "When advanced operations like exponents, logarithms, or trigonometry appear, Teacher Mode includes brief educational context about what these operations represent",
+        "Explanations are appropriate for the selected grade level",
+        "Concept explanations are clearly distinguished from solution steps"
       ]
     }
   ],
   "constraints": [
-    "Do not modify backend files for this branding change",
-    "Preserve all existing functionality and styling",
-    "Do not change any immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui"
+    "Teacher Mode must be a client-side feature that enhances existing solution generation logic",
+    "Do not modify the core mathematical evaluation functionality",
+    "Maintain compatibility with the existing grade level selector in MathProblemSolver"
   ],
   "nonGoals": [
-    "Changing the visual design or theme",
-    "Modifying any feature functionality",
-    "Updating backend actor names or canister configurations"
+    "Adding backend storage for Teacher Mode preferences",
+    "Creating lesson plans or full curriculum content",
+    "Generating practice problems or quizzes",
+    "Adding multimedia content like videos or diagrams to explanations"
   ],
   "imageRequirements": {
     "required": [],
