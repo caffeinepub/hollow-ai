@@ -1,50 +1,24 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T04:31:02.829Z",
+  "generatedAt": "2026-02-21T04:35:34.876Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a close/exit button to the chat interface that allows users to return to a chat selection view or main navigation",
+        "summary": "Configure the default route in App.tsx to navigate to the math problem solver (/math) instead of the current landing page when users first open the application",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ChatView.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/ChatView.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Implement navigation between different chat boxes/sessions, allowing users to switch between multiple chat conversations",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ChatView.tsx",
-          "frontend/src/components/ChatSidebar.tsx",
           "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/ChatView.tsx",
           "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Ensure ChatSidebar component displays all available chat boxes and allows selection to navigate between them",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/ChatSidebar.tsx",
-          "frontend/src/hooks/useChatSessions.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useChatSessions.ts"
         ]
       }
     ]
@@ -55,9 +29,6 @@
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
-    "frontend/src/components/ChatPage.tsx",
-    "frontend/src/components/ChatView.tsx",
-    "frontend/src/hooks/useChatSessions.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

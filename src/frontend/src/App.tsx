@@ -58,7 +58,7 @@ function SharedContentViewerWrapper() {
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: ChatPage,
+  component: MathProblemSolver,
 });
 
 const chatRoute = createRoute({

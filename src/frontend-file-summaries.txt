@@ -1,7 +1,7 @@
 {
   "frontend/src/index.css": "Global styles with black/dark OKLCH color system as default theme, featuring deep blacks and dark grays for backgrounds with vibrant teal and coral accents for educational feel.",
   "frontend/tailwind.config.js": "Extended Tailwind configuration with custom educational color palette, typography settings, soft shadows, glow effects, and animation utilities for a cohesive Hollow AI design system.",
-  "frontend/src/App.tsx": "Main application component with router setup including dynamic chat routes (/chat and /chat/:sessionId), game mode modal integration, predefined game selector with correct prop names, and wrapper components for routes requiring props.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup where the root path ('/') now navigates directly to MathProblemSolver, along with all other routes for chat, media, translator, music, art, code, games, and shared content.",
   "frontend/src/components/Header.tsx": "Application header with Neroxa AI branding, logo, theme toggle, user profile name display when authenticated, and sign-out button; ProfileSetup modal integration removed.",
   "frontend/src/components/ChatSidebar.tsx": "Collapsible sidebar with responsive width adjustments, mobile-friendly session buttons with minimum touch target sizes, and adaptive text sizing across breakpoints.",
   "frontend/src/components/ChatView.tsx": "Chat interface component displaying conversation messages with user/AI avatars, message input, real-time updates, and a close button in the header that triggers navigation back to the chat list.",

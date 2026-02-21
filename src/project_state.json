@@ -1,32 +1,16 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Chat application with multiple chat boxes and navigation between them",
+  "summary": "Math problem solving app",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-close-exit-button-to-the-chat-interface-that-allows-users-to-return-to-a-chat-selection-view-or-main-navigation",
-      "title": "Add a close/exit button to the chat interface that allows users to return to a chat selection view or main navigation",
+      "id": "feature-configure-the-default-route-in-app-tsx-to-navigate-to-the-math-problem-solver-math-instead-of-the-current-landing-page-when-users-first-open-the-application",
+      "title": "Configure the default route in App.tsx to navigate to the math problem solver (/math) instead of the current landing page when users first open the application",
       "reqIds": [
         "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-navigation-between-different-chat-boxes-sessions-allowing-users-to-switch-between-multiple-chat-conversations",
-      "title": "Implement navigation between different chat boxes/sessions, allowing users to switch between multiple chat conversations",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-chatsidebar-component-displays-all-available-chat-boxes-and-allows-selection-to-navigate-between-them",
-      "title": "Ensure ChatSidebar component displays all available chat boxes and allows selection to navigate between them",
-      "reqIds": [
-        "REQ-3"
       ],
       "version": 1
     }
@@ -34,12 +18,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add ability to exit chats and navigate to different chat boxes",
+      "summary": "Set math problem solving as default landing screen",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Add chat exit and navigation between different chat boxes",
+  "projectName": "Nexora Math",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

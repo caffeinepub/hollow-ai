@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-close-exit-button-to-the-chat-interface-that-allows-users-to-return-to-a-chat-selection-view-or-main-navigation",
-      "featureTitle": "Add a close/exit button to the chat interface that allows users to return to a chat selection view or main navigation",
+      "featureId": "feature-configure-the-default-route-in-app-tsx-to-navigate-to-the-math-problem-solver-math-instead-of-the-current-landing-page-when-users-first-open-the-application",
+      "featureTitle": "Configure the default route in App.tsx to navigate to the math problem solver (/math) instead of the current landing page when users first open the application",
       "files": [
-        "frontend/src/components/ChatView.tsx"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -19,49 +19,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-navigation-between-different-chat-boxes-sessions-allowing-users-to-switch-between-multiple-chat-conversations",
-      "featureTitle": "Implement navigation between different chat boxes/sessions, allowing users to switch between multiple chat conversations",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ChatView.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-chatsidebar-component-displays-all-available-chat-boxes-and-allows-selection-to-navigate-between-them",
-      "featureTitle": "Ensure ChatSidebar component displays all available chat boxes and allows selection to navigate between them",
-      "files": [
-        "frontend/src/hooks/useChatSessions.ts"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
       ],
       "confidence": "high"
     }

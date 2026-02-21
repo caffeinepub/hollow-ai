@@ -1,70 +1,37 @@
 {
   "kind": "build_request",
-  "title": "Add chat exit and navigation between different chat boxes",
+  "title": "Set math problem solver as default landing page",
+  "projectName": "Nexora Math",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a close/exit button to the chat interface that allows users to return to a chat selection view or main navigation",
+      "text": "Configure the default route in App.tsx to navigate to the math problem solver (/math) instead of the current landing page when users first open the application",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-latest"
+          "msg-latest"
         ],
         "quotes": [
-          "make it so you can exit out of chats to go to diffrent boxes"
+          "make it so when you get in the app you are in the math problem solving thing"
         ]
       },
       "acceptanceCriteria": [
-        "A visible close or back button is present in the chat interface",
-        "Clicking the button navigates the user away from the current chat",
-        "The navigation destination is appropriate (e.g., chat list, main menu, or previous view)"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Implement navigation between different chat boxes/sessions, allowing users to switch between multiple chat conversations",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-latest"
-        ],
-        "quotes": [
-          "make it so you can exit out of chats to go to diffrent boxes"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can view a list of available chat boxes/sessions",
-        "Users can select and switch to a different chat box",
-        "Each chat box maintains its own conversation history",
-        "The current active chat is visually indicated"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Ensure ChatSidebar component displays all available chat boxes and allows selection to navigate between them",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "ChatSidebar lists all chat sessions/boxes",
-        "Clicking a chat in the sidebar switches the active conversation",
-        "The selected chat is highlighted in the sidebar"
+        "Opening the application URL without any path navigates directly to /math",
+        "The MathProblemSolver component loads immediately on app launch",
+        "No intermediate landing page or welcome screen is shown"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the useInternetIdentity hook or authentication flow",
-    "Maintain existing chat message history functionality",
-    "Preserve the current ChatView and ChatSidebar component structure"
+    "Do not modify the MathProblemSolver component itself",
+    "Preserve all existing routes and navigation structure",
+    "Maintain compatibility with the TanStack Router configuration"
   ],
   "nonGoals": [
-    "Real-time synchronization between multiple devices",
-    "Chat notifications or alerts",
-    "Multi-user chat rooms or group chats"
+    "Changing the math problem solver functionality",
+    "Removing other routes or navigation options",
+    "Modifying the Header or sidebar navigation"
   ],
   "imageRequirements": {
     "required": [],

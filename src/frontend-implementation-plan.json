@@ -1,69 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add chat exit and navigation between different chat boxes",
+  "title": "Set math problem solver as default landing page",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a close/exit button to the chat interface that allows users to return to a chat selection view or main navigation",
+      "summary": "Configure the default route to navigate to the math problem solver (/math) instead of the current landing page",
       "acceptanceCriteria": [
-        "A visible close or back button is present in the chat interface",
-        "Clicking the button navigates the user away from the current chat",
-        "The navigation destination is appropriate (e.g., chat list, main menu, or previous view)"
+        "Opening the application URL without any path navigates directly to /math",
+        "The MathProblemSolver component loads immediately on app launch",
+        "No intermediate landing page or welcome screen is shown"
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/components/ChatView.tsx",
-          "operation": "modify",
-          "description": "Add a close/exit button to the ChatView header area that triggers navigation away from the current chat. The button should be visually prominent and positioned in the top-right corner of the chat interface. Wire the button to navigate back to the main chat list or home view using React Router navigation."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Implement navigation between different chat boxes/sessions, allowing users to switch between multiple chat conversations",
-      "acceptanceCriteria": [
-        "Users can view a list of available chat boxes/sessions",
-        "Users can select and switch to a different chat box",
-        "Each chat box maintains its own conversation history",
-        "The current active chat is visually indicated"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ChatView.tsx",
-          "operation": "modify",
-          "description": "Modify ChatView to accept a sessionId prop or URL parameter to identify which chat session is currently active. Update the component to load and display messages specific to the active session. Ensure conversation history is preserved per session using local state or query parameters."
-        },
-        {
-          "path": "frontend/src/components/ChatSidebar.tsx",
-          "operation": "modify",
-          "description": "Update ChatSidebar to make each chat session clickable. Wire each session item to navigate to the corresponding chat view with the session ID as a parameter. Add visual indication (highlighting, background color change) for the currently active session to show which chat is selected."
-        },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update the chat route configuration to support dynamic session routing (e.g., /chat/:sessionId). Ensure the router passes the sessionId parameter to ChatView so users can navigate between different chat sessions via URL changes."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Ensure ChatSidebar component displays all available chat boxes and allows selection to navigate between them",
-      "acceptanceCriteria": [
-        "ChatSidebar lists all chat sessions/boxes",
-        "Clicking a chat in the sidebar switches the active conversation",
-        "The selected chat is highlighted in the sidebar"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ChatSidebar.tsx",
-          "operation": "modify",
-          "description": "Ensure ChatSidebar fetches and displays all available chat sessions. Add click handlers to each session item that trigger navigation to the corresponding chat route with the session ID. Implement visual highlighting for the currently selected session using conditional styling based on the active session ID from URL parameters or router state."
-        },
-        {
-          "path": "frontend/src/hooks/useChatSessions.ts",
-          "operation": "modify",
-          "description": "Update useChatSessions hook to support managing multiple chat sessions locally. Ensure the hook provides methods to retrieve all sessions, create new sessions, and track the active session. Since backend session support has been removed, implement local session management using localStorage or React state to persist session data across page reloads."
+          "description": "Update the root route ('/') configuration to redirect to '/math' using TanStack Router's redirect functionality or navigate mechanism, ensuring that when users open the application without a specific path, they are immediately routed to the math problem solver page"
         }
       ]
     }
