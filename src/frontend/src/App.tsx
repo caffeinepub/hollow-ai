@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
+import { InternetIdentityProvider } from './hooks/useInternetIdentity';
 import { Header } from './components/Header';
-import { ChatSidebar } from './components/ChatSidebar';
 import { ChatView } from './components/ChatView';
 import { MathProblemSolver } from './components/MathProblemSolver';
 import { MediaDisplay } from './components/MediaDisplay';
@@ -11,202 +12,135 @@ import { ArtCanvas } from './components/ArtCanvas';
 import { Scripter } from './components/Scripter';
 import { GamesView } from './components/GamesView';
 import { SharedContentViewer } from './components/SharedContentViewer';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, Image, Languages, Music2, Palette, Code2, Gamepad2 } from 'lucide-react';
+import { GameModeModal } from './components/GameModeModal';
+import { PredefinedGameSelector } from './components/PredefinedGameSelector';
+import { GameBrowser } from './components/GameBrowser';
+import { GameStudio } from './components/GameStudio';
+import GamePlayer from './components/GamePlayer';
 import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from 'next-themes';
 
-function MainApp() {
-  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-
-  return (
-    <ErrorBoundary>
-      <div className="min-h-screen flex flex-col bg-background">
-        <Header />
-        <div className="flex-1 flex overflow-hidden">
-          <ChatSidebar
-            selectedSessionId={selectedSessionId}
-            onSelectSession={setSelectedSessionId}
-            collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-          />
-          <main className="flex-1 overflow-hidden">
-            {selectedSessionId ? (
-              <ChatView sessionId={selectedSessionId} />
-            ) : (
-              <div className="h-full p-3 sm:p-4 md:p-6 overflow-auto">
-                <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
-                  <div className="space-y-2">
-                    <h1 className="text-2xl sm:text-3xl font-display font-bold text-foreground">
-                      What would you like to learn today?
-                    </h1>
-                    <p className="text-sm sm:text-base text-muted-foreground">
-                      Solve math problems, translate languages, generate AI media, create music, draw art, generate scripts, play games, or start a new conversation
-                    </p>
-                  </div>
-                  
-                  <Tabs defaultValue="math" className="w-full">
-                    <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 max-w-5xl h-auto gap-1 p-1">
-                      <TabsTrigger value="math" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
-                        <Calculator className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">Math Solver</span>
-                        <span className="sm:hidden">Math</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="translator" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
-                        <Languages className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">Translator</span>
-                        <span className="sm:hidden">Translate</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="scripter" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
-                        <Code2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">Scripter</span>
-                        <span className="sm:hidden">Code</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="media" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
-                        <Image className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">Media Gallery</span>
-                        <span className="sm:hidden">Media</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="music" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
-                        <Music2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">Music Generator</span>
-                        <span className="sm:hidden">Music</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="art" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
-                        <Palette className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">Art</span>
-                        <span className="sm:hidden">Art</span>
-                      </TabsTrigger>
-                      <TabsTrigger value="games" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
-                        <Gamepad2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                        <span className="hidden sm:inline">Games</span>
-                        <span className="sm:hidden">Games</span>
-                      </TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="math" className="mt-4 sm:mt-6">
-                      <ErrorBoundary>
-                        <MathProblemSolver />
-                      </ErrorBoundary>
-                    </TabsContent>
-                    
-                    <TabsContent value="translator" className="mt-4 sm:mt-6 h-[calc(100vh-12rem)] sm:h-[calc(100vh-16rem)]">
-                      <div className="h-full border border-border rounded-lg overflow-hidden">
-                        <ErrorBoundary>
-                          <TranslatorChat />
-                        </ErrorBoundary>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="scripter" className="mt-4 sm:mt-6 h-[calc(100vh-12rem)] sm:h-[calc(100vh-16rem)]">
-                      <div className="h-full border border-border rounded-lg overflow-hidden">
-                        <ErrorBoundary>
-                          <Scripter />
-                        </ErrorBoundary>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="media" className="mt-4 sm:mt-6">
-                      <ErrorBoundary>
-                        <MediaDisplay />
-                      </ErrorBoundary>
-                    </TabsContent>
-                    
-                    <TabsContent value="music" className="mt-4 sm:mt-6">
-                      <ErrorBoundary>
-                        <MusicGenerator />
-                      </ErrorBoundary>
-                    </TabsContent>
-                    
-                    <TabsContent value="art" className="mt-4 sm:mt-6 h-[calc(100vh-12rem)] sm:h-[calc(100vh-16rem)]">
-                      <ErrorBoundary>
-                        <ArtCanvas />
-                      </ErrorBoundary>
-                    </TabsContent>
-                    
-                    <TabsContent value="games" className="mt-4 sm:mt-6">
-                      <ErrorBoundary>
-                        <GamesView />
-                      </ErrorBoundary>
-                    </TabsContent>
-                  </Tabs>
-                </div>
-              </div>
-            )}
-          </main>
-        </div>
-        <footer className="border-t border-border py-4 sm:py-6 px-4 sm:px-6 text-center text-sm text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} Neroxa AI • Built with ❤️ using{' '}
-            <a
-              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              caffeine.ai
-            </a>
-          </p>
-        </footer>
-      </div>
-    </ErrorBoundary>
-  );
-}
-
-// Layout component for routes that need the standard app shell
-function RootLayout() {
-  return (
-    <ErrorBoundary>
-      <Outlet />
-      <Toaster />
-    </ErrorBoundary>
-  );
-}
-
-// Router setup
-const rootRoute = createRootRoute({
-  component: RootLayout,
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+    },
+  },
 });
+
+function Layout() {
+  return (
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
+const rootRoute = createRootRoute({
+  component: Layout,
+});
+
+// Wrapper component for ChatView with default sessionId
+function ChatViewWrapper() {
+  return <ChatView sessionId="default" />;
+}
+
+// Wrapper component for SharedContentViewer that extracts params from route
+function SharedContentViewerWrapper() {
+  // For now, we'll default to 'art' type and extract ID from URL
+  // In a real app, you'd parse the contentId to determine type
+  const contentId = window.location.pathname.split('/').pop() || '';
+  const type = contentId.startsWith('art-') ? 'art' : 'music';
+  const id = contentId.replace(/^(art-|music-)/, '');
+  
+  return <SharedContentViewer type={type} id={id} />;
+}
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: MainApp,
+  component: ChatViewWrapper,
 });
 
-const sharedArtRoute = createRoute({
+const mathRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/shared/art/$artworkId',
-  component: () => {
-    const { artworkId } = sharedArtRoute.useParams();
-    return (
-      <ErrorBoundary>
-        <SharedContentViewer type="art" id={artworkId} />
-      </ErrorBoundary>
-    );
-  },
+  path: '/math',
+  component: MathProblemSolver,
 });
 
-const sharedMusicRoute = createRoute({
+const mediaRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/shared/music/$musicId',
-  component: () => {
-    const { musicId } = sharedMusicRoute.useParams();
-    return (
-      <ErrorBoundary>
-        <SharedContentViewer type="music" id={musicId} />
-      </ErrorBoundary>
-    );
-  },
+  path: '/media',
+  component: MediaDisplay,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, sharedArtRoute, sharedMusicRoute]);
-
-const router = createRouter({ 
-  routeTree,
-  defaultPreload: 'intent',
+const translatorRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/translator',
+  component: TranslatorChat,
 });
+
+const musicRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/music',
+  component: MusicGenerator,
+});
+
+const artRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/art',
+  component: ArtCanvas,
+});
+
+const codeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/code',
+  component: Scripter,
+});
+
+const gamesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/games',
+  component: GamesView,
+});
+
+const gameBrowseRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/games/browse',
+  component: GameBrowser,
+});
+
+const gameStudioRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/games/studio',
+  component: GameStudio,
+});
+
+const sharedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/shared/$contentId',
+  component: SharedContentViewerWrapper,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  mathRoute,
+  mediaRoute,
+  translatorRoute,
+  musicRoute,
+  artRoute,
+  codeRoute,
+  gamesRoute,
+  gameBrowseRoute,
+  gameStudioRoute,
+  sharedRoute,
+]);
+
+const router = createRouter({ routeTree });
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -215,7 +149,62 @@ declare module '@tanstack/react-router' {
 }
 
 function App() {
-  return <RouterProvider router={router} />;
+  const [gameModeModalOpen, setGameModeModalOpen] = useState(false);
+  const [predefinedGameSelectorOpen, setPredefinedGameSelectorOpen] = useState(false);
+  const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
+
+  const handleGameModeOpen = () => {
+    setGameModeModalOpen(true);
+  };
+
+  const handlePlayClick = () => {
+    setGameModeModalOpen(false);
+    router.navigate({ to: '/games/browse' });
+  };
+
+  const handleCreateClick = () => {
+    setGameModeModalOpen(false);
+    router.navigate({ to: '/games/studio' });
+  };
+
+  const handleBuiltInGamesClick = () => {
+    setGameModeModalOpen(false);
+    setPredefinedGameSelectorOpen(true);
+  };
+
+  const handlePredefinedGameSelect = (gameId: string) => {
+    setSelectedGameId(gameId);
+  };
+
+  const handleCloseGamePlayer = () => {
+    setSelectedGameId(null);
+  };
+
+  return (
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <QueryClientProvider client={queryClient}>
+        <InternetIdentityProvider>
+          <RouterProvider router={router} context={{ onGameModeOpen: handleGameModeOpen }} />
+          <GameModeModal
+            open={gameModeModalOpen}
+            onOpenChange={setGameModeModalOpen}
+            onPlayClick={handlePlayClick}
+            onCreateClick={handleCreateClick}
+            onBuiltInGamesClick={handleBuiltInGamesClick}
+          />
+          <PredefinedGameSelector
+            open={predefinedGameSelectorOpen}
+            onOpenChange={setPredefinedGameSelectorOpen}
+            onGameSelect={handlePredefinedGameSelect}
+          />
+          {selectedGameId && (
+            <GamePlayer gameId={selectedGameId} onClose={handleCloseGamePlayer} />
+          )}
+          <Toaster />
+        </InternetIdentityProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;

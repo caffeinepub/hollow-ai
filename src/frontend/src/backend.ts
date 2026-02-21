@@ -94,13 +94,14 @@ export interface UserProfile {
     name: string;
     totalScore: bigint;
 }
-export interface GameMetadata {
+export interface Game {
+    id: string;
     title: string;
+    creator: Principal;
     description: string;
-    author: Principal;
+    lastModified: bigint;
     creationTime: bigint;
-    highScore: bigint;
-    category: string;
+    gameCode: string;
 }
 export interface _CaffeineStorageCreateCertificateResult {
     method: string;
@@ -127,25 +128,21 @@ export interface backendInterface {
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createGame(title: string, category: string, description: string): Promise<string>;
+    createGame(title: string, description: string, gameCode: string): Promise<string>;
     deleteGame(id: string): Promise<void>;
-    getAllGames(): Promise<Array<GameMetadata>>;
-    getAuthors(): Promise<Array<Principal>>;
+    getAllGames(): Promise<Array<Game>>;
+    getCallerGameCount(): Promise<bigint>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getCategories(): Promise<Array<string>>;
-    getGame(id: string): Promise<GameMetadata | null>;
-    getHighScore(id: string): Promise<bigint>;
-    getTemplate(name: string): Promise<string>;
+    getCreatorGameCount(creator: Principal): Promise<bigint>;
+    getCreators(): Promise<Array<Principal>>;
+    getGame(id: string): Promise<Game | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
-    listTemplateNames(): Promise<Array<string>>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    searchGamesByAuthor(author: Principal): Promise<Array<GameMetadata>>;
-    searchGamesByCategory(category: string): Promise<Array<GameMetadata>>;
-    updateHighScore(id: string, score: bigint): Promise<void>;
+    updateGame(id: string, title: string | null, description: string | null, gameCode: string | null): Promise<void>;
 }
-import type { GameMetadata as _GameMetadata, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
+import type { Game as _Game, UserProfile as _UserProfile, UserRole as _UserRole, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _caffeineStorageBlobIsLive(arg0: Uint8Array): Promise<boolean> {
@@ -288,7 +285,7 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getAllGames(): Promise<Array<GameMetadata>> {
+    async getAllGames(): Promise<Array<Game>> {
         if (this.processError) {
             try {
                 const result = await this.actor.getAllGames();
@@ -302,17 +299,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async getAuthors(): Promise<Array<Principal>> {
+    async getCallerGameCount(): Promise<bigint> {
         if (this.processError) {
             try {
-                const result = await this.actor.getAuthors();
+                const result = await this.actor.getCallerGameCount();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getAuthors();
+            const result = await this.actor.getCallerGameCount();
             return result;
         }
     }
@@ -344,21 +341,35 @@ export class Backend implements backendInterface {
             return from_candid_UserRole_n11(this._uploadFile, this._downloadFile, result);
         }
     }
-    async getCategories(): Promise<Array<string>> {
+    async getCreatorGameCount(arg0: Principal): Promise<bigint> {
         if (this.processError) {
             try {
-                const result = await this.actor.getCategories();
+                const result = await this.actor.getCreatorGameCount(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getCategories();
+            const result = await this.actor.getCreatorGameCount(arg0);
             return result;
         }
     }
-    async getGame(arg0: string): Promise<GameMetadata | null> {
+    async getCreators(): Promise<Array<Principal>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCreators();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCreators();
+            return result;
+        }
+    }
+    async getGame(arg0: string): Promise<Game | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getGame(arg0);
@@ -370,34 +381,6 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getGame(arg0);
             return from_candid_opt_n13(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getHighScore(arg0: string): Promise<bigint> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getHighScore(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getHighScore(arg0);
-            return result;
-        }
-    }
-    async getTemplate(arg0: string): Promise<string> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getTemplate(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getTemplate(arg0);
-            return result;
         }
     }
     async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
@@ -428,20 +411,6 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async listTemplateNames(): Promise<Array<string>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.listTemplateNames();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.listTemplateNames();
-            return result;
-        }
-    }
     async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
         if (this.processError) {
             try {
@@ -456,45 +425,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async searchGamesByAuthor(arg0: Principal): Promise<Array<GameMetadata>> {
+    async updateGame(arg0: string, arg1: string | null, arg2: string | null, arg3: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.searchGamesByAuthor(arg0);
+                const result = await this.actor.updateGame(arg0, to_candid_opt_n14(this._uploadFile, this._downloadFile, arg1), to_candid_opt_n14(this._uploadFile, this._downloadFile, arg2), to_candid_opt_n14(this._uploadFile, this._downloadFile, arg3));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.searchGamesByAuthor(arg0);
-            return result;
-        }
-    }
-    async searchGamesByCategory(arg0: string): Promise<Array<GameMetadata>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.searchGamesByCategory(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.searchGamesByCategory(arg0);
-            return result;
-        }
-    }
-    async updateHighScore(arg0: string, arg1: bigint): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.updateHighScore(arg0, arg1);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.updateHighScore(arg0, arg1);
+            const result = await this.actor.updateGame(arg0, to_candid_opt_n14(this._uploadFile, this._downloadFile, arg1), to_candid_opt_n14(this._uploadFile, this._downloadFile, arg2), to_candid_opt_n14(this._uploadFile, this._downloadFile, arg3));
             return result;
         }
     }
@@ -508,7 +449,7 @@ function from_candid__CaffeineStorageRefillResult_n4(_uploadFile: (file: Externa
 function from_candid_opt_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_GameMetadata]): GameMetadata | null {
+function from_candid_opt_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Game]): Game | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_opt_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [boolean]): boolean | null {
@@ -546,6 +487,9 @@ function to_candid__CaffeineStorageRefillInformation_n2(_uploadFile: (file: Exte
 }
 function to_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CaffeineStorageRefillInformation | null): [] | [__CaffeineStorageRefillInformation] {
     return value === null ? candid_none() : candid_some(to_candid__CaffeineStorageRefillInformation_n2(_uploadFile, _downloadFile, value));
+}
+function to_candid_opt_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: string | null): [] | [string] {
+    return value === null ? candid_none() : candid_some(value);
 }
 function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     proposed_top_up_amount?: bigint;

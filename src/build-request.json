@@ -1,66 +1,50 @@
 {
   "kind": "build_request",
-  "title": "Add playable AI-generated games to Games category",
-  "projectName": "Neroxa AI",
+  "title": "Add playable games accessible from game play button",
+  "projectName": "Nexora Games",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Implement a backend endpoint that generates playable game code (HTML/CSS/JavaScript) based on game metadata (title, category, description)",
-      "target": "backend",
+      "text": "Ensure the game play button opens a game selection interface that displays Flappy Bird along with other available games (Snake, Pong, Breakout)",
+      "target": "frontend",
       "source": {
         "messageIds": [
           "msg-latest"
         ],
         "quotes": [
-          "in the games catigory make it so  there are real fun games you can acually play that the ai made"
+          "on the gaame button when you click play make it so games like flappy bird and all that stuff ar avaliable to play"
         ]
       },
       "acceptanceCriteria": [
-        "Backend function accepts game metadata and returns complete HTML/CSS/JavaScript code for a playable game",
-        "Generated games are simple, functional, and playable in a browser",
-        "Game code includes basic mechanics appropriate to the game type (puzzle, arcade, strategy, etc.)"
+        "Clicking the play button shows a list or grid of available games including Flappy Bird",
+        "All games (Flappy Bird, Snake, Pong, Breakout) are visible and selectable",
+        "Clicking on any game launches it in a playable state"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
+      "text": "Implement a fully playable Flappy Bird game with bird physics, pipe obstacles, score tracking, and game over detection",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-latest"
         ],
         "quotes": [
-          "there are real fun games you can acually play"
+          "games like flappy bird"
         ]
       },
       "acceptanceCriteria": [
-        "GamePlayer fetches and displays generated game code when user clicks play",
-        "Games run in a secure sandbox (iframe with sandbox attributes)",
-        "Game controls and interactions work within the player interface"
+        "Bird responds to tap/click controls with realistic gravity and jump physics",
+        "Pipes spawn continuously and move from right to left",
+        "Score increments when bird passes through pipes",
+        "Game ends when bird collides with pipes or ground",
+        "Game can be restarted after game over"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Create a library of playable game templates that the AI can generate: simple arcade games (Snake, Pong variants), puzzle games (Tic-Tac-Toe, Memory Match), and reaction games (Whack-a-Mole, Color Match)",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "real fun games you can acually play that the ai made"
-        ]
-      },
-      "acceptanceCriteria": [
-        "At least 5 different game templates are available for generation",
-        "Each game type has clear rules, win/lose conditions, and score tracking",
-        "Games are responsive and work on different screen sizes"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
+      "text": "Integrate the Flappy Bird game template into GamePlayer component alongside existing game templates (Snake, Pong, Breakout)",
       "target": "frontend",
       "source": {
         "messageIds": [
@@ -68,40 +52,29 @@
         ]
       },
       "acceptanceCriteria": [
-        "Game cards display 'Play Now' for AI-generated playable games",
-        "Clicking play loads the generated game code in GamePlayer",
-        "Loading states are shown while games are being generated or loaded"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Games can save state to backend between sessions",
-        "High scores and progress are preserved across browser sessions",
-        "Users can resume games from where they left off"
+        "Flappy Bird is available as a predefined game template in GamePlayer",
+        "Flappy Bird game loads correctly in the iframe player",
+        "High score tracking works for Flappy Bird",
+        "Game controls are responsive and smooth"
       ]
     }
   ],
   "constraints": [
-    "Generated game code must be safe and sandboxed to prevent security issues",
-    "Games must not require external dependencies or CDN resources",
-    "Game generation must complete within reasonable time (under 3 seconds)"
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, or components/ui directory",
+    "Maintain single-actor backend architecture in backend/main.mo",
+    "Use existing GamePlayer component infrastructure for game rendering"
   ],
   "nonGoals": [
-    "Multiplayer or networked game features",
-    "3D games or complex physics engines",
-    "Integration with external game APIs or services",
-    "User-uploaded custom games"
+    "Adding multiplayer functionality to games",
+    "Creating custom game editor for Flappy Bird",
+    "Integrating external game APIs or third-party game libraries",
+    "Adding social features like leaderboards or sharing"
   ],
   "imageRequirements": {
-    "required": [],
+    "required": [
+      "Pixel art flappy bird character sprite with yellow body and small wings (flappy-bird-sprite.dim_64x64.png)",
+      "Green pipe obstacle sprite in pixel art style for Flappy Bird game (pipe-sprite.dim_64x128.png)"
+    ],
     "edits": []
   }
 }

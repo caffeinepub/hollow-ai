@@ -1,33 +1,40 @@
 import { useState, useMemo } from 'react';
-import { useGameCatalogue, useCategories } from '../hooks/useGameCatalogue';
+import { useGameCatalogue } from '../hooks/useGameCatalogue';
 import { GameCard } from './GameCard';
-import { GamePlayer } from './GamePlayer';
+import GamePlayer from './GamePlayer';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Loader2, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const ITEMS_PER_PAGE = 24;
 
 export function GamesView() {
   const { data: games, isLoading, error } = useGameCatalogue();
-  const { data: categories } = useCategories();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [filterType, setFilterType] = useState<'all' | 'user' | 'ai'>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
 
   const filteredGames = useMemo(() => {
     if (!games) return [];
     
-    return games.filter(game => {
+    let filtered = games.filter(game => {
       const matchesSearch = game.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            game.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || game.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      return matchesSearch;
     });
-  }, [games, searchTerm, selectedCategory]);
+
+    // Filter by creator type
+    if (filterType === 'user') {
+      filtered = filtered.filter(game => game.creator.toString() !== '2vxsx-fae');
+    } else if (filterType === 'ai') {
+      filtered = filtered.filter(game => game.creator.toString() === '2vxsx-fae');
+    }
+
+    return filtered;
+  }, [games, searchTerm, filterType]);
 
   const paginatedGames = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -42,8 +49,8 @@ export function GamesView() {
     setCurrentPage(1);
   };
 
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
+  const handleFilterChange = (value: string) => {
+    setFilterType(value as 'all' | 'user' | 'ai');
     setCurrentPage(1);
   };
 
@@ -71,41 +78,34 @@ export function GamesView() {
       <div className="space-y-4">
         <div className="space-y-2">
           <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground">
-            AI-Generated Games
+            Game Catalogue
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Play fun games created by AI • {games?.length || 0} games available
+            Play games created by AI and the community • {games?.length || 0} games available
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search games..."
-              value={searchTerm}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="pl-9 min-h-[44px]"
-            />
-          </div>
-          <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-full sm:w-[200px] min-h-[44px]">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              {categories?.map(category => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <Tabs value={filterType} onValueChange={handleFilterChange}>
+          <TabsList className="grid w-full grid-cols-3 max-w-md">
+            <TabsTrigger value="all">All Games</TabsTrigger>
+            <TabsTrigger value="user">User Made</TabsTrigger>
+            <TabsTrigger value="ai">AI Made</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search games..."
+            value={searchTerm}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="pl-9 min-h-[44px]"
+          />
         </div>
 
         <div className="text-sm text-muted-foreground">
           Showing {paginatedGames.length} of {filteredGames.length} games
-          {(searchTerm || selectedCategory !== 'all') && ` (filtered from ${games?.length})`}
+          {(searchTerm || filterType !== 'all') && ` (filtered from ${games?.length})`}
         </div>
 
         <ScrollArea className="h-[calc(100vh-28rem)] sm:h-[calc(100vh-24rem)]">
@@ -117,9 +117,9 @@ export function GamesView() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-4">
               {paginatedGames.map(game => (
                 <GameCard
-                  key={game.title}
+                  key={game.id}
                   game={game}
-                  onPlay={() => setSelectedGameId(game.title)}
+                  onPlay={() => setSelectedGameId(game.id)}
                 />
               ))}
             </div>

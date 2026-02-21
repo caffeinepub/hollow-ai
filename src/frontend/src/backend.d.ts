@@ -12,13 +12,14 @@ export interface UserProfile {
     name: string;
     totalScore: bigint;
 }
-export interface GameMetadata {
+export interface Game {
+    id: string;
     title: string;
+    creator: Principal;
     description: string;
-    author: Principal;
+    lastModified: bigint;
     creationTime: bigint;
-    highScore: bigint;
-    category: string;
+    gameCode: string;
 }
 export enum UserRole {
     admin = "admin",
@@ -27,21 +28,17 @@ export enum UserRole {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createGame(title: string, category: string, description: string): Promise<string>;
+    createGame(title: string, description: string, gameCode: string): Promise<string>;
     deleteGame(id: string): Promise<void>;
-    getAllGames(): Promise<Array<GameMetadata>>;
-    getAuthors(): Promise<Array<Principal>>;
+    getAllGames(): Promise<Array<Game>>;
+    getCallerGameCount(): Promise<bigint>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getCategories(): Promise<Array<string>>;
-    getGame(id: string): Promise<GameMetadata | null>;
-    getHighScore(id: string): Promise<bigint>;
-    getTemplate(name: string): Promise<string>;
+    getCreatorGameCount(creator: Principal): Promise<bigint>;
+    getCreators(): Promise<Array<Principal>>;
+    getGame(id: string): Promise<Game | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
-    listTemplateNames(): Promise<Array<string>>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    searchGamesByAuthor(author: Principal): Promise<Array<GameMetadata>>;
-    searchGamesByCategory(category: string): Promise<Array<GameMetadata>>;
-    updateHighScore(id: string, score: bigint): Promise<void>;
+    updateGame(id: string, title: string | null, description: string | null, gameCode: string | null): Promise<void>;
 }

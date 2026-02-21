@@ -1,32 +1,33 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Media streaming platform with AI-generated playable games in the Games category",
+  "summary": "Game hub application with multiple playable games including Flappy Bird",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Pixel art flappy bird character sprite with yellow body and small wings (flappy-bird-sprite.dim_64x64.png)\n- Green pipe obstacle sprite in pixel art style for Flappy Bird game (pipe-sprite.dim_64x128.png)",
   "existing_features": [
     {
-      "id": "feature-update-gameplayer-component-to-render-ai-generated-game-code-in-an-iframe-or-sandboxed-container",
-      "title": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
+      "id": "feature-ensure-the-game-play-button-opens-a-game-selection-interface-that-displays-flappy-bird-along-with-other-available-games-snake-pong-breakout",
+      "title": "Ensure the game play button opens a game selection interface that displays Flappy Bird along with other available games (Snake, Pong, Breakout)",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-fully-playable-flappy-bird-game-with-bird-physics-pipe-obstacles-score-tracking-and-game-over-detection",
+      "title": "Implement a fully playable Flappy Bird game with bird physics, pipe obstacles, score tracking, and game over detection",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-game-catalogue-in-usegamecatalogue-hook-to-mark-games-as-playable-and-integrate-with-the-game-generation-backend",
-      "title": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
+      "id": "feature-integrate-the-flappy-bird-game-template-into-gameplayer-component-alongside-existing-game-templates-snake-pong-breakout",
+      "title": "Integrate the Flappy Bird game template into GamePlayer component alongside existing game templates (Snake, Pong, Breakout)",
       "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-game-state-persistence-so-that-generated-games-can-save-and-load-player-progress-scores-levels-game-state",
-      "title": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
-      "reqIds": [
-        "REQ-5"
+        "REQ-3"
       ],
       "version": 1
     }
@@ -34,28 +35,13 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add playable AI-generated games to Games category",
+      "summary": "Add multiple playable games (Flappy Bird, etc.) accessible from play button",
       "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Implement a backend endpoint that generates playable game code (HTML/CSS/JavaScript) based on game metadata (title, category, description)",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Create a library of playable game templates that the AI can generate: simple arcade games (Snake, Pong variants), puzzle games (Tic-Tac-Toe, Memory Match), and reaction games (Whack-a-Mole, Color Match)",
-      "reqIds": [
-        "REQ-3"
-      ],
       "status": "pending"
     }
   ],
-  "projectName": "Neroxa AI",
+  "gameProjectType": "2d",
+  "projectName": "Nexora Games",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

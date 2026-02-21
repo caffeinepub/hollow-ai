@@ -24,13 +24,14 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const GameMetadata = IDL.Record({
+export const Game = IDL.Record({
+  'id' : IDL.Text,
   'title' : IDL.Text,
+  'creator' : IDL.Principal,
   'description' : IDL.Text,
-  'author' : IDL.Principal,
+  'lastModified' : IDL.Int,
   'creationTime' : IDL.Int,
-  'highScore' : IDL.Nat,
-  'category' : IDL.Text,
+  'gameCode' : IDL.Text,
 });
 export const UserProfile = IDL.Record({
   'gamesPlayed' : IDL.Nat,
@@ -69,33 +70,25 @@ export const idlService = IDL.Service({
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createGame' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Text], []),
   'deleteGame' : IDL.Func([IDL.Text], [], []),
-  'getAllGames' : IDL.Func([], [IDL.Vec(GameMetadata)], ['query']),
-  'getAuthors' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+  'getAllGames' : IDL.Func([], [IDL.Vec(Game)], ['query']),
+  'getCallerGameCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getCategories' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-  'getGame' : IDL.Func([IDL.Text], [IDL.Opt(GameMetadata)], ['query']),
-  'getHighScore' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
-  'getTemplate' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
+  'getCreatorGameCount' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
+  'getCreators' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+  'getGame' : IDL.Func([IDL.Text], [IDL.Opt(Game)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'listTemplateNames' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-  'searchGamesByAuthor' : IDL.Func(
-      [IDL.Principal],
-      [IDL.Vec(GameMetadata)],
-      ['query'],
+  'updateGame' : IDL.Func(
+      [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [],
+      [],
     ),
-  'searchGamesByCategory' : IDL.Func(
-      [IDL.Text],
-      [IDL.Vec(GameMetadata)],
-      ['query'],
-    ),
-  'updateHighScore' : IDL.Func([IDL.Text, IDL.Nat], [], []),
 });
 
 export const idlInitArgs = [];
@@ -117,13 +110,14 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const GameMetadata = IDL.Record({
+  const Game = IDL.Record({
+    'id' : IDL.Text,
     'title' : IDL.Text,
+    'creator' : IDL.Principal,
     'description' : IDL.Text,
-    'author' : IDL.Principal,
+    'lastModified' : IDL.Int,
     'creationTime' : IDL.Int,
-    'highScore' : IDL.Nat,
-    'category' : IDL.Text,
+    'gameCode' : IDL.Text,
   });
   const UserProfile = IDL.Record({
     'gamesPlayed' : IDL.Nat,
@@ -162,33 +156,25 @@ export const idlFactory = ({ IDL }) => {
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createGame' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Text], []),
     'deleteGame' : IDL.Func([IDL.Text], [], []),
-    'getAllGames' : IDL.Func([], [IDL.Vec(GameMetadata)], ['query']),
-    'getAuthors' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'getAllGames' : IDL.Func([], [IDL.Vec(Game)], ['query']),
+    'getCallerGameCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getCategories' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
-    'getGame' : IDL.Func([IDL.Text], [IDL.Opt(GameMetadata)], ['query']),
-    'getHighScore' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
-    'getTemplate' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
+    'getCreatorGameCount' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
+    'getCreators' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'getGame' : IDL.Func([IDL.Text], [IDL.Opt(Game)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'listTemplateNames' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
-    'searchGamesByAuthor' : IDL.Func(
-        [IDL.Principal],
-        [IDL.Vec(GameMetadata)],
-        ['query'],
+    'updateGame' : IDL.Func(
+        [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [],
+        [],
       ),
-    'searchGamesByCategory' : IDL.Func(
-        [IDL.Text],
-        [IDL.Vec(GameMetadata)],
-        ['query'],
-      ),
-    'updateHighScore' : IDL.Func([IDL.Text, IDL.Nat], [], []),
   });
 };
 

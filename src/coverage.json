@@ -1,99 +1,68 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T03:39:01.146Z",
+  "generatedAt": "2026-02-21T04:24:06.485Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
+    "total": 3,
     "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Implement a backend endpoint that generates playable game code (HTML/CSS/JavaScript) based on game metadata (title, category, description)",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Ensure the game play button opens a game selection interface that displays Flappy Bird along with other available games (Snake, Pong, Breakout)",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/GameModeModal.tsx",
+          "frontend/src/components/PredefinedGameSelector.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GameModeModal.tsx",
+          "frontend/src/components/PredefinedGameSelector.tsx",
+          "frontend/src/App.tsx"
+        ]
       },
       {
         "id": "REQ-2",
-        "summary": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
+        "summary": "Implement a fully playable Flappy Bird game with bird physics, pipe obstacles, score tracking, and game over detection",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/GamePlayer.tsx"
+          "frontend/src/templates/flappyBirdTemplate.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/GamePlayer.tsx"
+          "frontend/src/templates/flappyBirdTemplate.ts"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Create a library of playable game templates that the AI can generate: simple arcade games (Snake, Pong variants), puzzle games (Tic-Tac-Toe, Memory Match), and reaction games (Whack-a-Mole, Color Match)",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
+        "summary": "Integrate the Flappy Bird game template into GamePlayer component alongside existing game templates (Snake, Pong, Breakout)",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useGameCatalogue.ts",
-          "frontend/src/components/GameCard.tsx",
-          "frontend/src/components/GamesView.tsx"
+          "frontend/src/components/GamePlayer.tsx",
+          "frontend/src/components/PredefinedGameSelector.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useGameCatalogue.ts",
-          "frontend/src/components/GameCard.tsx",
-          "frontend/src/components/GamesView.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useGameState.ts",
           "frontend/src/components/GamePlayer.tsx",
-          "frontend/src/hooks/useUserProfile.ts",
-          "frontend/src/components/ProfileSetup.tsx",
-          "frontend/src/components/Header.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useGameState.ts",
-          "frontend/src/components/GamePlayer.tsx",
-          "frontend/src/hooks/useUserProfile.ts",
-          "frontend/src/components/ProfileSetup.tsx",
-          "frontend/src/components/Header.tsx"
+          "frontend/src/components/PredefinedGameSelector.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/authorization/MixinAuthorization.mo",
-    "backend/authorization/access-control.mo",
-    "backend/main.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/GameCard.tsx",
+    "frontend/public/assets/generated/flappy-bird-sprite.dim_64x64.png",
+    "frontend/public/assets/generated/pipe-sprite.dim_64x128.png",
+    "frontend/src/App.tsx",
+    "frontend/src/components/GameModeModal.tsx",
     "frontend/src/components/GamePlayer.tsx",
-    "frontend/src/components/GamesView.tsx",
-    "frontend/src/components/Header.tsx",
-    "frontend/src/components/ProfileSetup.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useGameCatalogue.ts",
-    "frontend/src/hooks/useGameState.ts",
-    "frontend/src/hooks/useUserProfile.ts",
-    "frontend/src/utils/urlParams.ts",
+    "frontend/src/components/PredefinedGameSelector.tsx",
+    "frontend/src/templates/flappyBirdTemplate.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

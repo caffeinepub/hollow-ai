@@ -10,13 +10,14 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface GameMetadata {
+export interface Game {
+  'id' : string,
   'title' : string,
+  'creator' : Principal,
   'description' : string,
-  'author' : Principal,
+  'lastModified' : bigint,
   'creationTime' : bigint,
-  'highScore' : bigint,
-  'category' : string,
+  'gameCode' : string,
 }
 export interface UserProfile {
   'gamesPlayed' : bigint,
@@ -57,21 +58,20 @@ export interface _SERVICE {
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createGame' : ActorMethod<[string, string, string], string>,
   'deleteGame' : ActorMethod<[string], undefined>,
-  'getAllGames' : ActorMethod<[], Array<GameMetadata>>,
-  'getAuthors' : ActorMethod<[], Array<Principal>>,
+  'getAllGames' : ActorMethod<[], Array<Game>>,
+  'getCallerGameCount' : ActorMethod<[], bigint>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
-  'getCategories' : ActorMethod<[], Array<string>>,
-  'getGame' : ActorMethod<[string], [] | [GameMetadata]>,
-  'getHighScore' : ActorMethod<[string], bigint>,
-  'getTemplate' : ActorMethod<[string], string>,
+  'getCreatorGameCount' : ActorMethod<[Principal], bigint>,
+  'getCreators' : ActorMethod<[], Array<Principal>>,
+  'getGame' : ActorMethod<[string], [] | [Game]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'listTemplateNames' : ActorMethod<[], Array<string>>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
-  'searchGamesByAuthor' : ActorMethod<[Principal], Array<GameMetadata>>,
-  'searchGamesByCategory' : ActorMethod<[string], Array<GameMetadata>>,
-  'updateHighScore' : ActorMethod<[string, bigint], undefined>,
+  'updateGame' : ActorMethod<
+    [string, [] | [string], [] | [string], [] | [string]],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

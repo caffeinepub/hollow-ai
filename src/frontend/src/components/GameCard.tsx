@@ -1,15 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Play } from 'lucide-react';
-import type { GameMetadata } from '../backend';
+import { Play, User, Bot } from 'lucide-react';
+import type { Game } from '../backend';
 
 interface GameCardProps {
-  game: GameMetadata;
+  game: Game;
   onPlay: () => void;
 }
 
 export function GameCard({ game, onPlay }: GameCardProps) {
+  const isAICreated = game.creator.toString() === '2vxsx-fae';
+  
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 hover:border-primary/50 cursor-pointer overflow-hidden">
       <div 
@@ -28,8 +30,12 @@ export function GameCard({ game, onPlay }: GameCardProps) {
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-base sm:text-lg line-clamp-1">{game.title}</CardTitle>
-          <Badge variant="secondary" className="shrink-0 text-xs">
-            {game.category}
+          <Badge variant={isAICreated ? 'default' : 'secondary'} className="shrink-0 text-xs">
+            {isAICreated ? (
+              <><Bot className="h-3 w-3 mr-1" /> AI</>
+            ) : (
+              <><User className="h-3 w-3 mr-1" /> User</>
+            )}
           </Badge>
         </div>
         <CardDescription className="line-clamp-2 text-xs sm:text-sm">

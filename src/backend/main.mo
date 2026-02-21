@@ -1,13 +1,13 @@
 import Map "mo:core/Map";
 import Text "mo:core/Text";
-import List "mo:core/List";
-import Nat "mo:core/Nat";
-import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Principal "mo:core/Principal";
 import Iter "mo:core/Iter";
 import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+
+
 
 actor {
   // Initialize the access control system
@@ -44,94 +44,66 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  type GameMetadata = {
+  // Extended GameType
+  public type Game = {
+    id : Text;
     title : Text;
-    category : Text;
     description : Text;
-    author : Principal;
+    creator : Principal;
+    gameCode : Text;
     creationTime : Int;
-    highScore : Nat;
+    lastModified : Int;
   };
 
-  let games = Map.empty<Text, GameMetadata>();
+  // Extended Game storage implementation
+  let games = Map.empty<Text, Game>();
 
-  // Predefined Game Templates (as text blobs)
-  let templates = Map.fromIter(
-    [
-      ("snake", "<html>...Snake Game Code...</html>"),
-      ("pong", "<html>...Pong Game Code...</html>"),
-      ("tictactoe", "<html>...Tic-Tac-Toe Game Code...</html>"),
-      ("memory", "<html>...Memory Match Game Code...</html>"),
-      ("whackamole", "<html>...Whack-a-Mole Game Code...</html>"),
-      ("colormatch", "<html>...Color Match Game Code...</html>"),
-    ].values()
-  );
-
-  let categories = List.empty<Text>();
-
-  public query func getGame(id : Text) : async ?GameMetadata {
+  // No more templates or categories - categories are handled in frontend now
+  public query func getGame(id : Text) : async ?Game {
     games.get(id);
   };
 
-  public query func getAllGames() : async [GameMetadata] {
+  public query func getAllGames() : async [Game] {
     games.values().toArray();
   };
 
-  public query func getCategories() : async [Text] {
-    categories.toArray();
-  };
-
-  public query func searchGamesByCategory(category : Text) : async [GameMetadata] {
-    let filtered = List.empty<GameMetadata>();
-    for (game in games.values()) {
-      if (Text.equal(game.category, category)) {
-        filtered.add(game);
-      };
-    };
-    filtered.toArray();
-  };
-
-  public query ({ caller }) func searchGamesByAuthor(author : Principal) : async [GameMetadata] {
-    let filtered = List.empty<GameMetadata>();
-    for (game in games.values()) {
-      if (Principal.equal(game.author, author)) {
-        filtered.add(game);
-      };
-    };
-    filtered.toArray();
-  };
-
-  public query func getHighScore(id : Text) : async Nat {
-    switch (games.get(id)) {
-      case (?game) { game.highScore };
-      case (null) { Runtime.trap("Game not found") };
-    };
-  };
-
-  public query func getTemplate(name : Text) : async Text {
-    switch (templates.get(name)) {
-      case (?template) { template };
-      case (null) {
-        Runtime.trap("Template not found");
-      };
-    };
-  };
-
-  public query func listTemplateNames() : async [Text] {
-    templates.keys().toArray();
-  };
-
-  public shared ({ caller }) func updateHighScore(id : Text, score : Nat) : async () {
+  public shared ({ caller }) func createGame(title : Text, description : Text, gameCode : Text) : async Text {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can update scores");
+      Runtime.trap("Unauthorized: Only users can create games");
     };
 
+    // Removed invalid slice usage - just use title for id
+    let id = title;
+    let game : Game = {
+      id;
+      title;
+      description;
+      creator = caller;
+      gameCode;
+      creationTime = 0;
+      lastModified = 0;
+    };
+
+    games.add(id, game);
+    id;
+  };
+
+  public shared ({ caller }) func updateGame(id : Text, title : ?Text, description : ?Text, gameCode : ?Text) : async () {
     switch (games.get(id)) {
       case (?game) {
-        if (score > game.highScore) {
-          let updatedGame = { game with highScore = score };
-          games.add(id, updatedGame);
+        if (not Principal.equal(caller, game.creator)) {
+          Runtime.trap("Unauthorized: Only the game creator can update this game");
         };
+
+        let updatedGame = {
+          game with
+          title = switch (title) { case (?t) { t }; case (null) { game.title } };
+          description = switch (description) { case (?d) { d }; case (null) { game.description } };
+          gameCode = switch (gameCode) { case (?c) { c }; case (null) { game.gameCode } };
+          lastModified = 0;
+        };
+
+        games.add(id, updatedGame);
       };
       case (null) {
         Runtime.trap("Game not found");
@@ -139,37 +111,11 @@ actor {
     };
   };
 
-  public shared ({ caller }) func createGame(title : Text, category : Text, description : Text) : async Text {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can create games");
-    };
-
-    let id = title; // Use title + timestamp as ID
-    let metadata : GameMetadata = {
-      title;
-      category;
-      description;
-      author = caller;
-      creationTime = 0;
-      highScore = 0;
-    };
-
-    games.add(id, metadata);
-
-    // Add new category if it doesn't exist
-    if (not categories.any(func(c) { Text.equal(c, category) })) {
-      categories.add(category);
-    };
-
-    id;
-  };
-
   public shared ({ caller }) func deleteGame(id : Text) : async () {
     switch (games.get(id)) {
       case (?game) {
-        // Allow deletion if caller is the author or an admin
-        if (not (Principal.equal(caller, game.author) or AccessControl.isAdmin(accessControlState, caller))) {
-          Runtime.trap("Unauthorized: Only the game author or admins can delete this game");
+        if (not (Principal.equal(caller, game.creator) or AccessControl.isAdmin(accessControlState, caller))) {
+          Runtime.trap("Unauthorized: Only the creator or admins can delete this game");
         };
         games.remove(id);
       };
@@ -179,15 +125,35 @@ actor {
     };
   };
 
-  public query ({ caller }) func getAuthors() : async [Principal] {
+  public query ({ caller }) func getCreators() : async [Principal] {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
-      Runtime.trap("Unauthorized: Only admins can view all authors");
+      Runtime.trap("Unauthorized: Only admins can view all creators");
     };
 
-    let authorSet = Map.empty<Principal, Bool>();
+    let creatorSet = Map.empty<Principal, Bool>();
     for (game in games.values()) {
-      authorSet.add(game.author, true);
+      creatorSet.add(game.creator, true);
     };
-    authorSet.keys().toArray();
+    creatorSet.keys().toArray();
+  };
+
+  public query func getCreatorGameCount(creator : Principal) : async Nat {
+    var count = 0;
+    for (game in games.values()) {
+      if (Principal.equal(game.creator, creator)) {
+        count += 1;
+      };
+    };
+    count;
+  };
+
+  public query ({ caller }) func getCallerGameCount() : async Nat {
+    var count = 0;
+    for (game in games.values()) {
+      if (Principal.equal(game.creator, caller)) {
+        count += 1;
+      };
+    };
+    count;
   };
 };

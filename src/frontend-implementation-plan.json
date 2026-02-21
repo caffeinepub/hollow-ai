@@ -1,83 +1,71 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add playable AI-generated games to Games category",
+  "title": "Add playable games accessible from game play button",
   "requirements": [
     {
+      "id": "REQ-1",
+      "summary": "Create game selection interface accessible from play button showing Flappy Bird, Snake, Pong, and Breakout",
+      "acceptanceCriteria": [
+        "Clicking the play button shows a list or grid of available games including Flappy Bird",
+        "All games (Flappy Bird, Snake, Pong, Breakout) are visible and selectable",
+        "Clicking on any game launches it in a playable state"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/GameModeModal.tsx",
+          "operation": "modify",
+          "description": "Add a third option 'Play Built-in Games' alongside 'Play Games' and 'Create Game' that opens the predefined game selection interface"
+        },
+        {
+          "path": "frontend/src/components/PredefinedGameSelector.tsx",
+          "operation": "create",
+          "description": "Create a modal component that displays a grid of predefined games (Flappy Bird, Snake, Pong, Breakout) with game cards showing thumbnails, titles, and play buttons. When a game is selected, close the modal and launch GamePlayer with the selected predefined game template"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the PredefinedGameSelector modal into the GamesView route by adding state management for opening/closing the predefined game selector and passing it down to GameModeModal. When a predefined game is selected, open GamePlayer with that game"
+        }
+      ]
+    },
+    {
       "id": "REQ-2",
-      "summary": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
+      "summary": "Implement fully playable Flappy Bird 2D game with physics, obstacles, scoring, and game over detection",
       "acceptanceCriteria": [
-        "GamePlayer fetches and displays generated game code when user clicks play",
-        "Games run in a secure sandbox (iframe with sandbox attributes)",
-        "Game controls and interactions work within the player interface"
+        "Bird responds to tap/click controls with realistic gravity and jump physics",
+        "Pipes spawn continuously and move from right to left",
+        "Score increments when bird passes through pipes",
+        "Game ends when bird collides with pipes or ground",
+        "Game can be restarted after game over"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/templates/flappyBirdTemplate.ts",
+          "operation": "create",
+          "description": "Create a complete HTML/CSS/JavaScript template for a playable 2D Flappy Bird game. Include canvas rendering, bird physics with gravity and jump mechanics, pipe obstacle generation and movement, collision detection, score tracking, game over state, and restart functionality. Use the generated images at frontend/public/assets/generated/flappy-bird-sprite.dim_64x64.png and frontend/public/assets/generated/pipe-sprite.dim_64x128.png as sprites in the game rendering. Implement postMessage for score reporting to parent frame. Export as a string template"
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Integrate Flappy Bird template into GamePlayer alongside existing Snake, Pong, and Breakout templates",
+      "acceptanceCriteria": [
+        "Flappy Bird is available as a predefined game template in GamePlayer",
+        "Flappy Bird game loads correctly in the iframe player",
+        "High score tracking works for Flappy Bird",
+        "Game controls are responsive and smooth"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/GamePlayer.tsx",
           "operation": "modify",
-          "description": "Replace placeholder game interface with iframe-based game renderer. Fetch game template using getTemplate backend function based on game metadata. Implement sandbox attributes (allow-scripts, allow-same-origin) on iframe for security. Add srcdoc attribute to inject generated HTML/CSS/JavaScript code directly into iframe. Include error handling for failed game loads and loading states while fetching templates."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
-      "acceptanceCriteria": [
-        "Game cards display 'Play Now' for AI-generated playable games",
-        "Clicking play loads the generated game code in GamePlayer",
-        "Loading states are shown while games are being generated or loaded"
-      ],
-      "file_operations": [
+          "description": "Import the flappyBirdTemplate and add it to the predefinedGames object with id 'flappy-bird', title 'Flappy Bird', description 'Navigate the bird through pipes', and the template code. Ensure the existing postMessage score handling and high score tracking works for Flappy Bird"
+        },
         {
-          "path": "frontend/src/hooks/useGameCatalogue.ts",
+          "path": "frontend/src/components/PredefinedGameSelector.tsx",
           "operation": "modify",
-          "description": "Remove mock data implementation. Implement useGameCatalogue hook to fetch real games using getAllGames backend function. Add useGameMetadata hook to fetch individual game details using getGame backend function. Add useGameTemplates hook to fetch available template names using listTemplateNames backend function. Implement React Query queries with proper loading and error states. Cache game data appropriately."
-        },
-        {
-          "path": "frontend/src/components/GameCard.tsx",
-          "operation": "modify",
-          "description": "Update GameCard to display 'Play Now' button for all games returned from backend (they are playable AI-generated games). Remove coming-soon state logic since backend only returns playable games. Ensure onClick handler properly opens GamePlayer with game ID."
-        },
-        {
-          "path": "frontend/src/components/GamesView.tsx",
-          "operation": "modify",
-          "description": "Update GamesView to use the modified useGameCatalogue hook that fetches real backend data. Implement category filtering using searchGamesByCategory backend function. Update search functionality to work with real game data. Show loading states while games are being fetched. Handle empty states when no games match filters."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
-      "acceptanceCriteria": [
-        "Games can save state to backend between sessions",
-        "High scores and progress are preserved across browser sessions",
-        "Users can resume games from where they left off"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useGameState.ts",
-          "operation": "create",
-          "description": "Create hook for managing game state persistence. Implement useUpdateHighScore mutation that calls updateHighScore backend function when player achieves new high score. Implement useGetHighScore query that calls getHighScore backend function to fetch current high score for a game. Add postMessage communication between parent window and game iframe to receive score updates from running games. Include loading and error states for all operations."
-        },
-        {
-          "path": "frontend/src/components/GamePlayer.tsx",
-          "operation": "modify",
-          "description": "Integrate useGameState hook to persist high scores. Add window message event listener to receive score updates from games running in iframe. When game posts score message, call updateHighScore mutation. Display current high score from backend in game player UI. Show success notification when high score is updated."
-        },
-        {
-          "path": "frontend/src/hooks/useUserProfile.ts",
-          "operation": "create",
-          "description": "Create hook for user profile operations required by authorization component. Implement useGetCallerUserProfile query that calls getCallerUserProfile backend function. Implement useSaveCallerUserProfile mutation that calls saveCallerUserProfile backend function. Follow authorization component usage instructions for profile setup flow on first login. Include proper loading states to prevent profile setup modal flash as documented in component usage."
-        },
-        {
-          "path": "frontend/src/components/ProfileSetup.tsx",
-          "operation": "create",
-          "description": "Create profile setup modal that appears on first login when user has no profile. Use useGetCallerUserProfile hook to check if profile exists. Display form asking for user name. On submit, call useSaveCallerUserProfile with UserProfile object containing name, gamesPlayed=0, totalScore=0. Follow authorization component pattern: only show modal when isAuthenticated && !profileLoading && isFetched && userProfile === null. Close modal after successful profile save."
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Display user name from profile instead of showing principal. Use useGetCallerUserProfile hook to fetch current user profile. Show user name in header when authenticated and profile exists. Keep sign-out button functionality. Add ProfileSetup component to header so it appears on first login."
+          "description": "Include Flappy Bird in the displayed game grid with appropriate metadata (title, description, thumbnail) alongside Snake, Pong, and Breakout. Ensure clicking the Flappy Bird card launches it in GamePlayer"
         }
       ]
     }
