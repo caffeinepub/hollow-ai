@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-configure-the-default-route-in-app-tsx-to-navigate-to-the-math-problem-solver-math-instead-of-the-current-landing-page-when-users-first-open-the-application",
-      "featureTitle": "Configure the default route in App.tsx to navigate to the math problem solver (/math) instead of the current landing page when users first open the application",
+      "featureId": "feature-remove-api-key-requirement-from-image-search-functionality-in-mediadisplay-component-allowing-users-to-search-for-images-without-authentication",
+      "featureTitle": "Remove API key requirement from image search functionality in MediaDisplay component, allowing users to search for images without authentication",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/components/MediaDisplay.tsx",
+        "frontend/src/hooks/useImageSearch.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -19,6 +20,49 @@
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-extend-web-search-functionality-to-video-generation-tab-in-mediadisplay-enabling-users-to-search-for-videos-from-the-web-based-on-text-queries",
+      "featureTitle": "Extend web search functionality to video generation tab in MediaDisplay, enabling users to search for videos from the web based on text queries",
+      "files": [
+        "frontend/src/components/MediaDisplay.tsx",
+        "frontend/src/hooks/useVideoSearch.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-integrate-web-search-as-the-primary-mechanism-for-all-media-generation-requests-in-mediadisplay-triggering-automatic-web-searches-when-users-request-images-or-videos",
+      "featureTitle": "Integrate web search as the primary mechanism for all media generation requests in MediaDisplay, triggering automatic web searches when users request images or videos",
+      "files": [
+        "frontend/src/components/MediaDisplay.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

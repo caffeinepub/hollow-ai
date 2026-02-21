@@ -1,21 +1,70 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Set math problem solver as default landing page",
+  "title": "Enable API-keyless web search for images and videos in media generator",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Configure the default route to navigate to the math problem solver (/math) instead of the current landing page",
+      "summary": "Remove API key requirement from image search functionality, enabling users to search for images without authentication",
       "acceptanceCriteria": [
-        "Opening the application URL without any path navigates directly to /math",
-        "The MathProblemSolver component loads immediately on app launch",
-        "No intermediate landing page or welcome screen is shown"
+        "Users can search for images without entering or configuring an API key",
+        "Image search returns results from web sources",
+        "Search functionality works immediately without setup steps"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/hooks/useImageSearch.ts",
           "operation": "modify",
-          "description": "Update the root route ('/') configuration to redirect to '/math' using TanStack Router's redirect functionality or navigate mechanism, ensuring that when users open the application without a specific path, they are immediately routed to the math problem solver page"
+          "description": "Remove Unsplash API key dependency by implementing a public API-based image search or using a free API that doesn't require keys. Replace the current Unsplash API integration with a keyless alternative that returns image results with URLs, thumbnails, and descriptions. Ensure error handling for network issues and return structured image results compatible with the MediaDisplay component."
+        },
+        {
+          "path": "frontend/src/components/MediaDisplay.tsx",
+          "operation": "modify",
+          "description": "Remove any UI elements related to API key input or configuration from the Image Search tab. Ensure the search interface directly calls the updated useImageSearch hook without requiring authentication setup. Update the tab to display search results immediately when users enter queries."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Extend web search functionality to video generation tab, enabling users to search for videos from the web based on text queries",
+      "acceptanceCriteria": [
+        "Video generation tab includes web search capability",
+        "Users can enter text queries to search for videos",
+        "Search results display video previews or thumbnails",
+        "Videos from search results are viewable in the interface"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useVideoSearch.ts",
+          "operation": "create",
+          "description": "Create a new hook for API-keyless video search functionality. Implement integration with a public video API (such as Pexels Videos API public endpoints or similar free services) that returns video results including video URLs, thumbnail URLs, duration, and descriptions. Follow the same pattern as useImageSearch but adapted for video content. Include proper error handling and loading states."
+        },
+        {
+          "path": "frontend/src/components/MediaDisplay.tsx",
+          "operation": "modify",
+          "description": "Add video search UI to the Video Generation tab. Import and integrate the new useVideoSearch hook. Create a search input field and results grid similar to the image search interface. Display video thumbnails with play buttons, and enable inline video playback using HTML5 video elements. Ensure the video player supports the URLs returned from the video search API."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Integrate web search as the primary mechanism for all media generation requests, triggering automatic web searches when users request images or videos",
+      "acceptanceCriteria": [
+        "Both image and video tabs use web search as the default generation method",
+        "User input triggers web search automatically",
+        "Results are displayed in a unified, consistent interface",
+        "No API key configuration is required for any media generation feature"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MediaDisplay.tsx",
+          "operation": "modify",
+          "description": "Refactor the MediaDisplay component to make web search the primary interaction pattern for both Image Generation and Video Generation tabs. Update tab labels to 'Image Search' and 'Video Search' to reflect the web search approach. Ensure both tabs have consistent UI layouts with search inputs triggering immediate searches. Remove or hide any AI generation prompts or controls that don't align with web search. Consolidate the presentation layer so image and video results use a unified card-based grid layout with consistent styling."
+        },
+        {
+          "path": "frontend/src/hooks/useMediaGeneration.ts",
+          "operation": "modify",
+          "description": "Update or deprecate AI-specific media generation logic to align with web search as the primary method. If the hook is still used, ensure it doesn't conflict with the search-based approach. Consider renaming or refactoring to support search result handling rather than AI generation if the component still references this hook."
         }
       ]
     }

@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Music2, Play, Pause, Loader2, Sparkles, Volume2, Download, Share2, Check, Copy } from 'lucide-react';
+import { Music2, Play, Pause, Loader2, Sparkles, Volume2, Download, Share2, Check, Copy, X } from 'lucide-react';
 import { useAudioGeneration, renderBeatPatternToBlob } from '@/hooks/useAudioGeneration';
 import { useMusicShare } from '@/hooks/useMusicShare';
 import { toast } from 'sonner';
@@ -14,6 +15,7 @@ import { useEffect } from 'react';
 type SoundType = 'kick' | 'snare' | 'hihat';
 
 export function MusicGenerator() {
+  const navigate = useNavigate();
   const [prompt, setPrompt] = useState('');
   const [tempo, setTempo] = useState([120]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -68,7 +70,9 @@ export function MusicGenerator() {
   };
 
   const playBeatPattern = () => {
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    // Use webkit fallback for Safari compatibility
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const audioContext = new AudioContextClass();
     const beatDuration = 60 / tempo[0] / 2;
     const sounds: SoundType[] = ['kick', 'snare', 'hihat'];
 
@@ -182,7 +186,18 @@ export function MusicGenerator() {
   }, [shareSuccess, sharedMusicId]);
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 relative">
+      {/* Close Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => navigate({ to: '/' })}
+        className="absolute top-0 right-0 z-10 h-10 w-10 rounded-full hover:bg-destructive/10 hover:text-destructive"
+        aria-label="Close and return to main menu"
+      >
+        <X className="h-5 w-5" />
+      </Button>
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -332,47 +347,33 @@ export function MusicGenerator() {
                       <Share2 className="h-4 w-4" />
                     )}
                   </Button>
-                  <Button onClick={togglePlayPause} size="sm" variant="outline" className="min-h-[44px]">
+                  <Button onClick={togglePlayPause} size="sm" className="min-h-[44px]">
                     {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
+              
               <audio
                 ref={setAudioElement}
                 src={currentAudioUrl}
                 onEnded={handleAudioEnded}
-                controls
                 className="w-full"
+                controls
               />
             </div>
           )}
 
           {showShareUrl && sharedMusicId && (
-            <div className="p-3 bg-accent/10 border border-accent/20 rounded-lg space-y-2">
-              <p className="text-xs sm:text-sm font-semibold text-foreground">Share your music:</p>
-              <div className="flex flex-col sm:flex-row gap-2">
+            <div className="p-3 sm:p-4 bg-success/10 border border-success/20 rounded-lg space-y-2">
+              <p className="text-xs sm:text-sm font-semibold text-success">Music Shared Successfully!</p>
+              <div className="flex gap-2">
                 <Input
-                  value={`${window.location.origin}/shared/music/${sharedMusicId}`}
+                  value={`${window.location.origin}/shared/${sharedMusicId}`}
                   readOnly
-                  className="flex-1 text-xs sm:text-sm min-h-[44px]"
+                  className="flex-1 text-xs sm:text-sm"
                 />
-                <Button
-                  size="sm"
-                  onClick={handleCopyUrl}
-                  variant={urlCopied ? 'default' : 'outline'}
-                  className="min-h-[44px]"
-                >
-                  {urlCopied ? (
-                    <>
-                      <Check className="h-4 w-4 mr-2" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4 mr-2" />
-                      Copy
-                    </>
-                  )}
+                <Button onClick={handleCopyUrl} size="sm" variant="outline" className="min-h-[44px]">
+                  {urlCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 </Button>
               </div>
             </div>
@@ -381,47 +382,15 @@ export function MusicGenerator() {
           {generatedAudio.length > 0 && (
             <div className="space-y-2">
               <p className="text-xs sm:text-sm font-semibold text-foreground">Previously Generated</p>
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {generatedAudio.map((audio, index) => (
-                  <div
-                    key={index}
-                    className="p-2 sm:p-3 bg-muted rounded-lg border border-border space-y-2"
-                  >
-                    <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2">{audio.prompt}</p>
-                    <audio src={audio.url} controls className="w-full h-8" />
+              <div className="space-y-2">
+                {generatedAudio.slice(0, 3).map((audio, index) => (
+                  <div key={index} className="p-2 sm:p-3 bg-muted rounded-lg">
+                    <audio src={audio.url} controls className="w-full" />
                   </div>
                 ))}
               </div>
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      <Card className="bg-accent/5 border-accent/20">
-        <CardHeader>
-          <CardTitle className="text-sm sm:text-base">Quick Prompts</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {[
-              'Relaxing piano melody',
-              'Energetic electronic beat',
-              'Ambient space sounds',
-              'Upbeat pop music',
-              'Chill lo-fi hip hop',
-              'Epic orchestral theme',
-            ].map((example) => (
-              <Button
-                key={example}
-                variant="outline"
-                size="sm"
-                onClick={() => setPrompt(example)}
-                className="justify-start text-left h-auto py-2 sm:py-3 min-h-[44px] text-xs sm:text-sm"
-              >
-                {example}
-              </Button>
-            ))}
-          </div>
         </CardContent>
       </Card>
     </div>

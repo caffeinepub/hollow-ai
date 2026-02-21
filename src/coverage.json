@@ -1,24 +1,51 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T04:35:34.876Z",
+  "generatedAt": "2026-02-21T21:45:50.833Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Configure the default route in App.tsx to navigate to the math problem solver (/math) instead of the current landing page when users first open the application",
+        "summary": "Remove API key requirement from image search functionality in MediaDisplay component, allowing users to search for images without authentication",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx"
+          "frontend/src/hooks/useImageSearch.ts",
+          "frontend/src/components/MediaDisplay.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx"
+          "frontend/src/hooks/useImageSearch.ts",
+          "frontend/src/components/MediaDisplay.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Extend web search functionality to video generation tab in MediaDisplay, enabling users to search for videos from the web based on text queries",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useVideoSearch.ts",
+          "frontend/src/components/MediaDisplay.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useVideoSearch.ts",
+          "frontend/src/components/MediaDisplay.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Integrate web search as the primary mechanism for all media generation requests in MediaDisplay, triggering automatic web searches when users request images or videos",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/MediaDisplay.tsx",
+          "frontend/src/hooks/useMediaGeneration.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/MediaDisplay.tsx"
         ]
       }
     ]
@@ -28,7 +55,9 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
+    "frontend/src/components/MediaDisplay.tsx",
+    "frontend/src/hooks/useImageSearch.ts",
+    "frontend/src/hooks/useVideoSearch.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

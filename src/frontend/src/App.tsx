@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
 import { InternetIdentityProvider } from './hooks/useInternetIdentity';
 import { Header } from './components/Header';
+import { HomePage } from './components/HomePage';
 import { ChatPage } from './components/ChatPage';
 import { MathProblemSolver } from './components/MathProblemSolver';
 import { MediaDisplay } from './components/MediaDisplay';
@@ -58,7 +59,7 @@ function SharedContentViewerWrapper() {
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: MathProblemSolver,
+  component: HomePage,
 });
 
 const chatRoute = createRoute({

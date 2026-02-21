@@ -1,9 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Set the math problem solver as the default landing page when users open the application.
+**Goal:** Enable API-keyless web search for images and videos in the media generator.
 
 **Planned changes:**
-- Configure the default route in App.tsx to navigate directly to /math instead of the current landing page
+- Remove API key requirement from image search in MediaDisplay component
+- Add web search functionality to the video generation tab
+- Make web search the default mechanism for all media generation requests
+- Display search results with previews/thumbnails in a unified interface
 
-**User-visible outcome:** Users will immediately see the math problem solver when they open the application, without needing to navigate to it.
+**User-visible outcome:** Users can search for and view images and videos from the web without any API key configuration or setup steps.

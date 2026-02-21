@@ -1,17 +1,20 @@
 import { Button } from '@/components/ui/button';
-import { Moon, Sun, LogOut } from 'lucide-react';
+import { Moon, Sun, LogOut, Home } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useGetCallerUserProfile } from '../hooks/useUserProfile';
 import { useQueryClient } from '@tanstack/react-query';
+import { Link, useRouterState } from '@tanstack/react-router';
 
 export function Header() {
   const { theme, setTheme } = useTheme();
   const { identity, clear, loginStatus } = useInternetIdentity();
   const queryClient = useQueryClient();
   const { data: userProfile } = useGetCallerUserProfile();
+  const routerState = useRouterState();
 
   const isAuthenticated = !!identity;
+  const isHomePage = routerState.location.pathname === '/';
 
   const handleSignOut = async () => {
     await clear();
@@ -38,6 +41,18 @@ export function Header() {
             <span className="hidden sm:inline text-sm text-muted-foreground mr-2">
               {userProfile.name}
             </span>
+          )}
+          {!isHomePage && (
+            <Link to="/">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="min-h-[44px] min-w-[44px]"
+              >
+                <Home className="h-5 w-5" />
+                <span className="sr-only">Home</span>
+              </Button>
+            </Link>
           )}
           <Button
             variant="ghost"

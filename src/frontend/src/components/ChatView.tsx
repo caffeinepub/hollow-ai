@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Send, Loader2, Bot, User, X } from 'lucide-react';
-import { useSession, useChatSessions } from '../hooks/useChatSessions';
+import { useSession, useChatSessions, generateAIResponse } from '../hooks/useChatSessions';
 import { cn } from '@/lib/utils';
 
 interface ChatViewProps {
@@ -28,11 +28,20 @@ export function ChatView({ sessionId, onClose }: ChatViewProps) {
     await addMessage(sessionId, `User: ${userMessage}`);
     
     setIsTyping(true);
+    
+    // Simulate typing delay (500-1500ms based on message length)
+    const typingDelay = Math.min(1500, Math.max(500, userMessage.length * 20));
+    
     setTimeout(async () => {
-      const aiResponse = `I'm Axora AI, your learning companion. You said: "${userMessage}". How can I help you learn today?`;
+      // Get conversation history for context
+      const conversationHistory = sessionQuery.data?.messages || [];
+      
+      // Generate contextual AI response
+      const aiResponse = generateAIResponse(userMessage, conversationHistory);
+      
       await addMessage(sessionId, `Assistant: ${aiResponse}`);
       setIsTyping(false);
-    }, 1000);
+    }, typingDelay);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

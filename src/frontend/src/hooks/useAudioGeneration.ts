@@ -19,14 +19,16 @@ export function useAudioGeneration() {
       // Simulate AI audio generation with a delay
       await new Promise(resolve => setTimeout(resolve, 2500));
       
-      // Create a simple synthesized audio using Web Audio API
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      // Create a simple synthesized audio using Web Audio API with webkit fallback
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      const audioContext = new AudioContextClass();
       const duration = 3; // 3 seconds
       const sampleRate = audioContext.sampleRate;
       const numSamples = duration * sampleRate;
       
-      // Create an offline audio context for rendering
-      const offlineContext = new OfflineAudioContext(1, numSamples, sampleRate);
+      // Create an offline audio context for rendering with webkit fallback
+      const OfflineAudioContextClass = window.OfflineAudioContext || (window as any).webkitOfflineAudioContext;
+      const offlineContext = new OfflineAudioContextClass(1, numSamples, sampleRate);
       
       // Generate a simple melody based on the prompt length
       const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25]; // C major scale
@@ -151,13 +153,16 @@ export async function renderBeatPatternToBlob(
   beatPattern: boolean[][],
   tempo: number
 ): Promise<Blob> {
-  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+  // Use webkit fallback for Safari compatibility
+  const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+  const audioContext = new AudioContextClass();
   const beatDuration = 60 / tempo / 2;
   const totalDuration = beatPattern[0].length * beatDuration;
   const sampleRate = audioContext.sampleRate;
   const numSamples = Math.ceil(totalDuration * sampleRate);
 
-  const offlineContext = new OfflineAudioContext(1, numSamples, sampleRate);
+  const OfflineAudioContextClass = window.OfflineAudioContext || (window as any).webkitOfflineAudioContext;
+  const offlineContext = new OfflineAudioContextClass(1, numSamples, sampleRate);
   const sounds: ('kick' | 'snare' | 'hihat')[] = ['kick', 'snare', 'hihat'];
 
   beatPattern[0].forEach((_, beatIndex) => {

@@ -1,80 +1,80 @@
-import { useRef, useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
+import { useRef, useEffect, useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Eraser, Trash2, Send, Sparkles, Palette, Download, Share2, Check, Copy } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Palette, Eraser, Trash2, Download, Share2, Sparkles, Send, Loader2, Check, Copy, X } from 'lucide-react';
 import { useCanvasDrawing } from '../hooks/useCanvasDrawing';
 import { useArtIdeaGenerator } from '../hooks/useArtIdeaGenerator';
 import { useArtworkShare } from '../hooks/useArtworkShare';
-import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
+const COLORS = [
+  '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
+  '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080',
+];
+
 export function ArtCanvas() {
+  const navigate = useNavigate();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
   const {
     isDrawing,
     color,
     brushSize,
+    isErasing,
     setColor,
     setBrushSize,
+    setIsErasing,
     startDrawing,
     draw,
     stopDrawing,
     clearCanvas,
-    isErasing,
-    setIsErasing,
   } = useCanvasDrawing(canvasRef);
 
   const { messages, input, setInput, sendMessage, isGenerating } = useArtIdeaGenerator();
-  const { shareArtwork, isSharing, shareSuccess, sharedArtworkId, copyShareUrl, reset } = useArtworkShare();
+  const { shareArtwork, isSharing, shareSuccess, sharedArtworkId, copyShareUrl } = useArtworkShare();
+  
   const [showShareUrl, setShowShareUrl] = useState(false);
   const [urlCopied, setUrlCopied] = useState(false);
 
-  const colors = [
-    '#FF6B6B', // Red
-    '#4ECDC4', // Teal
-    '#45B7D1', // Blue
-    '#FFA07A', // Coral
-    '#98D8C8', // Mint
-    '#F7DC6F', // Yellow
-    '#BB8FCE', // Purple
-    '#85C1E2', // Sky Blue
-    '#F8B88B', // Peach
-    '#FFFFFF', // White
-    '#000000', // Black
-    '#808080', // Gray
-  ];
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-  const handleSendIdea = () => {
-    if (input.trim()) {
-      sendMessage();
-    }
-  };
+    const resizeCanvas = () => {
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = Math.min(500, window.innerHeight - 300);
+      
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+    };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendIdea();
-    }
-  };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
+  }, []);
 
   const handleSave = () => {
-    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    canvasRef.current.toBlob((blob) => {
-      if (!blob) {
-        toast.error('Failed to save artwork');
-        return;
-      }
-
+    canvas.toBlob((blob) => {
+      if (!blob) return;
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `axora-art-${Date.now()}.png`;
+      a.download = `artwork-${Date.now()}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -84,7 +84,22 @@ export function ArtCanvas() {
   };
 
   const handleShare = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
     shareArtwork({ canvasRef });
+  };
+
+  const handleSendPrompt = () => {
+    if (!input.trim()) return;
+    sendMessage();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendPrompt();
+    }
   };
 
   const handleCopyUrl = () => {
@@ -104,189 +119,205 @@ export function ArtCanvas() {
   }, [shareSuccess, sharedArtworkId]);
 
   return (
-    <div className="h-full flex flex-col lg:flex-row gap-3 sm:gap-4">
-      {/* Canvas Area */}
-      <div className="flex-1 flex flex-col gap-3 sm:gap-4 min-h-[400px] lg:min-h-0">
-        <Card className="flex-1 p-3 sm:p-4 flex flex-col">
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <div className="flex items-center gap-2">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 relative">
+      {/* Close Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => navigate({ to: '/' })}
+        className="absolute top-0 right-0 z-10 h-10 w-10 rounded-full hover:bg-destructive/10 hover:text-destructive"
+        aria-label="Close and return to main menu"
+      >
+        <X className="h-5 w-5" />
+      </Button>
+
+      <div className="lg:col-span-2 space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
               <Palette className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-              <h2 className="text-base sm:text-lg font-semibold text-foreground">Art Canvas</h2>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={handleSave} size="sm" variant="outline" className="min-h-[44px]">
-                <Download className="h-4 w-4" />
-              </Button>
-              <Button onClick={handleShare} size="sm" variant="outline" disabled={isSharing} className="min-h-[44px]">
-                {isSharing ? (
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                ) : (
-                  <Share2 className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex-1 bg-white rounded-lg overflow-hidden touch-none">
-            <canvas
-              ref={canvasRef}
-              width={800}
-              height={600}
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-              onTouchStart={startDrawing}
-              onTouchMove={draw}
-              onTouchEnd={stopDrawing}
-              className="w-full h-full cursor-crosshair"
-            />
-          </div>
-
-          {showShareUrl && sharedArtworkId && (
-            <div className="mt-3 p-2 sm:p-3 bg-accent/10 border border-accent/20 rounded-lg space-y-2">
-              <p className="text-xs sm:text-sm font-semibold text-foreground">Share your artwork:</p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Input
-                  value={`${window.location.origin}/shared/art/${sharedArtworkId}`}
-                  readOnly
-                  className="flex-1 text-xs sm:text-sm min-h-[44px]"
-                />
-                <Button
-                  size="sm"
-                  onClick={handleCopyUrl}
-                  variant={urlCopied ? 'default' : 'outline'}
-                  className="min-h-[44px]"
-                >
-                  {urlCopied ? (
-                    <>
-                      <Check className="h-4 w-4 mr-2" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4 mr-2" />
-                      Copy
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          )}
-
-          <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4">
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-              {colors.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => {
-                    setColor(c);
-                    setIsErasing(false);
-                  }}
-                  className={cn(
-                    'w-full sm:w-10 h-10 rounded-lg border-2 transition-all min-h-[44px]',
-                    color === c && !isErasing ? 'border-primary scale-110' : 'border-border'
-                  )}
-                  style={{ backgroundColor: c }}
-                />
-              ))}
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs sm:text-sm">Brush Size: {brushSize}px</Label>
-              <Slider
-                value={[brushSize]}
-                onValueChange={(v) => setBrushSize(v[0])}
-                min={1}
-                max={50}
-                step={1}
-                className="w-full"
+              Art Canvas
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">
+              Draw your masterpiece and get AI-powered creative suggestions
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Canvas */}
+            <div ref={containerRef} className="border-2 border-border rounded-lg overflow-hidden bg-white">
+              <canvas
+                ref={canvasRef}
+                onMouseDown={startDrawing}
+                onMouseMove={draw}
+                onMouseUp={stopDrawing}
+                onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
+                className="touch-none cursor-crosshair w-full"
               />
             </div>
 
-            <div className="flex gap-2 flex-wrap">
-              <Button
-                onClick={() => setIsErasing(!isErasing)}
-                variant={isErasing ? 'default' : 'outline'}
-                size="sm"
-                className="flex-1 min-h-[44px]"
-              >
-                <Eraser className="h-4 w-4 mr-2" />
-                Eraser
-              </Button>
-              <Button onClick={clearCanvas} variant="outline" size="sm" className="flex-1 min-h-[44px]">
-                <Trash2 className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
+            {/* Controls */}
+            <div className="space-y-4">
+              {/* Color Palette */}
+              <div className="space-y-2">
+                <Label className="text-xs sm:text-sm">Color</Label>
+                <div className="flex gap-2 flex-wrap">
+                  {COLORS.map((colorOption) => (
+                    <button
+                      key={colorOption}
+                      onClick={() => {
+                        setColor(colorOption);
+                        setIsErasing(false);
+                      }}
+                      className={`w-10 h-10 sm:w-8 sm:h-8 rounded-full border-2 transition-transform hover:scale-110 ${
+                        color === colorOption && !isErasing ? 'border-primary scale-110' : 'border-border'
+                      }`}
+                      style={{ backgroundColor: colorOption }}
+                      aria-label={`Select color ${colorOption}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Brush Size */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs sm:text-sm">Brush Size</Label>
+                  <span className="text-xs sm:text-sm font-mono">{brushSize}px</span>
+                </div>
+                <Slider
+                  value={[brushSize]}
+                  onValueChange={(v) => setBrushSize(v[0])}
+                  min={1}
+                  max={50}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant={isErasing ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setIsErasing(!isErasing)}
+                  className="min-h-[44px]"
+                >
+                  <Eraser className="h-4 w-4 mr-2" />
+                  Eraser
+                </Button>
+                <Button variant="outline" size="sm" onClick={clearCanvas} className="min-h-[44px]">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleSave} className="min-h-[44px]">
+                  <Download className="h-4 w-4 mr-2" />
+                  Save
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleShare} disabled={isSharing} className="min-h-[44px]">
+                  {isSharing ? (
+                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  ) : (
+                    <Share2 className="h-4 w-4 mr-2" />
+                  )}
+                  Share
+                </Button>
+              </div>
+
+              {showShareUrl && sharedArtworkId && (
+                <div className="p-3 sm:p-4 bg-success/10 border border-success/20 rounded-lg space-y-2">
+                  <p className="text-xs sm:text-sm font-semibold text-success">Artwork Shared Successfully!</p>
+                  <div className="flex gap-2">
+                    <Input
+                      value={`${window.location.origin}/shared/${sharedArtworkId}`}
+                      readOnly
+                      className="flex-1 text-xs sm:text-sm"
+                    />
+                    <Button onClick={handleCopyUrl} size="sm" variant="outline" className="min-h-[44px]">
+                      {urlCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          </CardContent>
         </Card>
       </div>
 
       {/* AI Chat Panel */}
-      <Card className="w-full lg:w-80 xl:w-96 flex flex-col h-[400px] lg:h-auto">
-        <div className="p-3 sm:p-4 border-b border-border">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-accent" />
-            <h3 className="text-sm sm:text-base font-semibold text-foreground">AI Art Ideas</h3>
-          </div>
-          <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">
-            Get creative suggestions for your artwork
-          </p>
-        </div>
-
-        <ScrollArea className="flex-1 p-3 sm:p-4">
-          {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-xs sm:text-sm text-muted-foreground text-center px-4">
-                Ask for art ideas or inspiration!
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    'p-2 sm:p-3 rounded-lg',
-                    message.isUser
-                      ? 'bg-primary text-primary-foreground ml-4'
-                      : 'bg-muted mr-4'
-                  )}
-                >
-                  <p className="text-xs sm:text-sm break-words">{message.content}</p>
+      <div className="lg:col-span-1">
+        <Card className="h-full flex flex-col">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Sparkles className="h-4 w-4 text-accent" />
+              AI Art Ideas
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Get creative suggestions and inspiration
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col space-y-3 min-h-0">
+            <ScrollArea className="flex-1 pr-3">
+              {messages.length === 0 ? (
+                <div className="flex items-center justify-center h-full">
+                  <div className="text-center space-y-2 p-4">
+                    <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mx-auto" />
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      Ask for drawing ideas or inspiration
+                    </p>
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </ScrollArea>
-
-        <Separator />
-
-        <div className="p-3 sm:p-4">
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask for art ideas..."
-              className="flex-1 min-h-[44px] text-sm sm:text-base"
-            />
-            <Button
-              onClick={handleSendIdea}
-              disabled={isGenerating || !input.trim()}
-              size="icon"
-              className="shrink-0 min-h-[44px] min-w-[44px]"
-            >
-              {isGenerating ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
               ) : (
-                <Send className="h-4 w-4" />
+                <div className="space-y-3">
+                  {messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`p-2 sm:p-3 rounded-lg ${
+                        message.isUser
+                          ? 'bg-primary/20 ml-4'
+                          : 'bg-muted mr-4'
+                      }`}
+                    >
+                      <p className="text-xs sm:text-sm break-words">{message.content}</p>
+                    </div>
+                  ))}
+                </div>
               )}
-            </Button>
-          </div>
-        </div>
-      </Card>
+            </ScrollArea>
+
+            <div className="space-y-2 pt-2 border-t">
+              <Textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g., Give me ideas for drawing a sunset..."
+                className="min-h-[60px] text-xs sm:text-sm resize-none"
+                rows={2}
+              />
+              <Button
+                onClick={handleSendPrompt}
+                disabled={isGenerating || !input.trim()}
+                size="sm"
+                className="w-full min-h-[44px]"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-3 w-3 mr-2 animate-spin" />
+                    Thinking...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-3 w-3 mr-2" />
+                    Get Ideas
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

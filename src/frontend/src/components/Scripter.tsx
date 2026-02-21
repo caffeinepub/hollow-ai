@@ -1,13 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, Loader2, Code2, Copy, Check } from 'lucide-react';
+import { Send, Loader2, Code2, Copy, Check, X } from 'lucide-react';
 import { useScriptGeneration } from '../hooks/useScriptGeneration';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 export function Scripter() {
+  const navigate = useNavigate();
   const [input, setInput] = useState('');
   const { messages, generateScript, isGenerating } = useScriptGeneration();
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -34,7 +36,18 @@ export function Scripter() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-background">
+    <div className="h-full flex flex-col bg-background relative">
+      {/* Close Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => navigate({ to: '/' })}
+        className="absolute top-2 right-2 z-10 h-10 w-10 rounded-full hover:bg-destructive/10 hover:text-destructive"
+        aria-label="Close and return to main menu"
+      >
+        <X className="h-5 w-5" />
+      </Button>
+
       <div className="border-b border-border p-3 sm:p-4">
         <div className="flex items-center gap-2">
           <Code2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />

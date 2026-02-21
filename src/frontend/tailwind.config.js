@@ -87,8 +87,14 @@ export default {
                     to: { height: '0' }
                 },
                 'slide-in': {
-                    from: { transform: 'translateX(-100%)' },
-                    to: { transform: 'translateX(0)' }
+                    from: { 
+                        transform: 'translateX(-100%)',
+                        '-webkit-transform': 'translateX(-100%)'
+                    },
+                    to: { 
+                        transform: 'translateX(0)',
+                        '-webkit-transform': 'translateX(0)'
+                    }
                 },
                 'fade-in': {
                     from: { opacity: '0' },
@@ -109,4 +115,3 @@ export default {
     },
     plugins: [typography, containerQueries, animate]
 };
-

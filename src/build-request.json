@@ -1,37 +1,76 @@
 {
   "kind": "build_request",
-  "title": "Set math problem solver as default landing page",
-  "projectName": "Nexora Math",
+  "title": "Enable API-keyless web search for images and videos in media generator",
+  "projectName": "Nexora AI",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Configure the default route in App.tsx to navigate to the math problem solver (/math) instead of the current landing page when users first open the application",
+      "text": "Remove API key requirement from image search functionality in MediaDisplay component, allowing users to search for images without authentication",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-6"
         ],
         "quotes": [
-          "make it so when you get in the app you are in the math problem solving thing"
+          "make it so you dont need an api key just make it so you can just use it"
         ]
       },
       "acceptanceCriteria": [
-        "Opening the application URL without any path navigates directly to /math",
-        "The MathProblemSolver component loads immediately on app launch",
-        "No intermediate landing page or welcome screen is shown"
+        "Users can search for images without entering or configuring an API key",
+        "Image search returns results from web sources",
+        "Search functionality works immediately without setup steps"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Extend web search functionality to video generation tab in MediaDisplay, enabling users to search for videos from the web based on text queries",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "if you ask it for an image or an videoa it goes to the web and searchhes for it"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Video generation tab includes web search capability",
+        "Users can enter text queries to search for videos",
+        "Search results display video previews or thumbnails",
+        "Videos from search results are viewable in the interface"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Integrate web search as the primary mechanism for all media generation requests in MediaDisplay, triggering automatic web searches when users request images or videos",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "runs th e whole media genorater hting"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Both image and video tabs use web search as the default generation method",
+        "User input triggers web search automatically",
+        "Results are displayed in a unified, consistent interface",
+        "No API key configuration is required for any media generation feature"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the MathProblemSolver component itself",
-    "Preserve all existing routes and navigation structure",
-    "Maintain compatibility with the TanStack Router configuration"
+    "Do not modify backend/main.mo",
+    "Do not edit frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
+    "Maintain existing MediaDisplay component structure and tab navigation"
   ],
   "nonGoals": [
-    "Changing the math problem solver functionality",
-    "Removing other routes or navigation options",
-    "Modifying the Header or sidebar navigation"
+    "Adding AI-generated image or video synthesis",
+    "Implementing custom media hosting or storage",
+    "Adding authentication or user accounts for media search",
+    "Creating a backend API for media search proxying"
   ],
   "imageRequirements": {
     "required": [],
