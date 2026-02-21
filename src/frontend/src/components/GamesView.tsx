@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useGameCatalogue } from '../hooks/useGameCatalogue';
+import { useGameCatalogue, useCategories } from '../hooks/useGameCatalogue';
 import { GameCard } from './GameCard';
 import { GamePlayer } from './GamePlayer';
 import { Input } from '@/components/ui/input';
@@ -12,19 +12,12 @@ const ITEMS_PER_PAGE = 24;
 
 export function GamesView() {
   const { data: games, isLoading, error } = useGameCatalogue();
+  const { data: categories } = useCategories();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedGameId, setSelectedGameId] = useState<string | null>(null);
 
-  // Extract unique categories
-  const categories = useMemo(() => {
-    if (!games) return [];
-    const uniqueCategories = Array.from(new Set(games.map(game => game.category)));
-    return uniqueCategories.sort();
-  }, [games]);
-
-  // Filter games based on search and category
   const filteredGames = useMemo(() => {
     if (!games) return [];
     
@@ -36,7 +29,6 @@ export function GamesView() {
     });
   }, [games, searchTerm, selectedCategory]);
 
-  // Paginate filtered games
   const paginatedGames = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -45,7 +37,6 @@ export function GamesView() {
 
   const totalPages = Math.ceil(filteredGames.length / ITEMS_PER_PAGE);
 
-  // Reset to page 1 when filters change
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
     setCurrentPage(1);
@@ -78,17 +69,15 @@ export function GamesView() {
   return (
     <>
       <div className="space-y-4">
-        {/* Header */}
         <div className="space-y-2">
           <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground">
-            Games Catalogue
+            AI-Generated Games
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground">
-            Browse and play from our collection of {games?.length.toLocaleString() || 0} fun games
+            Play fun games created by AI • {games?.length || 0} games available
           </p>
         </div>
 
-        {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -105,7 +94,7 @@ export function GamesView() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              {categories.map(category => (
+              {categories?.map(category => (
                 <SelectItem key={category} value={category}>
                   {category}
                 </SelectItem>
@@ -114,13 +103,11 @@ export function GamesView() {
           </Select>
         </div>
 
-        {/* Results count */}
         <div className="text-sm text-muted-foreground">
           Showing {paginatedGames.length} of {filteredGames.length} games
-          {(searchTerm || selectedCategory !== 'all') && ` (filtered from ${games?.length.toLocaleString()})`}
+          {(searchTerm || selectedCategory !== 'all') && ` (filtered from ${games?.length})`}
         </div>
 
-        {/* Games Grid */}
         <ScrollArea className="h-[calc(100vh-28rem)] sm:h-[calc(100vh-24rem)]">
           {paginatedGames.length === 0 ? (
             <div className="flex items-center justify-center h-64">
@@ -130,16 +117,15 @@ export function GamesView() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-4">
               {paginatedGames.map(game => (
                 <GameCard
-                  key={game.id}
+                  key={game.title}
                   game={game}
-                  onPlay={() => setSelectedGameId(game.id)}
+                  onPlay={() => setSelectedGameId(game.title)}
                 />
               ))}
             </div>
           )}
         </ScrollArea>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-2 pt-4 border-t border-border">
             <Button
@@ -167,7 +153,6 @@ export function GamesView() {
         )}
       </div>
 
-      {/* Game Player Modal */}
       {selectedGameId && (
         <GamePlayer
           gameId={selectedGameId}

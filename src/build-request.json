@@ -1,95 +1,104 @@
 {
   "kind": "build_request",
-  "title": "Add dictionary feature with AI voice pronunciation and definitions",
+  "title": "Add playable AI-generated games to Games category",
   "projectName": "Neroxa AI",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a new 'Dictionary' section to the application with a dedicated tab in the main navigation",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "add another box called dictionary"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Dictionary tab appears in the main navigation alongside existing tabs (Chat, Math, Media, etc.)",
-        "Clicking the Dictionary tab navigates to the dictionary interface",
-        "Dictionary section is accessible from the main application view"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Implement a backend word database containing over 250,000 English words with their definitions",
+      "text": "Implement a backend endpoint that generates playable game code (HTML/CSS/JavaScript) based on game metadata (title, category, description)",
       "target": "backend",
       "source": {
         "messageIds": [
           "msg-latest"
         ],
         "quotes": [
-          "in the dictionnary there are over 250 thaousand words"
+          "in the games catigory make it so  there are real fun games you can acually play that the ai made"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores a comprehensive dictionary dataset with 250,000+ words",
-        "Each word entry includes the word text and its definition",
-        "Backend provides query methods to retrieve word definitions by word lookup"
+        "Backend function accepts game metadata and returns complete HTML/CSS/JavaScript code for a playable game",
+        "Generated games are simple, functional, and playable in a browser",
+        "Game code includes basic mechanics appropriate to the game type (puzzle, arcade, strategy, etc.)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "there are real fun games you can acually play"
+        ]
+      },
+      "acceptanceCriteria": [
+        "GamePlayer fetches and displays generated game code when user clicks play",
+        "Games run in a secure sandbox (iframe with sandbox attributes)",
+        "Game controls and interactions work within the player interface"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Create a dictionary search interface where users can look up words and view their definitions",
-      "target": "frontend",
+      "text": "Create a library of playable game templates that the AI can generate: simple arcade games (Snake, Pong variants), puzzle games (Tic-Tac-Toe, Memory Match), and reaction games (Whack-a-Mole, Color Match)",
+      "target": "backend",
       "source": {
         "messageIds": [
           "msg-latest"
         ],
         "quotes": [
-          "you can also read what it means"
+          "real fun games you can acually play that the ai made"
         ]
       },
       "acceptanceCriteria": [
-        "Search input field allows users to type and search for words",
-        "Search results display the word and its full definition",
-        "Interface shows clear feedback when a word is not found",
-        "Search is case-insensitive and handles common variations"
+        "At least 5 different game templates are available for generation",
+        "Each game type has clear rules, win/lose conditions, and score tracking",
+        "Games are responsive and work on different screen sizes"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Implement AI-powered text-to-speech functionality that pronounces searched words using synthesized voice",
+      "text": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-latest"
-        ],
-        "quotes": [
-          "the ai uses its voice to say the word"
         ]
       },
       "acceptanceCriteria": [
-        "Each dictionary word result includes a 'Pronounce' or speaker button",
-        "Clicking the button triggers AI voice synthesis to speak the word aloud",
-        "Voice pronunciation uses Web Speech API or similar browser-based TTS",
-        "Audio playback is clear and audible with proper pronunciation"
+        "Game cards display 'Play Now' for AI-generated playable games",
+        "Clicking play loads the generated game code in GamePlayer",
+        "Loading states are shown while games are being generated or loaded"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Games can save state to backend between sessions",
+        "High scores and progress are preserved across browser sessions",
+        "Users can resume games from where they left off"
       ]
     }
   ],
   "constraints": [
-    "Use Web Speech API or browser-based text-to-speech for voice synthesis (no external API integrations)",
-    "Dictionary data must be stored and served from the backend canister",
-    "Maintain consistency with existing UI design patterns (Tailwind CSS, dark theme with teal/coral accents)"
+    "Generated game code must be safe and sandboxed to prevent security issues",
+    "Games must not require external dependencies or CDN resources",
+    "Game generation must complete within reasonable time (under 3 seconds)"
   ],
   "nonGoals": [
-    "Multi-language dictionary support beyond English",
-    "User-contributed definitions or community features",
-    "Advanced linguistic features like etymology, synonyms, or antonyms",
-    "Offline dictionary access or downloadable dictionary files",
-    "Custom voice selection or pronunciation customization"
+    "Multiplayer or networked game features",
+    "3D games or complex physics engines",
+    "Integration with external game APIs or services",
+    "User-uploaded custom games"
   ],
   "imageRequirements": {
     "required": [],

@@ -1,70 +1,83 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add dictionary feature with AI voice pronunciation and definitions",
+  "title": "Add playable AI-generated games to Games category",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Add Dictionary tab to main navigation and create dedicated dictionary route",
+      "id": "REQ-2",
+      "summary": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
       "acceptanceCriteria": [
-        "Dictionary tab appears in the main navigation alongside existing tabs (Chat, Math, Media, etc.)",
-        "Clicking the Dictionary tab navigates to the dictionary interface",
-        "Dictionary section is accessible from the main application view"
+        "GamePlayer fetches and displays generated game code when user clicks play",
+        "Games run in a secure sandbox (iframe with sandbox attributes)",
+        "Game controls and interactions work within the player interface"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/GamePlayer.tsx",
           "operation": "modify",
-          "description": "Add 'Dictionary' tab to the navigation tabs array and create a new route case in the renderContent switch statement that renders the DictionaryView component. Ensure the tab appears in the proper order with the existing tabs (Chat, Math, Media, Translator, Music, Art, Code, Games)."
-        },
-        {
-          "path": "frontend/src/components/DictionaryView.tsx",
-          "operation": "create",
-          "description": "Create the main Dictionary view component that will serve as the container for the dictionary interface. This component will render the search interface and display word definitions with pronunciation controls. Use Tailwind CSS with the existing dark theme (deep blacks with teal/coral accents) to match the application's design patterns."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Create dictionary search interface with word lookup and definition display",
-      "acceptanceCriteria": [
-        "Search input field allows users to type and search for words",
-        "Search results display the word and its full definition",
-        "Interface shows clear feedback when a word is not found",
-        "Search is case-insensitive and handles common variations"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/DictionaryView.tsx",
-          "operation": "modify",
-          "description": "Implement the search interface with an input field for word lookup, a search button, and a results display area. Show the word and its definition when found, or display a 'Word not found' message when the word doesn't exist in the database. Include loading states during search. Use the useDictionarySearch hook to handle backend queries."
-        },
-        {
-          "path": "frontend/src/hooks/useDictionarySearch.ts",
-          "operation": "create",
-          "description": "Create a React Query hook that calls the backend getWord method from the actor to retrieve word definitions. Handle loading, error, and success states. Implement case-insensitive search by normalizing input before querying. Use the useActor hook to access the authenticated backend actor."
+          "description": "Replace placeholder game interface with iframe-based game renderer. Fetch game template using getTemplate backend function based on game metadata. Implement sandbox attributes (allow-scripts, allow-same-origin) on iframe for security. Add srcdoc attribute to inject generated HTML/CSS/JavaScript code directly into iframe. Include error handling for failed game loads and loading states while fetching templates."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Implement AI-powered text-to-speech for word pronunciation using Web Speech API",
+      "summary": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
       "acceptanceCriteria": [
-        "Each dictionary word result includes a 'Pronounce' or speaker button",
-        "Clicking the button triggers AI voice synthesis to speak the word aloud",
-        "Voice pronunciation uses Web Speech API or similar browser-based TTS",
-        "Audio playback is clear and audible with proper pronunciation"
+        "Game cards display 'Play Now' for AI-generated playable games",
+        "Clicking play loads the generated game code in GamePlayer",
+        "Loading states are shown while games are being generated or loaded"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/DictionaryView.tsx",
+          "path": "frontend/src/hooks/useGameCatalogue.ts",
           "operation": "modify",
-          "description": "Add a pronunciation button (speaker icon) next to each displayed word result. When clicked, trigger the text-to-speech functionality from the useTextToSpeech hook to pronounce the word. Show visual feedback during playback (e.g., pulsing icon or color change)."
+          "description": "Remove mock data implementation. Implement useGameCatalogue hook to fetch real games using getAllGames backend function. Add useGameMetadata hook to fetch individual game details using getGame backend function. Add useGameTemplates hook to fetch available template names using listTemplateNames backend function. Implement React Query queries with proper loading and error states. Cache game data appropriately."
         },
         {
-          "path": "frontend/src/hooks/useTextToSpeech.ts",
+          "path": "frontend/src/components/GameCard.tsx",
+          "operation": "modify",
+          "description": "Update GameCard to display 'Play Now' button for all games returned from backend (they are playable AI-generated games). Remove coming-soon state logic since backend only returns playable games. Ensure onClick handler properly opens GamePlayer with game ID."
+        },
+        {
+          "path": "frontend/src/components/GamesView.tsx",
+          "operation": "modify",
+          "description": "Update GamesView to use the modified useGameCatalogue hook that fetches real backend data. Implement category filtering using searchGamesByCategory backend function. Update search functionality to work with real game data. Show loading states while games are being fetched. Handle empty states when no games match filters."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
+      "acceptanceCriteria": [
+        "Games can save state to backend between sessions",
+        "High scores and progress are preserved across browser sessions",
+        "Users can resume games from where they left off"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useGameState.ts",
           "operation": "create",
-          "description": "Create a hook that uses the Web Speech API (SpeechSynthesis interface) to pronounce words. Implement a speak function that takes a word string and triggers voice synthesis with proper English pronunciation settings. Handle browser compatibility checks and provide fallback messaging if TTS is not available. Include playback state management to prevent overlapping pronunciations."
+          "description": "Create hook for managing game state persistence. Implement useUpdateHighScore mutation that calls updateHighScore backend function when player achieves new high score. Implement useGetHighScore query that calls getHighScore backend function to fetch current high score for a game. Add postMessage communication between parent window and game iframe to receive score updates from running games. Include loading and error states for all operations."
+        },
+        {
+          "path": "frontend/src/components/GamePlayer.tsx",
+          "operation": "modify",
+          "description": "Integrate useGameState hook to persist high scores. Add window message event listener to receive score updates from games running in iframe. When game posts score message, call updateHighScore mutation. Display current high score from backend in game player UI. Show success notification when high score is updated."
+        },
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "create",
+          "description": "Create hook for user profile operations required by authorization component. Implement useGetCallerUserProfile query that calls getCallerUserProfile backend function. Implement useSaveCallerUserProfile mutation that calls saveCallerUserProfile backend function. Follow authorization component usage instructions for profile setup flow on first login. Include proper loading states to prevent profile setup modal flash as documented in component usage."
+        },
+        {
+          "path": "frontend/src/components/ProfileSetup.tsx",
+          "operation": "create",
+          "description": "Create profile setup modal that appears on first login when user has no profile. Use useGetCallerUserProfile hook to check if profile exists. Display form asking for user name. On submit, call useSaveCallerUserProfile with UserProfile object containing name, gamesPlayed=0, totalScore=0. Follow authorization component pattern: only show modal when isAuthenticated && !profileLoading && isFetched && userProfile === null. Close modal after successful profile save."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Display user name from profile instead of showing principal. Use useGetCallerUserProfile hook to fetch current user profile. Show user name in header when authenticated and profile exists. Keep sign-out button functionality. Add ProfileSetup component to header so it appears on first login."
         }
       ]
     }

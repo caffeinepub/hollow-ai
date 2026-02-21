@@ -1,84 +1,99 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T01:43:31.972Z",
+  "generatedAt": "2026-02-21T03:39:01.146Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
+    "total": 5,
     "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a new 'Dictionary' section to the application with a dedicated tab in the main navigation",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/components/DictionaryView.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/components/DictionaryView.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Implement a backend word database containing over 250,000 English words with their definitions",
+        "summary": "Implement a backend endpoint that generates playable game code (HTML/CSS/JavaScript) based on game metadata (title, category, description)",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-3",
-        "summary": "Create a dictionary search interface where users can look up words and view their definitions",
+        "id": "REQ-2",
+        "summary": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DictionaryView.tsx",
-          "frontend/src/hooks/useDictionarySearch.ts"
+          "frontend/src/components/GamePlayer.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DictionaryView.tsx",
-          "frontend/src/hooks/useDictionarySearch.ts"
+          "frontend/src/components/GamePlayer.tsx"
         ]
       },
       {
+        "id": "REQ-3",
+        "summary": "Create a library of playable game templates that the AI can generate: simple arcade games (Snake, Pong variants), puzzle games (Tic-Tac-Toe, Memory Match), and reaction games (Whack-a-Mole, Color Match)",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
         "id": "REQ-4",
-        "summary": "Implement AI-powered text-to-speech functionality that pronounces searched words using synthesized voice",
+        "summary": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DictionaryView.tsx",
-          "frontend/src/hooks/useTextToSpeech.ts"
+          "frontend/src/hooks/useGameCatalogue.ts",
+          "frontend/src/components/GameCard.tsx",
+          "frontend/src/components/GamesView.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DictionaryView.tsx",
-          "frontend/src/hooks/useTextToSpeech.ts"
+          "frontend/src/hooks/useGameCatalogue.ts",
+          "frontend/src/components/GameCard.tsx",
+          "frontend/src/components/GamesView.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useGameState.ts",
+          "frontend/src/components/GamePlayer.tsx",
+          "frontend/src/hooks/useUserProfile.ts",
+          "frontend/src/components/ProfileSetup.tsx",
+          "frontend/src/components/Header.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useGameState.ts",
+          "frontend/src/components/GamePlayer.tsx",
+          "frontend/src/hooks/useUserProfile.ts",
+          "frontend/src/components/ProfileSetup.tsx",
+          "frontend/src/components/Header.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/DictionaryView.tsx",
     "frontend/src/components/GameCard.tsx",
+    "frontend/src/components/GamePlayer.tsx",
+    "frontend/src/components/GamesView.tsx",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/components/ProfileSetup.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useArtworkShare.ts",
-    "frontend/src/hooks/useChatSessions.ts",
-    "frontend/src/hooks/useDictionarySearch.ts",
+    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useGameCatalogue.ts",
-    "frontend/src/hooks/useMusicShare.ts",
-    "frontend/src/hooks/useSharedContent.ts",
-    "frontend/src/hooks/useTextToSpeech.ts",
+    "frontend/src/hooks/useGameState.ts",
+    "frontend/src/hooks/useUserProfile.ts",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

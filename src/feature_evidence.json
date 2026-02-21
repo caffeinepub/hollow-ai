@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-dictionary-section-to-the-application-with-a-dedicated-tab-in-the-main-navigation",
-      "featureTitle": "Add a new 'Dictionary' section to the application with a dedicated tab in the main navigation",
+      "featureId": "feature-update-gameplayer-component-to-render-ai-generated-game-code-in-an-iframe-or-sandboxed-container",
+      "featureTitle": "Update GamePlayer component to render AI-generated game code in an iframe or sandboxed container",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/DictionaryView.tsx"
+        "frontend/src/components/GamePlayer.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -15,19 +14,21 @@
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
         "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
+        "http-outcalls@3.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-dictionary-search-interface-where-users-can-look-up-words-and-view-their-definitions",
-      "featureTitle": "Create a dictionary search interface where users can look up words and view their definitions",
+      "featureId": "feature-update-the-game-catalogue-in-usegamecatalogue-hook-to-mark-games-as-playable-and-integrate-with-the-game-generation-backend",
+      "featureTitle": "Update the game catalogue in useGameCatalogue hook to mark games as playable and integrate with the game generation backend",
       "files": [
-        "frontend/src/components/DictionaryView.tsx",
-        "frontend/src/hooks/useDictionarySearch.ts"
+        "frontend/src/components/GameCard.tsx",
+        "frontend/src/components/GamesView.tsx",
+        "frontend/src/hooks/useGameCatalogue.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -36,31 +37,36 @@
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
         "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-ai-powered-text-to-speech-functionality-that-pronounces-searched-words-using-synthesized-voice",
-      "featureTitle": "Implement AI-powered text-to-speech functionality that pronounces searched words using synthesized voice",
-      "files": [
-        "frontend/src/components/DictionaryView.tsx",
-        "frontend/src/hooks/useTextToSpeech.ts"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
+        "http-outcalls@3.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
         "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-game-state-persistence-so-that-generated-games-can-save-and-load-player-progress-scores-levels-game-state",
+      "featureTitle": "Add game state persistence so that generated games can save and load player progress (scores, levels, game state)",
+      "files": [
+        "frontend/src/components/GamePlayer.tsx",
+        "frontend/src/components/Header.tsx",
+        "frontend/src/components/ProfileSetup.tsx",
+        "frontend/src/hooks/useGameState.ts",
+        "frontend/src/hooks/useUserProfile.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
       ],
       "confidence": "high"
     }

@@ -10,7 +10,22 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface Word { 'word' : string, 'definition' : string }
+export interface GameMetadata {
+  'title' : string,
+  'description' : string,
+  'author' : Principal,
+  'creationTime' : bigint,
+  'highScore' : bigint,
+  'category' : string,
+}
+export interface UserProfile {
+  'gamesPlayed' : bigint,
+  'name' : string,
+  'totalScore' : bigint,
+}
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -38,10 +53,25 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
-  'addWord' : ActorMethod<[string, string], undefined>,
-  'getDefinition' : ActorMethod<[string], string>,
-  'getWord' : ActorMethod<[string], Word>,
-  'listWords' : ActorMethod<[], Array<string>>,
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'createGame' : ActorMethod<[string, string, string], string>,
+  'deleteGame' : ActorMethod<[string], undefined>,
+  'getAllGames' : ActorMethod<[], Array<GameMetadata>>,
+  'getAuthors' : ActorMethod<[], Array<Principal>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getCategories' : ActorMethod<[], Array<string>>,
+  'getGame' : ActorMethod<[string], [] | [GameMetadata]>,
+  'getHighScore' : ActorMethod<[string], bigint>,
+  'getTemplate' : ActorMethod<[string], string>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'listTemplateNames' : ActorMethod<[], Array<string>>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'searchGamesByAuthor' : ActorMethod<[Principal], Array<GameMetadata>>,
+  'searchGamesByCategory' : ActorMethod<[string], Array<GameMetadata>>,
+  'updateHighScore' : ActorMethod<[string, bigint], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

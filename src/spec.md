@@ -1,12 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Add a dictionary feature with AI voice pronunciation and word definitions.
+**Goal:** Add playable AI-generated games to the Games category that users can actually play in their browser.
 
 **Planned changes:**
-- Add a "Dictionary" tab to the main navigation
-- Implement a backend word database with 250,000+ English words and definitions
-- Create a search interface for looking up words and viewing their definitions
-- Add AI text-to-speech functionality to pronounce searched words
+- Implement backend endpoint to generate playable game code (HTML/CSS/JavaScript) from game metadata
+- Create library of 5+ game templates (Snake, Pong, Tic-Tac-Toe, Memory Match, Whack-a-Mole, Color Match)
+- Update GamePlayer component to render generated games in sandboxed iframe
+- Add "Play Now" buttons to game cards for AI-generated playable games
+- Implement game state persistence to save scores, levels, and progress between sessions
 
-**User-visible outcome:** Users can navigate to the Dictionary section, search for English words, read their definitions, and hear AI-powered pronunciation of the words.
+**User-visible outcome:** Users can click "Play Now" on game cards to play AI-generated browser games like Snake, Pong, and puzzle games, with their scores and progress automatically saved.

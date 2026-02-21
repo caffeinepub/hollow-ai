@@ -19,7 +19,24 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
-export const Word = IDL.Record({ 'word' : IDL.Text, 'definition' : IDL.Text });
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const GameMetadata = IDL.Record({
+  'title' : IDL.Text,
+  'description' : IDL.Text,
+  'author' : IDL.Principal,
+  'creationTime' : IDL.Int,
+  'highScore' : IDL.Nat,
+  'category' : IDL.Text,
+});
+export const UserProfile = IDL.Record({
+  'gamesPlayed' : IDL.Nat,
+  'name' : IDL.Text,
+  'totalScore' : IDL.Nat,
+});
 
 export const idlService = IDL.Service({
   '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -48,10 +65,37 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-  'addWord' : IDL.Func([IDL.Text, IDL.Text], [], []),
-  'getDefinition' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
-  'getWord' : IDL.Func([IDL.Text], [Word], ['query']),
-  'listWords' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'createGame' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Text], []),
+  'deleteGame' : IDL.Func([IDL.Text], [], []),
+  'getAllGames' : IDL.Func([], [IDL.Vec(GameMetadata)], ['query']),
+  'getAuthors' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getCategories' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+  'getGame' : IDL.Func([IDL.Text], [IDL.Opt(GameMetadata)], ['query']),
+  'getHighScore' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
+  'getTemplate' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'listTemplateNames' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'searchGamesByAuthor' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Vec(GameMetadata)],
+      ['query'],
+    ),
+  'searchGamesByCategory' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(GameMetadata)],
+      ['query'],
+    ),
+  'updateHighScore' : IDL.Func([IDL.Text, IDL.Nat], [], []),
 });
 
 export const idlInitArgs = [];
@@ -68,7 +112,24 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
-  const Word = IDL.Record({ 'word' : IDL.Text, 'definition' : IDL.Text });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const GameMetadata = IDL.Record({
+    'title' : IDL.Text,
+    'description' : IDL.Text,
+    'author' : IDL.Principal,
+    'creationTime' : IDL.Int,
+    'highScore' : IDL.Nat,
+    'category' : IDL.Text,
+  });
+  const UserProfile = IDL.Record({
+    'gamesPlayed' : IDL.Nat,
+    'name' : IDL.Text,
+    'totalScore' : IDL.Nat,
+  });
   
   return IDL.Service({
     '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -97,10 +158,37 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-    'addWord' : IDL.Func([IDL.Text, IDL.Text], [], []),
-    'getDefinition' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
-    'getWord' : IDL.Func([IDL.Text], [Word], ['query']),
-    'listWords' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'createGame' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Text], []),
+    'deleteGame' : IDL.Func([IDL.Text], [], []),
+    'getAllGames' : IDL.Func([], [IDL.Vec(GameMetadata)], ['query']),
+    'getAuthors' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getCategories' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+    'getGame' : IDL.Func([IDL.Text], [IDL.Opt(GameMetadata)], ['query']),
+    'getHighScore' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
+    'getTemplate' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'listTemplateNames' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'searchGamesByAuthor' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(GameMetadata)],
+        ['query'],
+      ),
+    'searchGamesByCategory' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(GameMetadata)],
+        ['query'],
+      ),
+    'updateHighScore' : IDL.Func([IDL.Text, IDL.Nat], [], []),
   });
 };
 

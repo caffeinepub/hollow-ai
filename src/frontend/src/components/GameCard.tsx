@@ -2,19 +2,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
-
-// Mock type since it's not in the backend anymore
-interface GameCatalogueView {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  playable: boolean;
-  hasThumbnail: boolean;
-}
+import type { GameMetadata } from '../backend';
 
 interface GameCardProps {
-  game: GameCatalogueView;
+  game: GameMetadata;
   onPlay: () => void;
 }
 
@@ -25,11 +16,7 @@ export function GameCard({ game, onPlay }: GameCardProps) {
         className="relative aspect-video bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center overflow-hidden"
         onClick={onPlay}
       >
-        {game.hasThumbnail ? (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10" />
-        ) : (
-          <div className="text-6xl opacity-20">🎮</div>
-        )}
+        <div className="text-6xl opacity-20">🎮</div>
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200 flex items-center justify-center">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div className="bg-primary text-primary-foreground rounded-full p-4">
@@ -53,10 +40,9 @@ export function GameCard({ game, onPlay }: GameCardProps) {
         <Button 
           onClick={onPlay} 
           className="w-full min-h-[44px]"
-          disabled={!game.playable}
         >
           <Play className="mr-2 h-4 w-4" />
-          {game.playable ? 'Play Now' : 'Coming Soon'}
+          Play Now
         </Button>
       </CardContent>
     </Card>
