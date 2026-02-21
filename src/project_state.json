@@ -1,31 +1,30 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Game hub application with multiple playable games including Flappy Bird",
+  "summary": "Chat application with multiple chat boxes and navigation between them",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Pixel art flappy bird character sprite with yellow body and small wings (flappy-bird-sprite.dim_64x64.png)\n- Green pipe obstacle sprite in pixel art style for Flappy Bird game (pipe-sprite.dim_64x128.png)",
   "existing_features": [
     {
-      "id": "feature-ensure-the-game-play-button-opens-a-game-selection-interface-that-displays-flappy-bird-along-with-other-available-games-snake-pong-breakout",
-      "title": "Ensure the game play button opens a game selection interface that displays Flappy Bird along with other available games (Snake, Pong, Breakout)",
+      "id": "feature-add-a-close-exit-button-to-the-chat-interface-that-allows-users-to-return-to-a-chat-selection-view-or-main-navigation",
+      "title": "Add a close/exit button to the chat interface that allows users to return to a chat selection view or main navigation",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-a-fully-playable-flappy-bird-game-with-bird-physics-pipe-obstacles-score-tracking-and-game-over-detection",
-      "title": "Implement a fully playable Flappy Bird game with bird physics, pipe obstacles, score tracking, and game over detection",
+      "id": "feature-implement-navigation-between-different-chat-boxes-sessions-allowing-users-to-switch-between-multiple-chat-conversations",
+      "title": "Implement navigation between different chat boxes/sessions, allowing users to switch between multiple chat conversations",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-integrate-the-flappy-bird-game-template-into-gameplayer-component-alongside-existing-game-templates-snake-pong-breakout",
-      "title": "Integrate the Flappy Bird game template into GamePlayer component alongside existing game templates (Snake, Pong, Breakout)",
+      "id": "feature-ensure-chatsidebar-component-displays-all-available-chat-boxes-and-allows-selection-to-navigate-between-them",
+      "title": "Ensure ChatSidebar component displays all available chat boxes and allows selection to navigate between them",
       "reqIds": [
         "REQ-3"
       ],
@@ -35,13 +34,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add multiple playable games (Flappy Bird, etc.) accessible from play button",
+      "summary": "Add ability to exit chats and navigate to different chat boxes",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "gameProjectType": "2d",
-  "projectName": "Nexora Games",
+  "projectName": "Add chat exit and navigation between different chat boxes",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

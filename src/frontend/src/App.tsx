@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createRouter, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
 import { InternetIdentityProvider } from './hooks/useInternetIdentity';
 import { Header } from './components/Header';
-import { ChatView } from './components/ChatView';
+import { ChatPage } from './components/ChatPage';
 import { MathProblemSolver } from './components/MathProblemSolver';
 import { MediaDisplay } from './components/MediaDisplay';
 import { TranslatorChat } from './components/TranslatorChat';
@@ -44,11 +44,6 @@ const rootRoute = createRootRoute({
   component: Layout,
 });
 
-// Wrapper component for ChatView with default sessionId
-function ChatViewWrapper() {
-  return <ChatView sessionId="default" />;
-}
-
 // Wrapper component for SharedContentViewer that extracts params from route
 function SharedContentViewerWrapper() {
   // For now, we'll default to 'art' type and extract ID from URL
@@ -63,7 +58,19 @@ function SharedContentViewerWrapper() {
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: ChatViewWrapper,
+  component: ChatPage,
+});
+
+const chatRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/chat',
+  component: ChatPage,
+});
+
+const chatSessionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/chat/$sessionId',
+  component: ChatPage,
 });
 
 const mathRoute = createRoute({
@@ -128,6 +135,8 @@ const sharedRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  chatRoute,
+  chatSessionRoute,
   mathRoute,
   mediaRoute,
   translatorRoute,
@@ -198,7 +207,10 @@ function App() {
             onGameSelect={handlePredefinedGameSelect}
           />
           {selectedGameId && (
-            <GamePlayer gameId={selectedGameId} onClose={handleCloseGamePlayer} />
+            <GamePlayer
+              gameId={selectedGameId}
+              onClose={handleCloseGamePlayer}
+            />
           )}
           <Toaster />
         </InternetIdentityProvider>

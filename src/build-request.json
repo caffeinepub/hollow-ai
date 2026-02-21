@@ -1,80 +1,73 @@
 {
   "kind": "build_request",
-  "title": "Add playable games accessible from game play button",
-  "projectName": "Nexora Games",
+  "title": "Add chat exit and navigation between different chat boxes",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Ensure the game play button opens a game selection interface that displays Flappy Bird along with other available games (Snake, Pong, Breakout)",
+      "text": "Add a close/exit button to the chat interface that allows users to return to a chat selection view or main navigation",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ],
         "quotes": [
-          "on the gaame button when you click play make it so games like flappy bird and all that stuff ar avaliable to play"
+          "make it so you can exit out of chats to go to diffrent boxes"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking the play button shows a list or grid of available games including Flappy Bird",
-        "All games (Flappy Bird, Snake, Pong, Breakout) are visible and selectable",
-        "Clicking on any game launches it in a playable state"
+        "A visible close or back button is present in the chat interface",
+        "Clicking the button navigates the user away from the current chat",
+        "The navigation destination is appropriate (e.g., chat list, main menu, or previous view)"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement a fully playable Flappy Bird game with bird physics, pipe obstacles, score tracking, and game over detection",
+      "text": "Implement navigation between different chat boxes/sessions, allowing users to switch between multiple chat conversations",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ],
         "quotes": [
-          "games like flappy bird"
+          "make it so you can exit out of chats to go to diffrent boxes"
         ]
       },
       "acceptanceCriteria": [
-        "Bird responds to tap/click controls with realistic gravity and jump physics",
-        "Pipes spawn continuously and move from right to left",
-        "Score increments when bird passes through pipes",
-        "Game ends when bird collides with pipes or ground",
-        "Game can be restarted after game over"
+        "Users can view a list of available chat boxes/sessions",
+        "Users can select and switch to a different chat box",
+        "Each chat box maintains its own conversation history",
+        "The current active chat is visually indicated"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Integrate the Flappy Bird game template into GamePlayer component alongside existing game templates (Snake, Pong, Breakout)",
+      "text": "Ensure ChatSidebar component displays all available chat boxes and allows selection to navigate between them",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Flappy Bird is available as a predefined game template in GamePlayer",
-        "Flappy Bird game loads correctly in the iframe player",
-        "High score tracking works for Flappy Bird",
-        "Game controls are responsive and smooth"
+        "ChatSidebar lists all chat sessions/boxes",
+        "Clicking a chat in the sidebar switches the active conversation",
+        "The selected chat is highlighted in the sidebar"
       ]
     }
   ],
   "constraints": [
-    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, or components/ui directory",
-    "Maintain single-actor backend architecture in backend/main.mo",
-    "Use existing GamePlayer component infrastructure for game rendering"
+    "Do not modify the useInternetIdentity hook or authentication flow",
+    "Maintain existing chat message history functionality",
+    "Preserve the current ChatView and ChatSidebar component structure"
   ],
   "nonGoals": [
-    "Adding multiplayer functionality to games",
-    "Creating custom game editor for Flappy Bird",
-    "Integrating external game APIs or third-party game libraries",
-    "Adding social features like leaderboards or sharing"
+    "Real-time synchronization between multiple devices",
+    "Chat notifications or alerts",
+    "Multi-user chat rooms or group chats"
   ],
   "imageRequirements": {
-    "required": [
-      "Pixel art flappy bird character sprite with yellow body and small wings (flappy-bird-sprite.dim_64x64.png)",
-      "Green pipe obstacle sprite in pixel art style for Flappy Bird game (pipe-sprite.dim_64x128.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

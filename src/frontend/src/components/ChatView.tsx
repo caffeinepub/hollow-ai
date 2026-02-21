@@ -3,15 +3,16 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Loader2, Bot, User } from 'lucide-react';
+import { Send, Loader2, Bot, User, X } from 'lucide-react';
 import { useSession, useChatSessions } from '../hooks/useChatSessions';
 import { cn } from '@/lib/utils';
 
 interface ChatViewProps {
   sessionId: string;
+  onClose: () => void;
 }
 
-export function ChatView({ sessionId }: ChatViewProps) {
+export function ChatView({ sessionId, onClose }: ChatViewProps) {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -57,11 +58,22 @@ export function ChatView({ sessionId }: ChatViewProps) {
 
   return (
     <div className="h-full flex flex-col bg-background">
-      <div className="border-b border-border p-3 sm:p-4">
-        <h2 className="text-base sm:text-lg font-semibold text-foreground">Chat Session</h2>
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          {sessionQuery.data?.messages.length || 0} messages
-        </p>
+      <div className="border-b border-border p-3 sm:p-4 flex items-center justify-between">
+        <div>
+          <h2 className="text-base sm:text-lg font-semibold text-foreground">Chat Session</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            {sessionQuery.data?.messages.length || 0} messages
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="shrink-0 min-h-[44px] min-w-[44px]"
+          title="Close chat"
+        >
+          <X className="h-5 w-5" />
+        </Button>
       </div>
 
       <ScrollArea className="flex-1 p-3 sm:p-4" ref={scrollRef}>

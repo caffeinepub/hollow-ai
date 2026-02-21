@@ -1,12 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Add playable games (Flappy Bird, Snake, Pong, Breakout) accessible from the game play button.
+**Goal:** Enable users to exit chats and navigate between different chat boxes.
 
 **Planned changes:**
-- Create game selection interface that displays when clicking the play button
-- Implement fully playable Flappy Bird game with physics, obstacles, scoring, and game over detection
-- Add Snake, Pong, and Breakout games as playable options
-- Integrate all games into the GamePlayer component with high score tracking
+- Add close/exit button to chat interface to return to chat selection view
+- Implement navigation system to switch between multiple chat conversations
+- Update ChatSidebar to display all available chat boxes with selection functionality
+- Ensure each chat box maintains its own conversation history
+- Add visual indication for the currently active chat
 
-**User-visible outcome:** Users can click the play button to see a selection of games (Flappy Bird, Snake, Pong, Breakout) and play any of them with full gameplay mechanics, scoring, and restart functionality.
+**User-visible outcome:** Users can exit the current chat, view a list of all chat sessions, and switch between different chat boxes while maintaining separate conversation histories for each.
