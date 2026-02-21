@@ -10,38 +10,7 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export type ArtworkId = string;
-export type ExternalBlob = Uint8Array;
-export interface GameCatalogueView {
-  'id' : GameId,
-  'title' : string,
-  'playable' : boolean,
-  'description' : string,
-  'hasThumbnail' : boolean,
-  'category' : string,
-}
-export type GameId = string;
-export interface GameMetadata {
-  'id' : GameId,
-  'title' : string,
-  'thumbnail' : ExternalBlob,
-  'playable' : boolean,
-  'description' : string,
-  'category' : string,
-}
-export interface Message {
-  'id' : MessageId,
-  'content' : string,
-  'timestamp' : bigint,
-}
-export type MessageId = string;
-export type MusicId = string;
-export type SessionId = string;
-export interface SessionView {
-  'id' : SessionId,
-  'messages' : Array<Message>,
-  'lastActive' : bigint,
-}
+export interface Word { 'word' : string, 'definition' : string }
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -69,19 +38,10 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
-  'addGameMetadata' : ActorMethod<[GameMetadata], undefined>,
-  'addMessageToSession' : ActorMethod<[SessionId, Message], undefined>,
-  'getAllArtworks' : ActorMethod<[], Array<[ArtworkId, ExternalBlob]>>,
-  'getAllMusic' : ActorMethod<[], Array<[MusicId, ExternalBlob]>>,
-  'getGameCatalogue' : ActorMethod<[], Array<GameCatalogueView>>,
-  'getGameMetadata' : ActorMethod<[GameId], GameMetadata>,
-  'getSession' : ActorMethod<[SessionId], SessionView>,
-  'getUserSessions' : ActorMethod<[], Array<SessionView>>,
-  'registerUser' : ActorMethod<[], undefined>,
-  'retrieveArtwork' : ActorMethod<[ArtworkId], ExternalBlob>,
-  'retrieveMusic' : ActorMethod<[MusicId], ExternalBlob>,
-  'shareArtwork' : ActorMethod<[ArtworkId, ExternalBlob], undefined>,
-  'shareMusic' : ActorMethod<[MusicId, ExternalBlob], undefined>,
+  'addWord' : ActorMethod<[string, string], undefined>,
+  'getDefinition' : ActorMethod<[string], string>,
+  'getWord' : ActorMethod<[string], Word>,
+  'listWords' : ActorMethod<[], Array<string>>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

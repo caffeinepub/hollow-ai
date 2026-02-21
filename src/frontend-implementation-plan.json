@@ -1,56 +1,70 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Create standalone HTML demo page for Neroxa AI",
+  "title": "Add dictionary feature with AI voice pronunciation and definitions",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Generate a standalone HTML file with all inline CSS and JavaScript for full self-containment",
+      "summary": "Add Dictionary tab to main navigation and create dedicated dictionary route",
       "acceptanceCriteria": [
-        "HTML file contains inline <style> tags with all necessary CSS",
-        "HTML file contains inline <script> tags with all necessary JavaScript",
-        "File can be opened directly in a browser without a build process",
-        "All functionality works without external file dependencies"
+        "Dictionary tab appears in the main navigation alongside existing tabs (Chat, Math, Media, etc.)",
+        "Clicking the Dictionary tab navigates to the dictionary interface",
+        "Dictionary section is accessible from the main application view"
       ],
       "file_operations": [
         {
-          "path": "frontend/public/demo.html",
-          "operation": "create",
-          "description": "Create a standalone HTML file with inline CSS (incorporating Tailwind-inspired styles from frontend/src/index.css and the dark theme aesthetic) and inline JavaScript for interactive functionality. Include all necessary styles within <style> tags and all scripts within <script> tags to ensure zero external dependencies. The file must be fully functional when opened directly in a browser."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Include proper HTML5 structure with DOCTYPE, meta tags, and semantic elements",
-      "acceptanceCriteria": [
-        "Valid HTML5 DOCTYPE declaration present",
-        "Meta viewport tag configured for responsive design",
-        "UTF-8 character encoding specified",
-        "Semantic HTML5 elements used appropriately"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/demo.html",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Ensure the HTML file includes: HTML5 DOCTYPE declaration, <head> section with UTF-8 charset meta tag, viewport meta tag for responsive design (width=device-width, initial-scale=1.0), appropriate title tag, and semantic HTML5 elements throughout the body (header, nav, main, section, footer as applicable)."
+          "description": "Add 'Dictionary' tab to the navigation tabs array and create a new route case in the renderContent switch statement that renders the DictionaryView component. Ensure the tab appears in the proper order with the existing tabs (Chat, Math, Media, Translator, Music, Art, Code, Games)."
+        },
+        {
+          "path": "frontend/src/components/DictionaryView.tsx",
+          "operation": "create",
+          "description": "Create the main Dictionary view component that will serve as the container for the dictionary interface. This component will render the search interface and display word definitions with pronunciation controls. Use Tailwind CSS with the existing dark theme (deep blacks with teal/coral accents) to match the application's design patterns."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Create a functional demo showcasing Neroxa AI's core features in an interactive format",
+      "summary": "Create dictionary search interface with word lookup and definition display",
       "acceptanceCriteria": [
-        "Page displays navigation or tabs for different features",
-        "Each feature section is visually distinct and labeled",
-        "Interactive elements (buttons, inputs) are functional",
-        "Page maintains visual consistency across sections"
+        "Search input field allows users to type and search for words",
+        "Search results display the word and its full definition",
+        "Interface shows clear feedback when a word is not found",
+        "Search is case-insensitive and handles common variations"
       ],
       "file_operations": [
         {
-          "path": "frontend/public/demo.html",
+          "path": "frontend/src/components/DictionaryView.tsx",
           "operation": "modify",
-          "description": "Implement interactive demo sections for all core features: chat interface, math solver with expression evaluation, media generation showcase, language translator with dropdown selectors, music generator interface, art/drawing canvas, code generation scripter, and games showcase. Include tab navigation or accordion-style sections to switch between features. Add working interactive elements (input fields, buttons, demo outputs) with inline JavaScript event handlers. Maintain visual consistency using the dark theme color scheme (teal primary, coral accents) throughout all sections. Each feature section should have clear labels and demonstrate mock functionality without backend integration."
+          "description": "Implement the search interface with an input field for word lookup, a search button, and a results display area. Show the word and its definition when found, or display a 'Word not found' message when the word doesn't exist in the database. Include loading states during search. Use the useDictionarySearch hook to handle backend queries."
+        },
+        {
+          "path": "frontend/src/hooks/useDictionarySearch.ts",
+          "operation": "create",
+          "description": "Create a React Query hook that calls the backend getWord method from the actor to retrieve word definitions. Handle loading, error, and success states. Implement case-insensitive search by normalizing input before querying. Use the useActor hook to access the authenticated backend actor."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Implement AI-powered text-to-speech for word pronunciation using Web Speech API",
+      "acceptanceCriteria": [
+        "Each dictionary word result includes a 'Pronounce' or speaker button",
+        "Clicking the button triggers AI voice synthesis to speak the word aloud",
+        "Voice pronunciation uses Web Speech API or similar browser-based TTS",
+        "Audio playback is clear and audible with proper pronunciation"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DictionaryView.tsx",
+          "operation": "modify",
+          "description": "Add a pronunciation button (speaker icon) next to each displayed word result. When clicked, trigger the text-to-speech functionality from the useTextToSpeech hook to pronounce the word. Show visual feedback during playback (e.g., pulsing icon or color change)."
+        },
+        {
+          "path": "frontend/src/hooks/useTextToSpeech.ts",
+          "operation": "create",
+          "description": "Create a hook that uses the Web Speech API (SpeechSynthesis interface) to pronounce words. Implement a speak function that takes a word string and triggers voice synthesis with proper English pronunciation settings. Handle browser compatibility checks and provide fallback messaging if TTS is not available. Include playback state management to prevent overlapping pronunciations."
         }
       ]
     }

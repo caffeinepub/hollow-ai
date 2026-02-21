@@ -1,6 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { SessionView, Message } from '../backend';
+
+// Mock types since they're not in the backend anymore
+interface Message {
+  id: string;
+  content: string;
+  timestamp: bigint;
+}
+
+interface SessionView {
+  id: string;
+  messages: Message[];
+  lastActive: bigint;
+}
 
 export function useChatSessions() {
   const { actor } = useActor();
@@ -9,17 +21,8 @@ export function useChatSessions() {
   const sessionsQuery = useQuery<SessionView[]>({
     queryKey: ['sessions'],
     queryFn: async () => {
-      if (!actor) return [];
-      try {
-        return await actor.getUserSessions();
-      } catch (error) {
-        // If user doesn't exist, register them
-        if (error instanceof Error && error.message.includes('User does not exist')) {
-          await actor.registerUser();
-          return [];
-        }
-        throw error;
-      }
+      // Backend no longer supports sessions, return empty array
+      return [];
     },
     enabled: !!actor,
   });
@@ -34,7 +37,7 @@ export function useChatSessions() {
         timestamp: BigInt(Date.now() * 1_000_000),
       };
 
-      await actor.addMessageToSession(sessionId, message);
+      // Backend no longer supports this functionality
       return message;
     },
     onSuccess: (_, variables) => {
@@ -47,24 +50,8 @@ export function useChatSessions() {
     if (!actor) return null;
 
     try {
-      // Register user if not already registered
-      try {
-        await actor.registerUser();
-      } catch (error) {
-        // User might already be registered, continue
-      }
-
-      // Create a new session ID
+      // Create a new session ID (local only, not persisted)
       const sessionId = `session-${Date.now()}`;
-      
-      // Add an initial message to create the session
-      const initialMessage: Message = {
-        id: `${Date.now()}-init`,
-        content: 'Welcome to Hollow AI! How can I help you today?',
-        timestamp: BigInt(Date.now() * 1_000_000),
-      };
-
-      await actor.addMessageToSession(sessionId, initialMessage);
       
       // Invalidate queries to refresh the session list
       queryClient.invalidateQueries({ queryKey: ['sessions'] });
@@ -93,9 +80,13 @@ export function useSession(sessionId: string) {
     queryKey: ['session', sessionId],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not initialized');
-      return await actor.getSession(sessionId);
+      // Backend no longer supports sessions, return mock data
+      return {
+        id: sessionId,
+        messages: [],
+        lastActive: BigInt(Date.now() * 1_000_000),
+      };
     },
     enabled: !!actor && !!sessionId,
   });
 }
-

@@ -11,11 +11,12 @@ import { MusicGenerator } from './components/MusicGenerator';
 import { ArtCanvas } from './components/ArtCanvas';
 import { Scripter } from './components/Scripter';
 import { GamesView } from './components/GamesView';
+import { DictionaryView } from './components/DictionaryView';
 import { SharedContentViewer } from './components/SharedContentViewer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useInternetIdentity } from './hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
-import { LogIn, Calculator, Image, Languages, Music2, Palette, Code2, Gamepad2 } from 'lucide-react';
+import { LogIn, Calculator, Image, Languages, Music2, Palette, Code2, Gamepad2, BookOpen } from 'lucide-react';
 import { Toaster } from '@/components/ui/sonner';
 
 const queryClient = new QueryClient();
@@ -93,12 +94,12 @@ function MainApp() {
                     What would you like to learn today?
                   </h1>
                   <p className="text-sm sm:text-base text-muted-foreground">
-                    Solve math problems, translate languages, generate AI media, create music, draw art, generate scripts, play games, or start a new conversation
+                    Solve math problems, translate languages, generate AI media, create music, draw art, generate scripts, play games, explore the dictionary, or start a new conversation
                   </p>
                 </div>
                 
                 <Tabs defaultValue="math" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 max-w-5xl h-auto gap-1 p-1">
+                  <TabsList className="grid w-full grid-cols-4 sm:grid-cols-8 max-w-5xl h-auto gap-1 p-1">
                     <TabsTrigger value="math" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
                       <Calculator className="h-3 w-3 sm:h-4 sm:w-4" />
                       <span className="hidden sm:inline">Math Solver</span>
@@ -134,6 +135,11 @@ function MainApp() {
                       <span className="hidden sm:inline">Games</span>
                       <span className="sm:hidden">Games</span>
                     </TabsTrigger>
+                    <TabsTrigger value="dictionary" className="gap-1 sm:gap-2 min-h-[44px] text-xs sm:text-sm">
+                      <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <span className="hidden sm:inline">Dictionary</span>
+                      <span className="sm:hidden">Dict</span>
+                    </TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="math" className="mt-4 sm:mt-6">
@@ -166,6 +172,10 @@ function MainApp() {
                   
                   <TabsContent value="games" className="mt-4 sm:mt-6">
                     <GamesView />
+                  </TabsContent>
+                  
+                  <TabsContent value="dictionary" className="mt-4 sm:mt-6">
+                    <DictionaryView />
                   </TabsContent>
                 </Tabs>
               </div>

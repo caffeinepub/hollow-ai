@@ -2,7 +2,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
-import type { GameCatalogueView } from '../backend';
+
+// Mock type since it's not in the backend anymore
+interface GameCatalogueView {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  playable: boolean;
+  hasThumbnail: boolean;
+}
 
 interface GameCardProps {
   game: GameCatalogueView;

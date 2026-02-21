@@ -89,47 +89,20 @@ export class ExternalBlob {
         return this;
     }
 }
-export type ArtworkId = string;
-export type MusicId = string;
-export type MessageId = string;
-export interface _CaffeineStorageRefillInformation {
-    proposed_top_up_amount?: bigint;
-}
-export interface Message {
-    id: MessageId;
-    content: string;
-    timestamp: bigint;
-}
-export interface GameMetadata {
-    id: GameId;
-    title: string;
-    thumbnail: ExternalBlob;
-    playable: boolean;
-    description: string;
-    category: string;
-}
-export type SessionId = string;
 export interface _CaffeineStorageCreateCertificateResult {
     method: string;
     blob_hash: string;
 }
-export type GameId = string;
-export interface SessionView {
-    id: SessionId;
-    messages: Array<Message>;
-    lastActive: bigint;
+export interface Word {
+    word: string;
+    definition: string;
 }
 export interface _CaffeineStorageRefillResult {
     success?: boolean;
     topped_up_amount?: bigint;
 }
-export interface GameCatalogueView {
-    id: GameId;
-    title: string;
-    playable: boolean;
-    description: string;
-    hasThumbnail: boolean;
-    category: string;
+export interface _CaffeineStorageRefillInformation {
+    proposed_top_up_amount?: bigint;
 }
 export interface backendInterface {
     _caffeineStorageBlobIsLive(hash: Uint8Array): Promise<boolean>;
@@ -138,21 +111,12 @@ export interface backendInterface {
     _caffeineStorageCreateCertificate(blobHash: string): Promise<_CaffeineStorageCreateCertificateResult>;
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
-    addGameMetadata(gameMetadata: GameMetadata): Promise<void>;
-    addMessageToSession(sessionId: SessionId, message: Message): Promise<void>;
-    getAllArtworks(): Promise<Array<[ArtworkId, ExternalBlob]>>;
-    getAllMusic(): Promise<Array<[MusicId, ExternalBlob]>>;
-    getGameCatalogue(): Promise<Array<GameCatalogueView>>;
-    getGameMetadata(gameId: GameId): Promise<GameMetadata>;
-    getSession(sessionId: SessionId): Promise<SessionView>;
-    getUserSessions(): Promise<Array<SessionView>>;
-    registerUser(): Promise<void>;
-    retrieveArtwork(artworkId: ArtworkId): Promise<ExternalBlob>;
-    retrieveMusic(musicId: MusicId): Promise<ExternalBlob>;
-    shareArtwork(artworkId: ArtworkId, imageBlob: ExternalBlob): Promise<void>;
-    shareMusic(musicId: MusicId, audioBlob: ExternalBlob): Promise<void>;
+    addWord(word: string, definition: string): Promise<void>;
+    getDefinition(word: string): Promise<string>;
+    getWord(word: string): Promise<Word>;
+    listWords(): Promise<Array<string>>;
 }
-import type { ArtworkId as _ArtworkId, ExternalBlob as _ExternalBlob, GameId as _GameId, GameMetadata as _GameMetadata, MusicId as _MusicId, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
+import type { _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _caffeineStorageBlobIsLive(arg0: Uint8Array): Promise<boolean> {
@@ -239,194 +203,62 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async addGameMetadata(arg0: GameMetadata): Promise<void> {
+    async addWord(arg0: string, arg1: string): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.addGameMetadata(await to_candid_GameMetadata_n8(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.addWord(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addGameMetadata(await to_candid_GameMetadata_n8(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.addWord(arg0, arg1);
             return result;
         }
     }
-    async addMessageToSession(arg0: SessionId, arg1: Message): Promise<void> {
+    async getDefinition(arg0: string): Promise<string> {
         if (this.processError) {
             try {
-                const result = await this.actor.addMessageToSession(arg0, arg1);
+                const result = await this.actor.getDefinition(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addMessageToSession(arg0, arg1);
+            const result = await this.actor.getDefinition(arg0);
             return result;
         }
     }
-    async getAllArtworks(): Promise<Array<[ArtworkId, ExternalBlob]>> {
+    async getWord(arg0: string): Promise<Word> {
         if (this.processError) {
             try {
-                const result = await this.actor.getAllArtworks();
-                return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getAllArtworks();
-            return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getAllMusic(): Promise<Array<[MusicId, ExternalBlob]>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getAllMusic();
-                return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getAllMusic();
-            return from_candid_vec_n14(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getGameCatalogue(): Promise<Array<GameCatalogueView>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getGameCatalogue();
+                const result = await this.actor.getWord(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getGameCatalogue();
+            const result = await this.actor.getWord(arg0);
             return result;
         }
     }
-    async getGameMetadata(arg0: GameId): Promise<GameMetadata> {
+    async listWords(): Promise<Array<string>> {
         if (this.processError) {
             try {
-                const result = await this.actor.getGameMetadata(arg0);
-                return from_candid_GameMetadata_n16(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getGameMetadata(arg0);
-            return from_candid_GameMetadata_n16(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async getSession(arg0: SessionId): Promise<SessionView> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getSession(arg0);
+                const result = await this.actor.listWords();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getSession(arg0);
+            const result = await this.actor.listWords();
             return result;
         }
     }
-    async getUserSessions(): Promise<Array<SessionView>> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getUserSessions();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getUserSessions();
-            return result;
-        }
-    }
-    async registerUser(): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.registerUser();
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.registerUser();
-            return result;
-        }
-    }
-    async retrieveArtwork(arg0: ArtworkId): Promise<ExternalBlob> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.retrieveArtwork(arg0);
-                return from_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.retrieveArtwork(arg0);
-            return from_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async retrieveMusic(arg0: MusicId): Promise<ExternalBlob> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.retrieveMusic(arg0);
-                return from_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.retrieveMusic(arg0);
-            return from_candid_ExternalBlob_n13(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async shareArtwork(arg0: ArtworkId, arg1: ExternalBlob): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.shareArtwork(arg0, await to_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, arg1));
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.shareArtwork(arg0, await to_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, arg1));
-            return result;
-        }
-    }
-    async shareMusic(arg0: MusicId, arg1: ExternalBlob): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.shareMusic(arg0, await to_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, arg1));
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.shareMusic(arg0, await to_candid_ExternalBlob_n10(this._uploadFile, this._downloadFile, arg1));
-            return result;
-        }
-    }
-}
-async function from_candid_ExternalBlob_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ExternalBlob): Promise<ExternalBlob> {
-    return await _downloadFile(value);
-}
-async function from_candid_GameMetadata_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _GameMetadata): Promise<GameMetadata> {
-    return await from_candid_record_n17(_uploadFile, _downloadFile, value);
 }
 function from_candid__CaffeineStorageRefillResult_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: __CaffeineStorageRefillResult): _CaffeineStorageRefillResult {
     return from_candid_record_n5(_uploadFile, _downloadFile, value);
@@ -436,30 +268,6 @@ function from_candid_opt_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Ar
 }
 function from_candid_opt_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
     return value.length === 0 ? null : value[0];
-}
-async function from_candid_record_n17(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    id: _GameId;
-    title: string;
-    thumbnail: _ExternalBlob;
-    playable: boolean;
-    description: string;
-    category: string;
-}): Promise<{
-    id: GameId;
-    title: string;
-    thumbnail: ExternalBlob;
-    playable: boolean;
-    description: string;
-    category: string;
-}> {
-    return {
-        id: value.id,
-        title: value.title,
-        thumbnail: await from_candid_ExternalBlob_n13(_uploadFile, _downloadFile, value.thumbnail),
-        playable: value.playable,
-        description: value.description,
-        category: value.category
-    };
 }
 function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     success: [] | [boolean];
@@ -472,30 +280,6 @@ function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint
         success: record_opt_to_undefined(from_candid_opt_n6(_uploadFile, _downloadFile, value.success)),
         topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
     };
-}
-async function from_candid_tuple_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [_ArtworkId, _ExternalBlob]): Promise<[ArtworkId, ExternalBlob]> {
-    return [
-        value[0],
-        await from_candid_ExternalBlob_n13(_uploadFile, _downloadFile, value[1])
-    ];
-}
-async function from_candid_tuple_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [_MusicId, _ExternalBlob]): Promise<[MusicId, ExternalBlob]> {
-    return [
-        value[0],
-        await from_candid_ExternalBlob_n13(_uploadFile, _downloadFile, value[1])
-    ];
-}
-async function from_candid_vec_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[_ArtworkId, _ExternalBlob]>): Promise<Array<[ArtworkId, ExternalBlob]>> {
-    return await Promise.all(value.map(async (x)=>await from_candid_tuple_n12(_uploadFile, _downloadFile, x)));
-}
-async function from_candid_vec_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[_MusicId, _ExternalBlob]>): Promise<Array<[MusicId, ExternalBlob]>> {
-    return await Promise.all(value.map(async (x)=>await from_candid_tuple_n15(_uploadFile, _downloadFile, x)));
-}
-async function to_candid_ExternalBlob_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ExternalBlob): Promise<_ExternalBlob> {
-    return await _uploadFile(value);
-}
-async function to_candid_GameMetadata_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: GameMetadata): Promise<_GameMetadata> {
-    return await to_candid_record_n9(_uploadFile, _downloadFile, value);
 }
 function to_candid__CaffeineStorageRefillInformation_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CaffeineStorageRefillInformation): __CaffeineStorageRefillInformation {
     return to_candid_record_n3(_uploadFile, _downloadFile, value);
@@ -510,30 +294,6 @@ function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 } {
     return {
         proposed_top_up_amount: value.proposed_top_up_amount ? candid_some(value.proposed_top_up_amount) : candid_none()
-    };
-}
-async function to_candid_record_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    id: GameId;
-    title: string;
-    thumbnail: ExternalBlob;
-    playable: boolean;
-    description: string;
-    category: string;
-}): Promise<{
-    id: _GameId;
-    title: string;
-    thumbnail: _ExternalBlob;
-    playable: boolean;
-    description: string;
-    category: string;
-}> {
-    return {
-        id: value.id,
-        title: value.title,
-        thumbnail: await to_candid_ExternalBlob_n10(_uploadFile, _downloadFile, value.thumbnail),
-        playable: value.playable,
-        description: value.description,
-        category: value.category
     };
 }
 export interface CreateActorOptions {

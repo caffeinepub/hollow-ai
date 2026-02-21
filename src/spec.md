@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Create a standalone, self-contained HTML demo page for Neroxa AI that works without external dependencies or build processes.
+**Goal:** Add a dictionary feature with AI voice pronunciation and word definitions.
 
 **Planned changes:**
-- Generate a single HTML file with inline CSS and JavaScript
-- Include proper HTML5 document structure with meta tags
-- Create interactive demo sections showcasing core features (chat, math solver, media generation, translation, music, art, code generation, games)
-- Maintain dark theme aesthetic consistent with existing design
+- Add a "Dictionary" tab to the main navigation
+- Implement a backend word database with 250,000+ English words and definitions
+- Create a search interface for looking up words and viewing their definitions
+- Add AI text-to-speech functionality to pronounce searched words
 
-**User-visible outcome:** Users can open a single HTML file directly in their browser to explore a fully functional demo of Neroxa AI's features without requiring installation, build processes, or internet connectivity.
+**User-visible outcome:** Users can navigate to the Dictionary section, search for English words, read their definitions, and hear AI-powered pronunciation of the words.

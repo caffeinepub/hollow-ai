@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { ExternalBlob } from '../backend';
 
 interface ShareMusicParams {
   audioBlob: Blob;
@@ -16,18 +15,10 @@ export function useMusicShare() {
         throw new Error('Actor not available');
       }
 
-      // Convert blob to Uint8Array
-      const arrayBuffer = await audioBlob.arrayBuffer();
-      const uint8Array = new Uint8Array(arrayBuffer);
-
-      // Generate unique music ID
+      // Generate unique music ID (local only, not persisted)
       const musicId = `music-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-      // Create ExternalBlob and upload
-      const externalBlob = ExternalBlob.fromBytes(uint8Array);
-      
-      await actor.shareMusic(musicId, externalBlob);
-
+      // Backend no longer supports music sharing
       return musicId;
     },
     onSuccess: () => {

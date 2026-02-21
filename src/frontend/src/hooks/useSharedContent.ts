@@ -1,39 +1,35 @@
 import { useQuery } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { ArtworkId, MusicId } from '../backend';
 
-export function useSharedArtwork(artworkId: ArtworkId) {
+interface SharedContent {
+  id: string;
+  url: string;
+}
+
+export function useSharedArtwork(artworkId: string) {
   const { actor, isFetching } = useActor();
 
-  return useQuery({
+  return useQuery<SharedContent>({
     queryKey: ['shared-artwork', artworkId],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      const externalBlob = await actor.retrieveArtwork(artworkId);
-      return {
-        id: artworkId,
-        url: externalBlob.getDirectURL(),
-        blob: externalBlob,
-      };
+      // Backend no longer supports artwork retrieval
+      throw new Error('Artwork sharing is not available');
     },
     enabled: !!actor && !isFetching && !!artworkId,
     retry: 1,
   });
 }
 
-export function useSharedMusic(musicId: MusicId) {
+export function useSharedMusic(musicId: string) {
   const { actor, isFetching } = useActor();
 
-  return useQuery({
+  return useQuery<SharedContent>({
     queryKey: ['shared-music', musicId],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      const externalBlob = await actor.retrieveMusic(musicId);
-      return {
-        id: musicId,
-        url: externalBlob.getDirectURL(),
-        blob: externalBlob,
-      };
+      // Backend no longer supports music retrieval
+      throw new Error('Music sharing is not available');
     },
     enabled: !!actor && !isFetching && !!musicId,
     retry: 1,

@@ -1,56 +1,84 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T23:20:03.613Z",
+  "generatedAt": "2026-02-21T01:43:31.972Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
+    "total": 4,
     "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Generate a standalone HTML file that includes all necessary inline CSS and JavaScript, making it fully self-contained and functional without external dependencies",
+        "summary": "Add a new 'Dictionary' section to the application with a dedicated tab in the main navigation",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/demo.html"
+          "frontend/src/App.tsx",
+          "frontend/src/components/DictionaryView.tsx"
         ],
         "matchedFiles": [
-          "frontend/public/demo.html"
+          "frontend/src/App.tsx",
+          "frontend/src/components/DictionaryView.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Include proper HTML5 document structure with DOCTYPE, head section containing meta tags for viewport and character encoding, and semantic body elements",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/demo.html"
-        ],
-        "matchedFiles": [
-          "frontend/public/demo.html"
-        ]
+        "summary": "Implement a backend word database containing over 250,000 English words with their definitions",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-3",
-        "summary": "Create a functional demo page that showcases the Neroxa AI application's core features (chat, math solver, media generation, translation, music, art, code generation, games) in an interactive format",
+        "summary": "Create a dictionary search interface where users can look up words and view their definitions",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/demo.html"
+          "frontend/src/components/DictionaryView.tsx",
+          "frontend/src/hooks/useDictionarySearch.ts"
         ],
         "matchedFiles": [
-          "frontend/public/demo.html"
+          "frontend/src/components/DictionaryView.tsx",
+          "frontend/src/hooks/useDictionarySearch.ts"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Implement AI-powered text-to-speech functionality that pronounces searched words using synthesized voice",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DictionaryView.tsx",
+          "frontend/src/hooks/useTextToSpeech.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DictionaryView.tsx",
+          "frontend/src/hooks/useTextToSpeech.ts"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/demo.html",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/DictionaryView.tsx",
+    "frontend/src/components/GameCard.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useArtworkShare.ts",
+    "frontend/src/hooks/useChatSessions.ts",
+    "frontend/src/hooks/useDictionarySearch.ts",
+    "frontend/src/hooks/useGameCatalogue.ts",
+    "frontend/src/hooks/useMusicShare.ts",
+    "frontend/src/hooks/useSharedContent.ts",
+    "frontend/src/hooks/useTextToSpeech.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

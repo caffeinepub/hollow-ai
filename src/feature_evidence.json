@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-generate-a-standalone-html-file-that-includes-all-necessary-inline-css-and-javascript-making-it-fully-self-contained-and-functional-without-external-dependencies",
-      "featureTitle": "Generate a standalone HTML file that includes all necessary inline CSS and JavaScript, making it fully self-contained and functional without external dependencies",
+      "featureId": "feature-add-a-new-dictionary-section-to-the-application-with-a-dedicated-tab-in-the-main-navigation",
+      "featureTitle": "Add a new 'Dictionary' section to the application with a dedicated tab in the main navigation",
       "files": [
-        "frontend/public/demo.html"
+        "frontend/src/App.tsx",
+        "frontend/src/components/DictionaryView.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -22,30 +23,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-include-proper-html5-document-structure-with-doctype-head-section-containing-meta-tags-for-viewport-and-character-encoding-and-semantic-body-elements",
-      "featureTitle": "Include proper HTML5 document structure with DOCTYPE, head section containing meta tags for viewport and character encoding, and semantic body elements",
+      "featureId": "feature-create-a-dictionary-search-interface-where-users-can-look-up-words-and-view-their-definitions",
+      "featureTitle": "Create a dictionary search interface where users can look up words and view their definitions",
       "files": [
-        "frontend/public/demo.html"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-functional-demo-page-that-showcases-the-neroxa-ai-application-s-core-features-chat-math-solver-media-generation-translation-music-art-code-generation-games-in-an-interactive-format",
-      "featureTitle": "Create a functional demo page that showcases the Neroxa AI application's core features (chat, math solver, media generation, translation, music, art, code generation, games) in an interactive format",
-      "files": [
-        "frontend/public/demo.html"
+        "frontend/src/components/DictionaryView.tsx",
+        "frontend/src/hooks/useDictionarySearch.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -58,6 +40,27 @@
       ],
       "testIds": [
         "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-ai-powered-text-to-speech-functionality-that-pronounces-searched-words-using-synthesized-voice",
+      "featureTitle": "Implement AI-powered text-to-speech functionality that pronounces searched words using synthesized voice",
+      "files": [
+        "frontend/src/components/DictionaryView.tsx",
+        "frontend/src/hooks/useTextToSpeech.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
       ],
       "confidence": "high"
     }

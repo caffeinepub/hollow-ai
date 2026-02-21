@@ -1,32 +1,34 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project to create a real HTML page",
+  "summary": "Web app with HTML page and dictionary feature",
   "architectural_notes": [],
-  "known_issues": [],
+  "known_issues": [
+    "Canister ID not resolved error on deployment - link not accessible in browsers"
+  ],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-generate-a-standalone-html-file-that-includes-all-necessary-inline-css-and-javascript-making-it-fully-self-contained-and-functional-without-external-dependencies",
-      "title": "Generate a standalone HTML file that includes all necessary inline CSS and JavaScript, making it fully self-contained and functional without external dependencies",
+      "id": "feature-add-a-new-dictionary-section-to-the-application-with-a-dedicated-tab-in-the-main-navigation",
+      "title": "Add a new 'Dictionary' section to the application with a dedicated tab in the main navigation",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-include-proper-html5-document-structure-with-doctype-head-section-containing-meta-tags-for-viewport-and-character-encoding-and-semantic-body-elements",
-      "title": "Include proper HTML5 document structure with DOCTYPE, head section containing meta tags for viewport and character encoding, and semantic body elements",
+      "id": "feature-create-a-dictionary-search-interface-where-users-can-look-up-words-and-view-their-definitions",
+      "title": "Create a dictionary search interface where users can look up words and view their definitions",
       "reqIds": [
-        "REQ-2"
+        "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-a-functional-demo-page-that-showcases-the-neroxa-ai-application-s-core-features-chat-math-solver-media-generation-translation-music-art-code-generation-games-in-an-interactive-format",
-      "title": "Create a functional demo page that showcases the Neroxa AI application's core features (chat, math solver, media generation, translation, music, art, code generation, games) in an interactive format",
+      "id": "feature-implement-ai-powered-text-to-speech-functionality-that-pronounces-searched-words-using-synthesized-voice",
+      "title": "Implement AI-powered text-to-speech functionality that pronounces searched words using synthesized voice",
       "reqIds": [
-        "REQ-3"
+        "REQ-4"
       ],
       "version": 1
     }
@@ -34,8 +36,16 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Create a real HTML page",
+      "summary": "Add dictionary box with 250k+ words, AI voice pronunciation, and definitions",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Implement a backend word database containing over 250,000 English words with their definitions",
+      "reqIds": [
+        "REQ-2"
+      ],
       "status": "pending"
     }
   ],
