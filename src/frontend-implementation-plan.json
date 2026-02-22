@@ -1,70 +1,96 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Enable API-keyless web search for images and videos in media generator",
+  "title": "Rebuild chat feature with AI capabilities",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove API key requirement from image search functionality, enabling users to search for images without authentication",
+      "summary": "Restore the chat functionality with AI-powered responses using the existing useChatSessions hook pattern",
       "acceptanceCriteria": [
-        "Users can search for images without entering or configuring an API key",
-        "Image search returns results from web sources",
-        "Search functionality works immediately without setup steps"
+        "Chat interface loads without errors",
+        "Users can create new chat sessions",
+        "Users can send messages and receive AI-generated responses",
+        "Chat history persists in localStorage",
+        "Session list displays all conversations with timestamps"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useImageSearch.ts",
+          "path": "frontend/src/hooks/useChatSessions.ts",
           "operation": "modify",
-          "description": "Remove Unsplash API key dependency by implementing a public API-based image search or using a free API that doesn't require keys. Replace the current Unsplash API integration with a keyless alternative that returns image results with URLs, thumbnails, and descriptions. Ensure error handling for network issues and return structured image results compatible with the MediaDisplay component."
+          "description": "Verify and ensure the useChatSessions hook correctly manages chat sessions in localStorage with AI response generation for greetings, math questions, science topics, and educational queries. Confirm session creation, message handling, and history persistence are working as intended."
         },
         {
-          "path": "frontend/src/components/MediaDisplay.tsx",
+          "path": "frontend/src/components/ChatView.tsx",
           "operation": "modify",
-          "description": "Remove any UI elements related to API key input or configuration from the Image Search tab. Ensure the search interface directly calls the updated useImageSearch hook without requiring authentication setup. Update the tab to display search results immediately when users enter queries."
+          "description": "Restore ChatView component to display conversation messages with user/assistant avatars, message input field with send functionality, typing indicators during AI response generation, and auto-scrolling to latest messages. Ensure it correctly integrates with useChatSessions hook for sending messages and receiving responses."
+        },
+        {
+          "path": "frontend/src/components/ChatSidebar.tsx",
+          "operation": "modify",
+          "description": "Restore ChatSidebar component to display the list of chat sessions with timestamps, provide a new chat creation button, handle session selection with active state highlighting, and include loading and empty states. Ensure proper integration with useChatSessions for session management."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Extend web search functionality to video generation tab, enabling users to search for videos from the web based on text queries",
+      "summary": "Ensure the ChatPage component correctly integrates ChatSidebar and ChatView with session management and navigation",
       "acceptanceCriteria": [
-        "Video generation tab includes web search capability",
-        "Users can enter text queries to search for videos",
-        "Search results display video previews or thumbnails",
-        "Videos from search results are viewable in the interface"
+        "Sidebar displays list of chat sessions",
+        "Clicking a session loads its conversation history",
+        "New chat button creates a fresh session",
+        "Sidebar is collapsible on mobile viewports"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useVideoSearch.ts",
-          "operation": "create",
-          "description": "Create a new hook for API-keyless video search functionality. Implement integration with a public video API (such as Pexels Videos API public endpoints or similar free services) that returns video results including video URLs, thumbnail URLs, duration, and descriptions. Follow the same pattern as useImageSearch but adapted for video content. Include proper error handling and loading states."
-        },
-        {
-          "path": "frontend/src/components/MediaDisplay.tsx",
+          "path": "frontend/src/components/ChatPage.tsx",
           "operation": "modify",
-          "description": "Add video search UI to the Video Generation tab. Import and integrate the new useVideoSearch hook. Create a search input field and results grid similar to the image search interface. Display video thumbnails with play buttons, and enable inline video playback using HTML5 video elements. Ensure the video player supports the URLs returned from the video search API."
+          "description": "Restore ChatPage component to properly integrate ChatSidebar and ChatView components. Implement session selection handling that updates the active conversation in ChatView. Ensure the sidebar is collapsible on mobile viewports with a close button. Handle navigation between sessions and new chat creation flow."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Integrate web search as the primary mechanism for all media generation requests, triggering automatic web searches when users request images or videos",
+      "summary": "Verify the chat route (/chat) is properly configured in the TanStack Router setup and accessible from the main navigation",
       "acceptanceCriteria": [
-        "Both image and video tabs use web search as the default generation method",
-        "User input triggers web search automatically",
-        "Results are displayed in a unified, consistent interface",
-        "No API key configuration is required for any media generation feature"
+        "Chat route navigates to the ChatPage component",
+        "Chat card on HomePage links to /chat",
+        "URL routing works correctly for chat sessions"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/MediaDisplay.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Refactor the MediaDisplay component to make web search the primary interaction pattern for both Image Generation and Video Generation tabs. Update tab labels to 'Image Search' and 'Video Search' to reflect the web search approach. Ensure both tabs have consistent UI layouts with search inputs triggering immediate searches. Remove or hide any AI generation prompts or controls that don't align with web search. Consolidate the presentation layer so image and video results use a unified card-based grid layout with consistent styling."
+          "description": "Verify that the /chat route is properly registered in the TanStack Router configuration and correctly points to the ChatPage component. Ensure route definitions are complete and functional."
         },
         {
-          "path": "frontend/src/hooks/useMediaGeneration.ts",
+          "path": "frontend/src/components/HomePage.tsx",
           "operation": "modify",
-          "description": "Update or deprecate AI-specific media generation logic to align with web search as the primary method. If the hook is still used, ensure it doesn't conflict with the search-based approach. Consider renaming or refactoring to support search result handling rather than AI generation if the component still references this hook."
+          "description": "Verify that the Chat navigation card on the HomePage correctly links to the /chat route and includes appropriate icon, description, and styling consistent with other feature cards."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Fix any frontend compilation issues to ensure successful build and deployment",
+      "acceptanceCriteria": [
+        "Build compiles without errors",
+        "No runtime errors in browser console"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ChatPage.tsx",
+          "operation": "modify",
+          "description": "Review and fix any TypeScript compilation errors, missing imports, or syntax issues in ChatPage component. Ensure all props are correctly typed and all dependencies are properly imported."
+        },
+        {
+          "path": "frontend/src/components/ChatView.tsx",
+          "operation": "modify",
+          "description": "Review and fix any TypeScript compilation errors, missing imports, undefined variables, or syntax issues in ChatView component. Ensure proper integration with useChatSessions hook types and React best practices."
+        },
+        {
+          "path": "frontend/src/components/ChatSidebar.tsx",
+          "operation": "modify",
+          "description": "Review and fix any TypeScript compilation errors, missing imports, or syntax issues in ChatSidebar component. Ensure all event handlers and state management are properly typed and implemented."
         }
       ]
     }

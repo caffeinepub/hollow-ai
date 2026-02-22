@@ -1,76 +1,97 @@
 {
   "kind": "build_request",
-  "title": "Enable API-keyless web search for images and videos in media generator",
+  "title": "Rebuild chat feature with AI capabilities",
   "projectName": "Nexora AI",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove API key requirement from image search functionality in MediaDisplay component, allowing users to search for images without authentication",
+      "text": "Restore the chat functionality with AI-powered responses that can handle greetings, math questions, science topics, and other educational queries using the existing useChatSessions hook pattern",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "make it so you dont need an api key just make it so you can just use it"
+          "remake it"
         ]
       },
       "acceptanceCriteria": [
-        "Users can search for images without entering or configuring an API key",
-        "Image search returns results from web sources",
-        "Search functionality works immediately without setup steps"
+        "Chat interface loads without errors",
+        "Users can create new chat sessions",
+        "Users can send messages and receive AI-generated responses",
+        "Chat history persists in localStorage",
+        "Session list displays all conversations with timestamps"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Extend web search functionality to video generation tab in MediaDisplay, enabling users to search for videos from the web based on text queries",
+      "text": "Ensure the ChatPage component correctly integrates ChatSidebar and ChatView with session management and navigation",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "if you ask it for an image or an videoa it goes to the web and searchhes for it"
+          "remake it"
         ]
       },
       "acceptanceCriteria": [
-        "Video generation tab includes web search capability",
-        "Users can enter text queries to search for videos",
-        "Search results display video previews or thumbnails",
-        "Videos from search results are viewable in the interface"
+        "Sidebar displays list of chat sessions",
+        "Clicking a session loads its conversation history",
+        "New chat button creates a fresh session",
+        "Sidebar is collapsible on mobile viewports"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Integrate web search as the primary mechanism for all media generation requests in MediaDisplay, triggering automatic web searches when users request images or videos",
+      "text": "Verify the chat route (/chat) is properly configured in the TanStack Router setup and accessible from the main navigation",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-4"
         ],
         "quotes": [
-          "runs th e whole media genorater hting"
+          "remake it"
         ]
       },
       "acceptanceCriteria": [
-        "Both image and video tabs use web search as the default generation method",
-        "User input triggers web search automatically",
-        "Results are displayed in a unified, consistent interface",
-        "No API key configuration is required for any media generation feature"
+        "Chat route navigates to the ChatPage component",
+        "Chat card on HomePage links to /chat",
+        "URL routing works correctly for chat sessions"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Fix any deployment issues that caused the previous version 46 build to fail, ensuring successful compilation and network deployment",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "remake it"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Build compiles without errors",
+        "Deployment to Internet Computer succeeds",
+        "Application is accessible via canister URL",
+        "No runtime errors in browser console"
       ]
     }
   ],
   "constraints": [
-    "Do not modify backend/main.mo",
-    "Do not edit frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
-    "Maintain existing MediaDisplay component structure and tab navigation"
+    "Maintain existing localStorage-based chat session storage pattern",
+    "Preserve the existing useChatSessions hook implementation for AI response generation",
+    "Keep the current UI component structure with ChatSidebar and ChatView",
+    "Do not modify immutable paths: useInternetIdentity, useActor, main.tsx, or ui components"
   ],
   "nonGoals": [
-    "Adding AI-generated image or video synthesis",
-    "Implementing custom media hosting or storage",
-    "Adding authentication or user accounts for media search",
-    "Creating a backend API for media search proxying"
+    "Adding new AI capabilities beyond what exists in useChatSessions",
+    "Changing the chat UI design or layout",
+    "Implementing backend persistence for chat messages",
+    "Adding real-time chat features or WebSocket connections"
   ],
   "imageRequirements": {
     "required": [],

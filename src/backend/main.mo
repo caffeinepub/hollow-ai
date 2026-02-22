@@ -7,8 +7,6 @@ import MixinStorage "blob-storage/Mixin";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
-
-
 actor {
   // Initialize the access control system
   let accessControlState = AccessControl.initState();

@@ -1,44 +1,50 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Media generator app with web-based image and video search functionality",
-  "architectural_notes": [
-    "Media generator uses web search for both image and video content",
-    "No API key requirement - direct web search integration"
+  "summary": "Chat application with AI capabilities",
+  "architectural_notes": [],
+  "known_issues": [
+    "Previous deployment (version 46) failed - needs successful rebuild"
   ],
-  "known_issues": [],
-  "isFixRequest": false,
-  "existing_features": [
-    {
-      "id": "feature-remove-api-key-requirement-from-image-search-functionality-in-mediadisplay-component-allowing-users-to-search-for-images-without-authentication",
-      "title": "Remove API key requirement from image search functionality in MediaDisplay component, allowing users to search for images without authentication",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-extend-web-search-functionality-to-video-generation-tab-in-mediadisplay-enabling-users-to-search-for-videos-from-the-web-based-on-text-queries",
-      "title": "Extend web search functionality to video generation tab in MediaDisplay, enabling users to search for videos from the web based on text queries",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-integrate-web-search-as-the-primary-mechanism-for-all-media-generation-requests-in-mediadisplay-triggering-automatic-web-searches-when-users-request-images-or-videos",
-      "title": "Integrate web search as the primary mechanism for all media generation requests in MediaDisplay, triggering automatic web searches when users request images or videos",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    }
-  ],
+  "isFixRequest": true,
+  "existing_features": [],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Integrate web search into media generator for both images and videos without API key requirement",
+      "summary": "Chat feature with AI capabilities",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Restore the chat functionality with AI-powered responses that can handle greetings, math questions, science topics, and other educational queries using the existing useChatSessions hook pattern",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Ensure the ChatPage component correctly integrates ChatSidebar and ChatView with session management and navigation",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Verify the chat route (/chat) is properly configured in the TanStack Router setup and accessible from the main navigation",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Fix any deployment issues that caused the previous version 46 build to fail, ensuring successful compilation and network deployment",
+      "reqIds": [
+        "REQ-4"
+      ],
       "status": "pending"
     }
   ],

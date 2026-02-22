@@ -1,63 +1,63 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T21:45:50.833Z",
+  "generatedAt": "2026-02-22T05:35:22.528Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
-    "implemented": 3,
+    "total": 4,
+    "implemented": 0,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove API key requirement from image search functionality in MediaDisplay component, allowing users to search for images without authentication",
-        "status": "implemented",
+        "summary": "Restore the chat functionality with AI-powered responses that can handle greetings, math questions, science topics, and other educational queries using the existing useChatSessions hook pattern",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/hooks/useImageSearch.ts",
-          "frontend/src/components/MediaDisplay.tsx"
+          "frontend/src/hooks/useChatSessions.ts",
+          "frontend/src/components/ChatView.tsx",
+          "frontend/src/components/ChatSidebar.tsx"
         ],
-        "matchedFiles": [
-          "frontend/src/hooks/useImageSearch.ts",
-          "frontend/src/components/MediaDisplay.tsx"
-        ]
+        "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Extend web search functionality to video generation tab in MediaDisplay, enabling users to search for videos from the web based on text queries",
-        "status": "implemented",
+        "summary": "Ensure the ChatPage component correctly integrates ChatSidebar and ChatView with session management and navigation",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/hooks/useVideoSearch.ts",
-          "frontend/src/components/MediaDisplay.tsx"
+          "frontend/src/components/ChatPage.tsx"
         ],
-        "matchedFiles": [
-          "frontend/src/hooks/useVideoSearch.ts",
-          "frontend/src/components/MediaDisplay.tsx"
-        ]
+        "matchedFiles": []
       },
       {
         "id": "REQ-3",
-        "summary": "Integrate web search as the primary mechanism for all media generation requests in MediaDisplay, triggering automatic web searches when users request images or videos",
-        "status": "implemented",
+        "summary": "Verify the chat route (/chat) is properly configured in the TanStack Router setup and accessible from the main navigation",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/components/MediaDisplay.tsx",
-          "frontend/src/hooks/useMediaGeneration.ts"
+          "frontend/src/App.tsx",
+          "frontend/src/components/HomePage.tsx"
         ],
-        "matchedFiles": [
-          "frontend/src/components/MediaDisplay.tsx"
-        ]
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Fix any deployment issues that caused the previous version 46 build to fail, ensuring successful compilation and network deployment",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/components/ChatPage.tsx",
+          "frontend/src/components/ChatView.tsx",
+          "frontend/src/components/ChatSidebar.tsx"
+        ],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/MediaDisplay.tsx",
-    "frontend/src/hooks/useImageSearch.ts",
-    "frontend/src/hooks/useVideoSearch.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

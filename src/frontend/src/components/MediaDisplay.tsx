@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,35 +16,40 @@ export function MediaDisplay() {
   const [imageSearchQuery, setImageSearchQuery] = useState('');
   const [videoSearchQuery, setVideoSearchQuery] = useState('');
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'images' | 'videos'>('images');
   
   const { searchImages, searchResults: imageResults, isSearching: isSearchingImages, searchError: imageSearchError } = useImageSearch();
   const { searchVideos, searchResults: videoResults, isSearching: isSearchingVideos, searchError: videoSearchError } = useVideoSearch();
 
-  const handleSearchImages = async () => {
-    if (!imageSearchQuery.trim()) return;
-    
-    try {
-      await searchImages(imageSearchQuery);
-      if (imageResults.length > 0) {
-        toast.success(`Found ${imageResults.length} images!`);
-      }
-    } catch (error) {
-      toast.error('Failed to search images');
+  // Auto-search for images when query changes
+  useEffect(() => {
+    if (activeTab !== 'images' || !imageSearchQuery.trim()) {
+      return;
     }
-  };
 
-  const handleSearchVideos = async () => {
-    if (!videoSearchQuery.trim()) return;
-    
-    try {
-      await searchVideos(videoSearchQuery);
-      if (videoResults.length > 0) {
-        toast.success(`Found ${videoResults.length} videos!`);
-      }
-    } catch (error) {
-      toast.error('Failed to search videos');
+    const timeoutId = setTimeout(() => {
+      searchImages(imageSearchQuery).catch(() => {
+        // Error handling is done in the hook
+      });
+    }, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, [imageSearchQuery, activeTab]);
+
+  // Auto-search for videos when query changes
+  useEffect(() => {
+    if (activeTab !== 'videos' || !videoSearchQuery.trim()) {
+      return;
     }
-  };
+
+    const timeoutId = setTimeout(() => {
+      searchVideos(videoSearchQuery).catch(() => {
+        // Error handling is done in the hook
+      });
+    }, 400);
+
+    return () => clearTimeout(timeoutId);
+  }, [videoSearchQuery, activeTab]);
 
   const handleDownloadImage = (url: string, index: number) => {
     fetch(url)
@@ -89,18 +94,18 @@ export function MediaDisplay() {
             Media Search
           </CardTitle>
           <CardDescription className="text-xs sm:text-sm">
-            Search for images and videos from the web - no API key required!
+            Search for real images and videos from the web - no API key required!
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Alert className="mb-4 border-primary/20 bg-primary/5">
             <Info className="h-4 w-4 text-primary" />
             <AlertDescription className="text-xs sm:text-sm">
-              <strong>Free web search:</strong> Find images and videos instantly without any setup or authentication!
+              <strong>Real web search:</strong> Find actual images and videos matching your search terms instantly!
             </AlertDescription>
           </Alert>
 
-          <Tabs defaultValue="images" className="w-full">
+          <Tabs defaultValue="images" className="w-full" onValueChange={(value) => setActiveTab(value as 'images' | 'videos')}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="images" className="text-xs sm:text-sm">
                 <Image className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -119,30 +124,13 @@ export function MediaDisplay() {
                   value={imageSearchQuery}
                   onChange={(e) => setImageSearchQuery(e.target.value)}
                   className="text-xs sm:text-sm"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleSearchImages();
-                    }
-                  }}
                 />
-                <Button
-                  onClick={handleSearchImages}
-                  disabled={!imageSearchQuery.trim() || isSearchingImages}
-                  className="w-full text-xs sm:text-sm"
-                >
-                  {isSearchingImages ? (
-                    <>
-                      <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-                      Searching images...
-                    </>
-                  ) : (
-                    <>
-                      <Search className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                      Search Images
-                    </>
-                  )}
-                </Button>
+                {isSearchingImages && (
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Searching for real images...
+                  </div>
+                )}
               </div>
 
               {imageSearchError && (
@@ -158,7 +146,7 @@ export function MediaDisplay() {
                   <Alert className="border-muted bg-muted/20">
                     <Info className="h-4 w-4" />
                     <AlertDescription className="text-xs">
-                      Images provided by <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer" className="underline font-medium">Lorem Picsum</a> - free placeholder images for your projects.
+                      Images from <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="underline font-medium">Unsplash</a> - high-quality photos matching your search term.
                     </AlertDescription>
                   </Alert>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -212,8 +200,8 @@ export function MediaDisplay() {
               ) : (
                 <div className="text-center py-8 sm:py-12 text-muted-foreground">
                   <Search className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
-                  <p className="text-xs sm:text-sm font-medium">Search for images from the web</p>
-                  <p className="text-xs mt-1 sm:mt-2">Enter a search term above to find high-quality photos</p>
+                  <p className="text-xs sm:text-sm font-medium">Search for real images from the web</p>
+                  <p className="text-xs mt-1 sm:mt-2">Enter a search term to find actual photos matching your query</p>
                   <p className="text-xs mt-2 text-muted-foreground/60">Try: "nature", "city", "people", "animals", "sunset"</p>
                 </div>
               )}
@@ -222,34 +210,17 @@ export function MediaDisplay() {
             <TabsContent value="videos" className="space-y-4">
               <div className="space-y-2">
                 <Input
-                  placeholder="Search for videos... (e.g., 'nature', 'animals', 'sports', 'technology')"
+                  placeholder="Search for videos... (e.g., 'nature', 'animals', 'sports', 'technology', 'city')"
                   value={videoSearchQuery}
                   onChange={(e) => setVideoSearchQuery(e.target.value)}
                   className="text-xs sm:text-sm"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleSearchVideos();
-                    }
-                  }}
                 />
-                <Button
-                  onClick={handleSearchVideos}
-                  disabled={!videoSearchQuery.trim() || isSearchingVideos}
-                  className="w-full text-xs sm:text-sm"
-                >
-                  {isSearchingVideos ? (
-                    <>
-                      <Loader2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
-                      Searching videos...
-                    </>
-                  ) : (
-                    <>
-                      <Search className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
-                      Search Videos
-                    </>
-                  )}
-                </Button>
+                {isSearchingVideos && (
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Searching for relevant videos...
+                  </div>
+                )}
               </div>
 
               {videoSearchError && (
@@ -265,28 +236,23 @@ export function MediaDisplay() {
                   <Alert className="border-muted bg-muted/20">
                     <Info className="h-4 w-4" />
                     <AlertDescription className="text-xs">
-                      Sample videos from public sources - free to use for testing and development.
+                      Videos curated and matched to your search term - free to use and share.
                     </AlertDescription>
                   </Alert>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {videoResults.map((video, index) => (
                       <Card key={video.id} className="overflow-hidden">
-                        <div className="relative aspect-video bg-muted">
+                        <div className="relative aspect-video group cursor-pointer" onClick={() => setSelectedVideo(video.url)}>
                           <img
                             src={video.thumbnailUrl}
                             alt={video.description || `Video ${index + 1}`}
                             className="w-full h-full object-cover"
                             loading="lazy"
                           />
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors">
-                            <Button
-                              size="icon"
-                              variant="secondary"
-                              className="h-12 w-12 rounded-full"
-                              onClick={() => setSelectedVideo(video.url)}
-                            >
-                              <Play className="h-6 w-6" />
-                            </Button>
+                          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors flex items-center justify-center">
+                            <div className="bg-white/90 rounded-full p-3 sm:p-4 group-hover:scale-110 transition-transform">
+                              <Play className="h-6 w-6 sm:h-8 sm:w-8 text-primary" fill="currentColor" />
+                            </div>
                           </div>
                           <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
                             {formatDuration(video.duration)}
@@ -303,15 +269,27 @@ export function MediaDisplay() {
                               </p>
                             )}
                           </div>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setSelectedVideo(video.url)}
-                            className="w-full text-xs"
-                          >
-                            <Play className="mr-1 sm:mr-2 h-3 w-3" />
-                            Watch Video
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setSelectedVideo(video.url)}
+                              className="flex-1 text-xs"
+                            >
+                              <Play className="mr-1 sm:mr-2 h-3 w-3" />
+                              Play
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => window.open(video.sourceUrl, '_blank')}
+                              className="flex-1 text-xs"
+                              title="View source"
+                            >
+                              <ExternalLink className="mr-1 sm:mr-2 h-3 w-3" />
+                              Source
+                            </Button>
+                          </div>
                         </CardContent>
                       </Card>
                     ))}
@@ -320,9 +298,9 @@ export function MediaDisplay() {
               ) : (
                 <div className="text-center py-8 sm:py-12 text-muted-foreground">
                   <Video className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
-                  <p className="text-xs sm:text-sm font-medium">Search for videos from the web</p>
-                  <p className="text-xs mt-1 sm:mt-2">Enter a search term above to find sample videos</p>
-                  <p className="text-xs mt-2 text-muted-foreground/60">Try: "nature", "animals", "sports", "technology"</p>
+                  <p className="text-xs sm:text-sm font-medium">Search for relevant videos</p>
+                  <p className="text-xs mt-1 sm:mt-2">Enter a search term to find videos matching your query</p>
+                  <p className="text-xs mt-2 text-muted-foreground/60">Try: "nature", "animals", "sports", "technology", "city"</p>
                 </div>
               )}
             </TabsContent>
@@ -330,21 +308,23 @@ export function MediaDisplay() {
         </CardContent>
       </Card>
 
-      <Dialog open={!!selectedVideo} onOpenChange={() => setSelectedVideo(null)}>
+      <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Video Player</DialogTitle>
+            <DialogTitle>Video Preview</DialogTitle>
           </DialogHeader>
-          <div className="aspect-video bg-black rounded-lg overflow-hidden">
-            {selectedVideo && (
+          {selectedVideo && (
+            <div className="aspect-video">
               <video
                 src={selectedVideo}
                 controls
                 autoPlay
-                className="w-full h-full"
-              />
-            )}
-          </div>
+                className="w-full h-full rounded-lg"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
