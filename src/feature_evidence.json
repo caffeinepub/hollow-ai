@@ -2,17 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-integrate-stripe-payment-processing-to-enable-a-20-usd-pro-tier-subscription-with-checkout-flow-and-payment-confirmation",
-      "featureTitle": "Integrate Stripe payment processing to enable a $20 USD Pro tier subscription with checkout flow and payment confirmation",
+      "featureId": "feature-change-the-pro-upgrade-call-to-action-text-from-please-log-in-to-upgrade-to-pay-20-to-upgrade",
+      "featureTitle": "Change the Pro upgrade call-to-action text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/Header.tsx",
-        "frontend/src/components/HomePage.tsx",
-        "frontend/src/components/PaymentFailure.tsx",
-        "frontend/src/components/PaymentSetup.tsx",
-        "frontend/src/components/PaymentSuccess.tsx",
-        "frontend/src/components/ProUpgrade.tsx",
-        "frontend/src/hooks/useCheckout.ts"
+        "frontend/src/components/ProFeaturesModal.tsx",
+        "frontend/src/components/ProUpgrade.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -26,78 +20,7 @@
         "stripe@3.0.0"
       ],
       "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-two-new-3d-games-to-the-built-in-games-section-using-three-js-and-react-three-fiber",
-      "featureTitle": "Add two new 3D games to the Built-in Games section using Three.js and React Three Fiber",
-      "files": [
-        "frontend/src/components/PredefinedGameSelector.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0",
-        "authorization@4.0.0",
-        "stripe@3.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-entire-application-background-theme-to-use-a-gold-color-scheme-consistently-across-all-pages",
-      "featureTitle": "Update the entire application background theme to use a gold color scheme consistently across all pages",
-      "files": [
-        "frontend/src/components/Header.tsx",
-        "frontend/src/components/HomePage.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0",
-        "authorization@4.0.0",
-        "stripe@3.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-generate-gold-toned-background-texture-images-to-support-the-new-gold-theme-across-the-application",
-      "featureTitle": "Generate gold-toned background texture images to support the new gold theme across the application",
-      "files": [
-        "frontend/src/components/Header.tsx",
-        "frontend/src/components/HomePage.tsx",
-        "frontend/src/index.css"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0",
-        "authorization@4.0.0",
-        "stripe@3.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
+        "REQ-5"
       ],
       "confidence": "high"
     }

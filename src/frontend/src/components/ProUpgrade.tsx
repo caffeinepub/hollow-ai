@@ -199,7 +199,7 @@ export function ProUpgrade() {
                 Already Subscribed
               </>
             ) : !isAuthenticated ? (
-              'Please Log In to Upgrade'
+              'Pay $20 to Upgrade'
             ) : (
               <>
                 <Crown className="h-5 w-5 mr-2" />

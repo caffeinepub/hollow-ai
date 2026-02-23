@@ -1,73 +1,25 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T22:46:56.118Z",
-  "summary": "The diff implements Stripe payment integration (REQ-1) and gold theme updates (REQ-8, REQ-9), but is missing implementations for enhanced AI chat (REQ-2), 3D games (REQ-3), AI art generation (REQ-4), music extensions (REQ-5), calculator (REQ-6), and translator expansion (REQ-7). No hallucinated features detected.",
+  "generatedAt": "2026-02-23T23:04:24.212Z",
+  "summary": "The BuildRequest requires changing the Pro upgrade button text from 'Please log in to upgrade' to 'Pay $20 to upgrade'. The diff shows modifications to ProFeaturesModal.tsx and ProUpgrade.tsx, but the actual button text change is not visible in the truncated diff content. The diff shows error toast messages with 'Please log in to upgrade' text, but no evidence of the replacement text 'Pay $20 to upgrade' as a call-to-action button label.",
   "missing_requirements": [
     {
-      "id": "REQ-2",
-      "requirement": "Enhance the AI chat system to provide comprehensive, context-aware responses across all topics with improved understanding",
-      "reason": "While the diff mentions improved AI responses in comments (frontend/src/components/ChatView.tsx, frontend/src/hooks/useChatSessions.ts), the actual implementation details are truncated and cannot be verified. No concrete evidence of enhanced chat capabilities visible in the provided diff.",
-      "evidence": [
-        "frontend/src/components/ChatView.tsx",
-        "frontend/src/hooks/useChatSessions.ts"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "Add two new 3D games to the Built-in Games section using Three.js and React Three Fiber",
-      "reason": "PredefinedGameSelector shows two new games ('spaceshooter3d' and 'racing3d') added to the game list with Pro-only flags, but there is no evidence of actual Three.js/React Three Fiber implementations, game rendering code, or playable 3D game components in the diff.",
-      "evidence": [
-        "frontend/src/components/PredefinedGameSelector.tsx"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "requirement": "Implement AI-powered art generation feature that creates images from text prompts in the Art section",
-      "reason": "No changes to ArtCanvas component visible in the diff. No text prompt input field, AI image generation logic, or art generation UI elements found.",
-      "evidence": []
-    },
-    {
       "id": "REQ-5",
-      "requirement": "Extend music track duration capabilities and add voice recording functionality to the Music section",
-      "reason": "No changes to MusicGenerator component in the diff. No voice recording interface, audio recording controls, or extended duration functionality visible.",
-      "evidence": []
-    },
-    {
-      "id": "REQ-6",
-      "requirement": "Add standard calculator functionality with basic arithmetic operations to the Math problem solver",
-      "reason": "MathProblemSolver shows only homework helper and teacher mode toggle. No calculator interface, number pad, operation buttons, or calculator toggle functionality visible in the diff.",
+      "requirement": "Change the Pro upgrade call-to-action text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
+      "reason": "The diff shows error toast messages containing 'Please log in to upgrade' text in both ProFeaturesModal.tsx and ProUpgrade.tsx, but the truncated content does not show any button or call-to-action element displaying 'Pay $20 to upgrade'. The visible content shows price display ($20) and subscription information, but not the specific button text change required.",
       "evidence": [
-        "frontend/src/components/MathProblemSolver.tsx"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "requirement": "Expand Translator to support additional languages and integrate dictionary definitions for translated words",
-      "reason": "TranslatorChat component shows language selection dropdowns but no evidence of new languages added or dictionary lookup functionality. No dictionary results display or word definitions visible.",
-      "evidence": [
-        "frontend/src/components/TranslatorChat.tsx"
+        "frontend/src/components/ProFeaturesModal.tsx",
+        "frontend/src/components/ProUpgrade.tsx"
       ]
     }
   ],
   "hallucinated_features": [],
-  "confidence": 0.75,
+  "confidence": 0.6,
   "changed_files": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/Header.tsx",
-    "frontend/src/components/HomePage.tsx",
-    "frontend/src/components/PaymentFailure.tsx",
-    "frontend/src/components/PaymentSetup.tsx",
-    "frontend/src/components/PaymentSuccess.tsx",
-    "frontend/src/components/PredefinedGameSelector.tsx",
+    "frontend/src/components/ProFeaturesModal.tsx",
     "frontend/src/components/ProUpgrade.tsx",
-    "frontend/src/components/ProfileSetup.tsx",
-    "frontend/src/hooks/useCheckout.ts",
-    "frontend/src/index.css",
-    "frontend/tailwind.config.js",
     "project_state.json"
   ]
 }

@@ -8,10 +8,13 @@ import {
   Music, 
   Palette, 
   Image, 
-  Gamepad2 
+  Gamepad2,
+  Crown
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { PaymentSetup } from './PaymentSetup';
+import { ProFeaturesModal } from './ProFeaturesModal';
 import { useActor } from '@/hooks/useActor';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
 
@@ -86,6 +89,7 @@ export function HomePage() {
   const { actor } = useActor();
   const { identity } = useInternetIdentity();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isProModalOpen, setIsProModalOpen] = useState(false);
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -102,8 +106,19 @@ export function HomePage() {
   }, [actor, identity]);
 
   return (
-    <div className="container mx-auto px-4 py-8 sm:py-12">
+    <div className="container mx-auto px-4 py-8 sm:py-12 relative">
       <div className="max-w-6xl mx-auto">
+        {/* Pro Badge Button */}
+        <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-10">
+          <Button
+            onClick={() => setIsProModalOpen(true)}
+            className="bg-gradient-to-r from-warning to-warning/80 hover:from-warning/90 hover:to-warning/70 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+          >
+            <Crown className="h-4 w-4" />
+            <span>Pro</span>
+          </Button>
+        </div>
+
         {isAdmin && (
           <div className="mb-8">
             <PaymentSetup />
@@ -145,6 +160,12 @@ export function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* Pro Features Modal */}
+      <ProFeaturesModal 
+        isOpen={isProModalOpen} 
+        onClose={() => setIsProModalOpen(false)} 
+      />
     </div>
   );
 }

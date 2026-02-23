@@ -5,13 +5,13 @@ import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import MixinStorage "blob-storage/Mixin";
 import Stripe "stripe/stripe";
-import Migration "migration";
+
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import OutCall "http-outcalls/outcall";
 
 // Add migration reference to wire migration into the main actor
-(with migration = Migration.run)
+
 actor {
   // Persistent state for authentication
   let accessControlState = AccessControl.initState();
