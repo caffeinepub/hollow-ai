@@ -17,6 +17,7 @@ import { PaymentSetup } from './PaymentSetup';
 import { ProFeaturesModal } from './ProFeaturesModal';
 import { useActor } from '@/hooks/useActor';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
+import { useIsOwner } from '@/hooks/useUserProfile';
 
 interface NavBox {
   title: string;
@@ -90,6 +91,7 @@ export function HomePage() {
   const { identity } = useInternetIdentity();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isProModalOpen, setIsProModalOpen] = useState(false);
+  const { data: isOwner } = useIsOwner();
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -108,16 +110,18 @@ export function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8 sm:py-12 relative">
       <div className="max-w-6xl mx-auto">
-        {/* Pro Badge Button */}
-        <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-10">
-          <Button
-            onClick={() => setIsProModalOpen(true)}
-            className="bg-gradient-to-r from-warning to-warning/80 hover:from-warning/90 hover:to-warning/70 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-          >
-            <Crown className="h-4 w-4" />
-            <span>Pro</span>
-          </Button>
-        </div>
+        {/* Pro Badge Button - hidden for owner */}
+        {!isOwner && (
+          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-10">
+            <Button
+              onClick={() => setIsProModalOpen(true)}
+              className="bg-gradient-to-r from-warning to-warning/80 hover:from-warning/90 hover:to-warning/70 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+            >
+              <Crown className="h-4 w-4" />
+              <span>Pro</span>
+            </Button>
+          </div>
+        )}
 
         {isAdmin && (
           <div className="mb-8">

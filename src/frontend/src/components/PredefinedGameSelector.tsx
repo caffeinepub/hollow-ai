@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Gamepad2, Crown } from 'lucide-react';
-import { useGetCallerUserProfile } from '@/hooks/useUserProfile';
+import { useGetCallerUserProfile, useIsOwner } from '@/hooks/useUserProfile';
 
 interface PredefinedGame {
   id: string;
@@ -80,10 +80,12 @@ interface PredefinedGameSelectorProps {
 
 export function PredefinedGameSelector({ open, onOpenChange, onGameSelect }: PredefinedGameSelectorProps) {
   const { data: userProfile } = useGetCallerUserProfile();
-  const hasProSubscription = userProfile?.hasProSubscription || false;
+  const { data: isOwner } = useIsOwner();
+  const hasPro = userProfile?.isPro || false;
 
   const handleGameClick = (game: PredefinedGame) => {
-    if (game.proOnly && !hasProSubscription) {
+    // Owner has access to all games
+    if (game.proOnly && !hasPro && !isOwner) {
       return; // Don't allow selection of Pro games without subscription
     }
     onGameSelect(game.id);
@@ -104,7 +106,7 @@ export function PredefinedGameSelector({ open, onOpenChange, onGameSelect }: Pre
         </DialogHeader>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {PREDEFINED_GAMES.map((game) => {
-            const isLocked = game.proOnly && !hasProSubscription;
+            const isLocked = game.proOnly && !hasPro && !isOwner;
             return (
               <Card 
                 key={game.id}

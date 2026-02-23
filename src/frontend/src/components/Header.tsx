@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Moon, Sun, LogOut, Home, Crown } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetCallerUserProfile } from '../hooks/useUserProfile';
+import { useGetCallerUserProfile, useIsOwner } from '../hooks/useUserProfile';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link, useRouterState } from '@tanstack/react-router';
 
@@ -12,11 +12,12 @@ export function Header() {
   const { identity, clear, loginStatus } = useInternetIdentity();
   const queryClient = useQueryClient();
   const { data: userProfile } = useGetCallerUserProfile();
+  const { data: isOwner } = useIsOwner();
   const routerState = useRouterState();
 
   const isAuthenticated = !!identity;
   const isHomePage = routerState.location.pathname === '/';
-  const hasProSubscription = userProfile?.hasProSubscription || false;
+  const hasPro = userProfile?.isPro || false;
 
   const handleSignOut = async () => {
     await clear();
@@ -44,7 +45,7 @@ export function Header() {
               <span className="text-sm text-muted-foreground">
                 {userProfile.name}
               </span>
-              {hasProSubscription && (
+              {hasPro && (
                 <Badge variant="outline" className="text-warning border-warning">
                   <Crown className="h-3 w-3 mr-1" />
                   Pro
@@ -52,7 +53,7 @@ export function Header() {
               )}
             </div>
           )}
-          {isAuthenticated && !hasProSubscription && (
+          {isAuthenticated && !hasPro && !isOwner && (
             <Link to="/pro-upgrade">
               <Button
                 variant="outline"

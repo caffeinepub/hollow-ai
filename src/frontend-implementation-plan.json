@@ -1,26 +1,67 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update Pro upgrade button text to show $20 payment prompt",
+  "title": "Make Pro subscription free for owner account, $20 for others",
   "requirements": [
     {
-      "id": "REQ-5",
-      "summary": "Change the Pro upgrade call-to-action text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
+      "id": "REQ-3",
+      "summary": "Update frontend Pro upgrade UI to reflect that the owner has free Pro access automatically",
       "acceptanceCriteria": [
-        "The Pro upgrade button or prompt displays 'Pay $20 to upgrade' instead of 'Please log in to upgrade'",
-        "The text change is visible in the Pro features modal or upgrade flow",
-        "The $20 price is clearly communicated to users before they initiate checkout"
+        "Owner sees their Pro badge without needing to purchase",
+        "Owner can access all Pro features immediately upon login",
+        "Pro upgrade buttons and payment flows are hidden or disabled for the owner"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Update Header component to display Pro badge for owner account without requiring payment. Check if current user's principal matches the hardcoded owner principal (retrieve from backend via a query method or environment variable). If owner, show Pro badge immediately. Hide 'Upgrade to Pro' button for owner account."
+        },
+        {
+          "path": "frontend/src/components/HomePage.tsx",
+          "operation": "modify",
+          "description": "Modify HomePage to hide the Pro upgrade button for the owner account. Check user principal against owner principal to conditionally render upgrade UI. Owner should see all features as unlocked without payment prompts."
+        },
+        {
+          "path": "frontend/src/components/PredefinedGameSelector.tsx",
+          "operation": "modify",
+          "description": "Update PredefinedGameSelector to unlock all Pro-only games for the owner account automatically. Check if current user is owner before showing lock icons or Pro upgrade prompts. Owner bypasses all Pro subscription checks for game access."
+        },
+        {
+          "path": "frontend/src/components/GamesView.tsx",
+          "operation": "modify",
+          "description": "Ensure GamesView grants full access to game creation and Pro features for owner account. Check owner status before enforcing Pro subscription requirements. Owner can create unlimited games without payment."
+        },
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "modify",
+          "description": "Add logic to useGetCallerUserProfile hook to automatically set isPro: true in the cached user profile when the current user is the owner. This ensures consistent Pro status display across all components that read user profile data."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Display '$20 to upgrade' messaging in ProFeaturesModal for non-owner accounts",
+      "acceptanceCriteria": [
+        "ProFeaturesModal shows 'Pay $20 to upgrade' text for regular users",
+        "Checkout button initiates $20 payment flow",
+        "Modal displays Pro features list with pricing information"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/ProFeaturesModal.tsx",
           "operation": "modify",
-          "description": "Update the checkout button text to display 'Pay $20 to upgrade' instead of 'Please log in to upgrade'. Ensure the $20 price is prominently displayed before the user clicks the checkout button."
+          "description": "Update ProFeaturesModal to display '$20 USD one-time payment' pricing for non-owner accounts. Ensure the modal shows the exact amount ($20) prominently. Update the checkout button text to clearly indicate the $20 cost. Verify that owner accounts do not see this modal or see a 'You have Pro access' message instead."
         },
         {
           "path": "frontend/src/components/ProUpgrade.tsx",
           "operation": "modify",
-          "description": "Update any Pro upgrade call-to-action text to display 'Pay $20 to upgrade' instead of 'Please log in to upgrade'. Verify consistency with the pricing information already shown on the page."
+          "description": "Update ProUpgrade page to display '$20 to upgrade' messaging consistently across all feature cards and pricing sections. Ensure the checkout flow uses $20 USD as the price in the ShoppingItem array passed to useCheckout hook. Hide upgrade UI entirely for owner account."
+        },
+        {
+          "path": "frontend/src/hooks/useCheckout.ts",
+          "operation": "modify",
+          "description": "Ensure useCheckout hook passes ShoppingItem with priceInCents: 2000 (representing $20 USD) when creating checkout sessions for Pro subscription purchases. Verify the checkout mutation correctly formats the $20 price for Stripe integration."
         }
       ]
     }

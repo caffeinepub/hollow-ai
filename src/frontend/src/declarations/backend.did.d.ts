@@ -44,10 +44,10 @@ export interface TransformationOutput {
   'headers' : Array<http_header>,
 }
 export interface UserProfile {
-  'hasProSubscription' : boolean,
   'gamesPlayed' : bigint,
   'name' : string,
   'totalScore' : bigint,
+  'isPro' : boolean,
 }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
@@ -87,6 +87,7 @@ export interface _SERVICE {
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'completeProSubscription' : ActorMethod<[string], undefined>,
   'createCheckoutSession' : ActorMethod<
     [Array<ShoppingItem>, string, string],
     string

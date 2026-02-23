@@ -5,13 +5,12 @@ import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import MixinStorage "blob-storage/Mixin";
 import Stripe "stripe/stripe";
-
+import OutCall "http-outcalls/outcall";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import OutCall "http-outcalls/outcall";
+import Migration "migration";
 
-// Add migration reference to wire migration into the main actor
-
+(with migration = Migration.run)
 actor {
   // Persistent state for authentication
   let accessControlState = AccessControl.initState();
@@ -24,7 +23,7 @@ actor {
     name : Text;
     gamesPlayed : Nat;
     totalScore : Nat;
-    hasProSubscription : Bool;
+    isPro : Bool;
   };
 
   // Payment tier definitions
@@ -35,14 +34,14 @@ actor {
 
   let userProfiles = Map.empty<Principal, UserProfile>();
 
-  // Payment tier tracking - not currently used due to migration issue
+  // Payment tier tracking
   func determineTier(profile : UserProfile) : PaymentTier {
-    if (profile.hasProSubscription) { #pro } else { #free };
+    if (profile.isPro) { #pro } else { #free };
   };
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can save profiles");
+      Runtime.trap("Unauthorized: Only users can view profiles");
     };
     userProfiles.get(caller);
   };
@@ -58,7 +57,32 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
-    userProfiles.add(caller, profile);
+
+    // Get existing profile to preserve isPro status
+    let existingProfile = userProfiles.get(caller);
+    let currentProStatus = switch (existingProfile) {
+      case (null) { false };
+      case (?p) { p.isPro };
+    };
+
+    // Owner (admin) automatically gets Pro subscription
+    let finalProStatus = if (AccessControl.isAdmin(accessControlState, caller)) {
+      true;
+    } else {
+      // Regular users cannot modify their Pro status through this function
+      // Pro status can only be granted via payment (grantProSubscription function)
+      currentProStatus;
+    };
+
+    userProfiles.add(
+      caller,
+      {
+        name = profile.name;
+        gamesPlayed = profile.gamesPlayed;
+        totalScore = profile.totalScore;
+        isPro = finalProStatus;
+      },
+    );
   };
 
   public query func isCallerPro({ caller } : { caller : Principal }) : async Bool {
@@ -67,11 +91,72 @@ actor {
     };
     switch (userProfiles.get(caller)) {
       case (null) { false };
-      case (?profile) { profile.hasProSubscription };
+      case (?profile) { profile.isPro };
     };
   };
 
-  // Game management structure (unchanged)
+  // Internal function to grant Pro subscription after payment verification
+  // This should only be called after successful Stripe payment verification
+  func grantProSubscription(user : Principal) {
+    let existingProfile = userProfiles.get(user);
+    switch (existingProfile) {
+      case (null) {
+        // Create new profile with Pro status
+        userProfiles.add(
+          user,
+          {
+            name = "";
+            gamesPlayed = 0;
+            totalScore = 0;
+            isPro = true;
+          },
+        );
+      };
+      case (?oldProfile) {
+        // Update existing profile to Pro
+        userProfiles.add(
+          user,
+          {
+            oldProfile with isPro = true;
+          },
+        );
+      };
+    };
+  };
+
+  // Function to complete Pro subscription after payment
+  // Verifies payment and grants Pro status
+  public shared ({ caller }) func completeProSubscription(sessionId : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can complete subscriptions");
+    };
+
+    let status = await Stripe.getSessionStatus(getStripeConfiguration(), sessionId, transform);
+
+    switch (status) {
+      case (#completed { userPrincipal }) {
+        switch (userPrincipal) {
+          case (?principal) {
+            let principalType = Principal.fromText(principal);
+            if (not Principal.equal(principalType, caller)) {
+              Runtime.trap("Unauthorized: Session does not belong to caller");
+            };
+          };
+          case (null) {
+            Runtime.trap("Unexpected: No customer found for completed transaction");
+          };
+        };
+      };
+      case (#failed { error }) {
+        Runtime.trap("Payment failed: " # error);
+      };
+    };
+
+    // Grant Pro subscription
+    grantProSubscription(caller);
+  };
+
+  // Game management structure
   public type Game = {
     id : Text;
     title : Text;

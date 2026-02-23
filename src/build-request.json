@@ -1,33 +1,93 @@
 {
   "kind": "build_request",
-  "title": "Update Pro upgrade button text to show $20 payment prompt",
+  "title": "Make Pro subscription free for owner account, $20 for others",
   "projectName": "Nexora AI",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-5",
-      "text": "Change the Pro upgrade call-to-action text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
-      "target": "frontend",
+      "id": "REQ-1",
+      "text": "Implement backend logic to automatically grant Pro subscription status to the owner's Internet Identity account without payment",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-4"
         ],
         "quotes": [
-          "instaed of making it say pleae log in to upgrade on the pro thing make it say pay 20 dallors to upgrade"
+          "make it free for only my account"
         ]
       },
       "acceptanceCriteria": [
-        "The Pro upgrade button or prompt displays 'Pay $20 to upgrade' instead of 'Please log in to upgrade'",
-        "The text change is visible in the Pro features modal or upgrade flow",
-        "The $20 price is clearly communicated to users before they initiate checkout"
+        "Owner's Internet Identity principal is hardcoded or configured in the backend",
+        "When the owner's account queries their profile, hasPro returns true automatically",
+        "Owner's account bypasses all payment requirements for Pro features"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Ensure all other user accounts require a $20 USD payment to access Pro features",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "for other accounts make it cost 20 us dollers"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Non-owner accounts have hasPro set to false by default",
+        "Pro features remain locked until payment is completed",
+        "Payment amount is exactly $20 USD as configured in Stripe checkout"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Update frontend Pro upgrade UI to reflect that the owner has free Pro access automatically",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "make it free for only my account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Owner sees their Pro badge without needing to purchase",
+        "Owner can access all Pro features immediately upon login",
+        "Pro upgrade buttons and payment flows are hidden or disabled for the owner"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Display '$20 to upgrade' messaging in ProFeaturesModal for non-owner accounts",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "make it cost 20 us dollers"
+        ]
+      },
+      "acceptanceCriteria": [
+        "ProFeaturesModal shows 'Pay $20 to upgrade' text for regular users",
+        "Checkout button initiates $20 payment flow",
+        "Modal displays Pro features list with pricing information"
       ]
     }
   ],
-  "constraints": [],
+  "constraints": [
+    "Maintain existing Stripe payment integration",
+    "Preserve single-actor backend architecture",
+    "Do not modify Internet Identity authentication flow",
+    "Keep Pro badge UI in Header component unchanged"
+  ],
   "nonGoals": [
-    "Changing the actual payment amount or Stripe integration",
-    "Modifying other Pro feature descriptions or benefits",
-    "Altering the checkout flow or payment processing logic"
+    "Multiple pricing tiers or subscription plans",
+    "Dynamic pricing based on user segments",
+    "Promotional codes or discount systems",
+    "Refund or cancellation workflows"
   ],
   "imageRequirements": {
     "required": [],

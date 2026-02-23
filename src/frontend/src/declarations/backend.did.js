@@ -41,10 +41,10 @@ export const Game = IDL.Record({
   'gameCode' : IDL.Text,
 });
 export const UserProfile = IDL.Record({
-  'hasProSubscription' : IDL.Bool,
   'gamesPlayed' : IDL.Nat,
   'name' : IDL.Text,
   'totalScore' : IDL.Nat,
+  'isPro' : IDL.Bool,
 });
 export const StripeSessionStatus = IDL.Variant({
   'completed' : IDL.Record({
@@ -105,6 +105,7 @@ export const idlService = IDL.Service({
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'completeProSubscription' : IDL.Func([IDL.Text], [], []),
   'createCheckoutSession' : IDL.Func(
       [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
       [IDL.Text],
@@ -182,10 +183,10 @@ export const idlFactory = ({ IDL }) => {
     'gameCode' : IDL.Text,
   });
   const UserProfile = IDL.Record({
-    'hasProSubscription' : IDL.Bool,
     'gamesPlayed' : IDL.Nat,
     'name' : IDL.Text,
     'totalScore' : IDL.Nat,
+    'isPro' : IDL.Bool,
   });
   const StripeSessionStatus = IDL.Variant({
     'completed' : IDL.Record({
@@ -243,6 +244,7 @@ export const idlFactory = ({ IDL }) => {
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'completeProSubscription' : IDL.Func([IDL.Text], [], []),
     'createCheckoutSession' : IDL.Func(
         [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
         [IDL.Text],

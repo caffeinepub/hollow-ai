@@ -1,47 +1,38 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, User } from 'lucide-react';
 import { useSaveCallerUserProfile } from '@/hooks/useUserProfile';
+import { Loader2 } from 'lucide-react';
 
 interface ProfileSetupProps {
-  open: boolean;
-  onComplete: () => void;
+  isOpen: boolean;
 }
 
-export function ProfileSetup({ open, onComplete }: ProfileSetupProps) {
+export function ProfileSetup({ isOpen }: ProfileSetupProps) {
   const [name, setName] = useState('');
   const saveProfile = useSaveCallerUserProfile();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
-      saveProfile.mutate({
-        name: name.trim(),
-        gamesPlayed: BigInt(0),
-        totalScore: BigInt(0),
-        hasProSubscription: false,
-      });
-    }
+    if (!name.trim()) return;
+
+    await saveProfile.mutateAsync({
+      name: name.trim(),
+      gamesPlayed: BigInt(0),
+      totalScore: BigInt(0),
+      isPro: false, // Will be set to true automatically by backend if user is admin
+    });
   };
 
-  // Close dialog when profile is saved successfully
-  if (saveProfile.isSuccess) {
-    onComplete();
-  }
-
   return (
-    <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
+    <Dialog open={isOpen} onOpenChange={() => {}}>
+      <DialogContent className="sm:max-w-md [&>button]:hidden">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
-            Welcome to Neroxa AI!
-          </DialogTitle>
+          <DialogTitle>Welcome to Neroxa AI!</DialogTitle>
           <DialogDescription>
-            Please enter your name to get started with your personalized experience.
+            Please tell us your name to get started
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">

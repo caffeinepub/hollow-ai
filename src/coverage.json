@@ -1,22 +1,55 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T23:04:24.215Z",
+  "generatedAt": "2026-02-23T23:41:19.776Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 4,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-5",
-        "summary": "Change the Pro upgrade call-to-action text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
+        "id": "REQ-1",
+        "summary": "Implement backend logic to automatically grant Pro subscription status to the owner's Internet Identity account without payment",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Ensure all other user accounts require a $20 USD payment to access Pro features",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Update frontend Pro upgrade UI to reflect that the owner has free Pro access automatically",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/Header.tsx",
+          "frontend/src/components/HomePage.tsx",
+          "frontend/src/components/PredefinedGameSelector.tsx",
+          "frontend/src/components/GamesView.tsx",
+          "frontend/src/hooks/useUserProfile.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Header.tsx",
+          "frontend/src/components/HomePage.tsx",
+          "frontend/src/components/PredefinedGameSelector.tsx",
+          "frontend/src/hooks/useUserProfile.ts"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Display '$20 to upgrade' messaging in ProFeaturesModal for non-owner accounts",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/ProFeaturesModal.tsx",
-          "frontend/src/components/ProUpgrade.tsx"
+          "frontend/src/components/ProUpgrade.tsx",
+          "frontend/src/hooks/useCheckout.ts"
         ],
         "matchedFiles": [
           "frontend/src/components/ProFeaturesModal.tsx",
@@ -26,12 +59,23 @@
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/components/HomePage.tsx",
+    "frontend/src/components/PredefinedGameSelector.tsx",
     "frontend/src/components/ProFeaturesModal.tsx",
     "frontend/src/components/ProUpgrade.tsx",
+    "frontend/src/components/ProfileSetup.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useUserProfile.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

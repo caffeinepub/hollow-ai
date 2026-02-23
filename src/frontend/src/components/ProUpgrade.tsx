@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { useCreateCheckoutSession } from '@/hooks/useCheckout';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
-import { useGetCallerUserProfile } from '@/hooks/useUserProfile';
+import { useGetCallerUserProfile, useIsOwner } from '@/hooks/useUserProfile';
 import { toast } from 'sonner';
 import type { ShoppingItem } from '@/backend';
 
@@ -70,11 +70,12 @@ export function ProUpgrade() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
   const { data: userProfile } = useGetCallerUserProfile();
+  const { data: isOwner } = useIsOwner();
   const createCheckoutSession = useCreateCheckoutSession();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const isAuthenticated = !!identity;
-  const hasProSubscription = userProfile?.hasProSubscription || false;
+  const hasPro = userProfile?.isPro || false;
 
   const handleUpgrade = async () => {
     if (!isAuthenticated) {
@@ -82,8 +83,8 @@ export function ProUpgrade() {
       return;
     }
 
-    if (hasProSubscription) {
-      toast.info('You already have a Pro subscription!');
+    if (hasPro || isOwner) {
+      toast.info('You already have Pro access!');
       return;
     }
 
@@ -130,19 +131,22 @@ export function ProUpgrade() {
           <Crown className="h-8 w-8 text-white" />
         </div>
         <h1 className="text-4xl font-display font-bold mb-3 bg-gradient-to-r from-warning via-warning/80 to-warning/60 bg-clip-text text-transparent">
-          Upgrade to Pro
+          {isOwner ? 'Pro Features' : 'Upgrade to Pro'}
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Unlock the full potential of Neroxa AI with premium features and exclusive content
+          {isOwner 
+            ? 'You have full access to all Pro features as the owner'
+            : 'Unlock the full potential of Neroxa AI with premium features and exclusive content'
+          }
         </p>
       </div>
 
-      {hasProSubscription && (
+      {(hasPro || isOwner) && (
         <Card className="mb-8 border-success/20 bg-success/5">
           <CardContent className="flex items-center justify-center gap-3 py-6">
             <CheckCircle2 className="h-6 w-6 text-success" />
             <p className="text-lg font-semibold text-success">
-              You already have Pro! Enjoy all premium features.
+              {isOwner ? 'You have Pro access as the owner!' : 'You already have Pro! Enjoy all premium features.'}
             </p>
           </CardContent>
         </Card>
@@ -152,17 +156,23 @@ export function ProUpgrade() {
         <CardHeader className="text-center pb-4">
           <div className="flex items-center justify-center gap-2 mb-2">
             <CardTitle className="text-3xl font-display">Pro Subscription</CardTitle>
-            <Badge variant="outline" className="text-warning border-warning">
-              One-time payment
-            </Badge>
+            {!isOwner && (
+              <Badge variant="outline" className="text-warning border-warning">
+                One-time payment
+              </Badge>
+            )}
           </div>
-          <div className="flex items-baseline justify-center gap-2">
-            <span className="text-5xl font-bold text-warning">$20</span>
-            <span className="text-xl text-muted-foreground">USD</span>
-          </div>
-          <CardDescription className="text-base mt-2">
-            Lifetime access to all Pro features
-          </CardDescription>
+          {!isOwner && (
+            <>
+              <div className="flex items-baseline justify-center gap-2">
+                <span className="text-5xl font-bold text-warning">$20</span>
+                <span className="text-xl text-muted-foreground">USD</span>
+              </div>
+              <CardDescription className="text-base mt-2">
+                Lifetime access to all Pro features
+              </CardDescription>
+            </>
+          )}
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -182,44 +192,50 @@ export function ProUpgrade() {
             ))}
           </div>
 
-          <Button
-            onClick={handleUpgrade}
-            disabled={isProcessing || !isAuthenticated || hasProSubscription}
-            className="w-full h-14 text-lg bg-gradient-to-r from-warning to-warning/80 hover:from-warning/90 hover:to-warning/70"
-            size="lg"
-          >
-            {isProcessing ? (
-              <>
-                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                Processing...
-              </>
-            ) : hasProSubscription ? (
-              <>
-                <CheckCircle2 className="h-5 w-5 mr-2" />
-                Already Subscribed
-              </>
-            ) : !isAuthenticated ? (
-              'Pay $20 to Upgrade'
-            ) : (
-              <>
-                <Crown className="h-5 w-5 mr-2" />
-                Upgrade to Pro - $20 USD
-              </>
-            )}
-          </Button>
+          {!isOwner && (
+            <>
+              <Button
+                onClick={handleUpgrade}
+                disabled={isProcessing || !isAuthenticated || hasPro}
+                className="w-full h-14 text-lg bg-gradient-to-r from-warning to-warning/80 hover:from-warning/90 hover:to-warning/70"
+                size="lg"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : hasPro ? (
+                  <>
+                    <CheckCircle2 className="h-5 w-5 mr-2" />
+                    Already Subscribed
+                  </>
+                ) : !isAuthenticated ? (
+                  'Pay $20 to Upgrade'
+                ) : (
+                  <>
+                    <Crown className="h-5 w-5 mr-2" />
+                    Pay $20 to Upgrade
+                  </>
+                )}
+              </Button>
 
-          {!isAuthenticated && (
-            <p className="text-sm text-center text-muted-foreground mt-4">
-              You need to be logged in to purchase a Pro subscription
-            </p>
+              {!isAuthenticated && (
+                <p className="text-sm text-center text-muted-foreground mt-4">
+                  You need to be logged in to purchase a Pro subscription
+                </p>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
 
-      <div className="text-center text-sm text-muted-foreground">
-        <p>Secure payment processing powered by Stripe</p>
-        <p className="mt-2">Questions? Contact support for assistance</p>
-      </div>
+      {!isOwner && (
+        <div className="text-center text-sm text-muted-foreground">
+          <p>Secure payment processing powered by Stripe</p>
+          <p className="mt-1">Questions? Contact support for assistance</p>
+        </div>
+      )}
     </div>
   );
 }

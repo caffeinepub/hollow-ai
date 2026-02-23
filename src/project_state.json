@@ -1,16 +1,27 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "App with Pro features: free for the owner's account, costs $20 for other users",
+  "architectural_notes": [
+    "Pro feature access controlled by Internet Identity",
+    "Payment system for $20 Pro upgrade for non-owner accounts"
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-change-the-pro-upgrade-call-to-action-text-from-please-log-in-to-upgrade-to-pay-20-to-upgrade",
-      "title": "Change the Pro upgrade call-to-action text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
+      "id": "feature-update-frontend-pro-upgrade-ui-to-reflect-that-the-owner-has-free-pro-access-automatically",
+      "title": "Update frontend Pro upgrade UI to reflect that the owner has free Pro access automatically",
       "reqIds": [
-        "REQ-5"
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-20-to-upgrade-messaging-in-profeaturesmodal-for-non-owner-accounts",
+      "title": "Display '$20 to upgrade' messaging in ProFeaturesModal for non-owner accounts",
+      "reqIds": [
+        "REQ-4"
       ],
       "version": 1
     }
@@ -18,8 +29,36 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Change Pro upgrade text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
+      "summary": "Pro badge with popup showing features and $20 upgrade option",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Free Pro access for owner's Internet Identity account",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "$20 payment requirement for Pro features for all other users",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Implement backend logic to automatically grant Pro subscription status to the owner's Internet Identity account without payment",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Ensure all other user accounts require a $20 USD payment to access Pro features",
+      "reqIds": [
+        "REQ-2"
+      ],
       "status": "pending"
     }
   ],

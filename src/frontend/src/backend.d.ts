@@ -53,10 +53,10 @@ export interface StripeConfiguration {
     secretKey: string;
 }
 export interface UserProfile {
-    hasProSubscription: boolean;
     gamesPlayed: bigint;
     name: string;
     totalScore: bigint;
+    isPro: boolean;
 }
 export interface http_request_result {
     status: bigint;
@@ -70,6 +70,7 @@ export enum UserRole {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    completeProSubscription(sessionId: string): Promise<void>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     createGame(title: string, description: string, gameCode: string): Promise<string>;
     deleteGame(id: string): Promise<void>;

@@ -146,10 +146,10 @@ export interface StripeConfiguration {
     secretKey: string;
 }
 export interface UserProfile {
-    hasProSubscription: boolean;
     gamesPlayed: bigint;
     name: string;
     totalScore: bigint;
+    isPro: boolean;
 }
 export interface http_request_result {
     status: bigint;
@@ -170,6 +170,7 @@ export interface backendInterface {
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    completeProSubscription(sessionId: string): Promise<void>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     createGame(title: string, description: string, gameCode: string): Promise<string>;
     deleteGame(id: string): Promise<void>;
@@ -304,6 +305,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n8(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async completeProSubscription(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.completeProSubscription(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.completeProSubscription(arg0);
             return result;
         }
     }

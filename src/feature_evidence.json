@@ -2,8 +2,33 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-change-the-pro-upgrade-call-to-action-text-from-please-log-in-to-upgrade-to-pay-20-to-upgrade",
-      "featureTitle": "Change the Pro upgrade call-to-action text from 'Please log in to upgrade' to 'Pay $20 to upgrade'",
+      "featureId": "feature-update-frontend-pro-upgrade-ui-to-reflect-that-the-owner-has-free-pro-access-automatically",
+      "featureTitle": "Update frontend Pro upgrade UI to reflect that the owner has free Pro access automatically",
+      "files": [
+        "frontend/src/components/Header.tsx",
+        "frontend/src/components/HomePage.tsx",
+        "frontend/src/components/PredefinedGameSelector.tsx",
+        "frontend/src/hooks/useUserProfile.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "authorization@4.0.0",
+        "stripe@3.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-display-20-to-upgrade-messaging-in-profeaturesmodal-for-non-owner-accounts",
+      "featureTitle": "Display '$20 to upgrade' messaging in ProFeaturesModal for non-owner accounts",
       "files": [
         "frontend/src/components/ProFeaturesModal.tsx",
         "frontend/src/components/ProUpgrade.tsx"
@@ -20,7 +45,7 @@
         "stripe@3.0.0"
       ],
       "testIds": [
-        "REQ-5"
+        "REQ-4"
       ],
       "confidence": "high"
     }
