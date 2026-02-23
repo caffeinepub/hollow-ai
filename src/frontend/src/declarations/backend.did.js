@@ -24,6 +24,13 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const ShoppingItem = IDL.Record({
+  'productName' : IDL.Text,
+  'currency' : IDL.Text,
+  'quantity' : IDL.Nat,
+  'priceInCents' : IDL.Nat,
+  'productDescription' : IDL.Text,
+});
 export const Game = IDL.Record({
   'id' : IDL.Text,
   'title' : IDL.Text,
@@ -34,9 +41,39 @@ export const Game = IDL.Record({
   'gameCode' : IDL.Text,
 });
 export const UserProfile = IDL.Record({
+  'hasProSubscription' : IDL.Bool,
   'gamesPlayed' : IDL.Nat,
   'name' : IDL.Text,
   'totalScore' : IDL.Nat,
+});
+export const StripeSessionStatus = IDL.Variant({
+  'completed' : IDL.Record({
+    'userPrincipal' : IDL.Opt(IDL.Text),
+    'response' : IDL.Text,
+  }),
+  'failed' : IDL.Record({ 'error' : IDL.Text }),
+});
+export const StripeConfiguration = IDL.Record({
+  'allowedCountries' : IDL.Vec(IDL.Text),
+  'secretKey' : IDL.Text,
+});
+export const http_header = IDL.Record({
+  'value' : IDL.Text,
+  'name' : IDL.Text,
+});
+export const http_request_result = IDL.Record({
+  'status' : IDL.Nat,
+  'body' : IDL.Vec(IDL.Nat8),
+  'headers' : IDL.Vec(http_header),
+});
+export const TransformationInput = IDL.Record({
+  'context' : IDL.Vec(IDL.Nat8),
+  'response' : http_request_result,
+});
+export const TransformationOutput = IDL.Record({
+  'status' : IDL.Nat,
+  'body' : IDL.Vec(IDL.Nat8),
+  'headers' : IDL.Vec(http_header),
 });
 
 export const idlService = IDL.Service({
@@ -68,6 +105,11 @@ export const idlService = IDL.Service({
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'createCheckoutSession' : IDL.Func(
+      [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
+      [IDL.Text],
+      [],
+    ),
   'createGame' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Text], []),
   'deleteGame' : IDL.Func([IDL.Text], [], []),
   'getAllGames' : IDL.Func([], [IDL.Vec(Game)], ['query']),
@@ -77,13 +119,26 @@ export const idlService = IDL.Service({
   'getCreatorGameCount' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
   'getCreators' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
   'getGame' : IDL.Func([IDL.Text], [IDL.Opt(Game)], ['query']),
+  'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'isCallerPro' : IDL.Func(
+      [IDL.Record({ 'caller' : IDL.Principal })],
+      [IDL.Bool],
+      ['query'],
+    ),
+  'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
+  'transform' : IDL.Func(
+      [TransformationInput],
+      [TransformationOutput],
+      ['query'],
+    ),
   'updateGame' : IDL.Func(
       [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
       [],
@@ -110,6 +165,13 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
+  const ShoppingItem = IDL.Record({
+    'productName' : IDL.Text,
+    'currency' : IDL.Text,
+    'quantity' : IDL.Nat,
+    'priceInCents' : IDL.Nat,
+    'productDescription' : IDL.Text,
+  });
   const Game = IDL.Record({
     'id' : IDL.Text,
     'title' : IDL.Text,
@@ -120,9 +182,36 @@ export const idlFactory = ({ IDL }) => {
     'gameCode' : IDL.Text,
   });
   const UserProfile = IDL.Record({
+    'hasProSubscription' : IDL.Bool,
     'gamesPlayed' : IDL.Nat,
     'name' : IDL.Text,
     'totalScore' : IDL.Nat,
+  });
+  const StripeSessionStatus = IDL.Variant({
+    'completed' : IDL.Record({
+      'userPrincipal' : IDL.Opt(IDL.Text),
+      'response' : IDL.Text,
+    }),
+    'failed' : IDL.Record({ 'error' : IDL.Text }),
+  });
+  const StripeConfiguration = IDL.Record({
+    'allowedCountries' : IDL.Vec(IDL.Text),
+    'secretKey' : IDL.Text,
+  });
+  const http_header = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
+  const http_request_result = IDL.Record({
+    'status' : IDL.Nat,
+    'body' : IDL.Vec(IDL.Nat8),
+    'headers' : IDL.Vec(http_header),
+  });
+  const TransformationInput = IDL.Record({
+    'context' : IDL.Vec(IDL.Nat8),
+    'response' : http_request_result,
+  });
+  const TransformationOutput = IDL.Record({
+    'status' : IDL.Nat,
+    'body' : IDL.Vec(IDL.Nat8),
+    'headers' : IDL.Vec(http_header),
   });
   
   return IDL.Service({
@@ -154,6 +243,11 @@ export const idlFactory = ({ IDL }) => {
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'createCheckoutSession' : IDL.Func(
+        [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
+        [IDL.Text],
+        [],
+      ),
     'createGame' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [IDL.Text], []),
     'deleteGame' : IDL.Func([IDL.Text], [], []),
     'getAllGames' : IDL.Func([], [IDL.Vec(Game)], ['query']),
@@ -163,13 +257,26 @@ export const idlFactory = ({ IDL }) => {
     'getCreatorGameCount' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
     'getCreators' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getGame' : IDL.Func([IDL.Text], [IDL.Opt(Game)], ['query']),
+    'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'isCallerPro' : IDL.Func(
+        [IDL.Record({ 'caller' : IDL.Principal })],
+        [IDL.Bool],
+        ['query'],
+      ),
+    'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
+    'transform' : IDL.Func(
+        [TransformationInput],
+        [TransformationOutput],
+        ['query'],
+      ),
     'updateGame' : IDL.Func(
         [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
         [],

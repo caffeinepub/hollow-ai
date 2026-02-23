@@ -18,6 +18,9 @@ import { PredefinedGameSelector } from './components/PredefinedGameSelector';
 import { GameBrowser } from './components/GameBrowser';
 import { GameStudio } from './components/GameStudio';
 import GamePlayer from './components/GamePlayer';
+import { ProUpgrade } from './components/ProUpgrade';
+import { PaymentSuccess } from './components/PaymentSuccess';
+import { PaymentFailure } from './components/PaymentFailure';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from 'next-themes';
 
@@ -47,8 +50,6 @@ const rootRoute = createRootRoute({
 
 // Wrapper component for SharedContentViewer that extracts params from route
 function SharedContentViewerWrapper() {
-  // For now, we'll default to 'art' type and extract ID from URL
-  // In a real app, you'd parse the contentId to determine type
   const contentId = window.location.pathname.split('/').pop() || '';
   const type = contentId.startsWith('art-') ? 'art' : 'music';
   const id = contentId.replace(/^(art-|music-)/, '');
@@ -128,6 +129,24 @@ const gameStudioRoute = createRoute({
   component: GameStudio,
 });
 
+const proUpgradeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/pro-upgrade',
+  component: ProUpgrade,
+});
+
+const paymentSuccessRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/payment-success',
+  component: PaymentSuccess,
+});
+
+const paymentFailureRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/payment-failure',
+  component: PaymentFailure,
+});
+
 const sharedRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/shared/$contentId',
@@ -147,6 +166,9 @@ const routeTree = rootRoute.addChildren([
   gamesRoute,
   gameBrowseRoute,
   gameStudioRoute,
+  proUpgradeRoute,
+  paymentSuccessRoute,
+  paymentFailureRoute,
   sharedRoute,
 ]);
 

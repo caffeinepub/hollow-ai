@@ -1,53 +1,159 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Chat application with AI capabilities",
-  "architectural_notes": [],
-  "known_issues": [
-    "Previous deployment (version 46) failed - needs successful rebuild"
+  "summary": "Nexora AI app with built-in games (Jumper Blox, Shooter Royale, Minegions) and multiple AI-powered features (chat, art, music, translator, math solver). User has requested a comprehensive Pro tier upgrade.",
+  "architectural_notes": [
+    "Pro tier requires Stripe payment integration ($20 USD)",
+    "Two new games must be 3D (Three.js implementation)",
+    "Music section needs audio recording API for voice input",
+    "Art section requires AI image generation API integration",
+    "Account currently has Email/Stripe features disabled - upgrade needed"
   ],
-  "isFixRequest": true,
-  "existing_features": [],
+  "known_issues": [
+    "User account has Email disabled, blocking Stripe payment features needed for Pro tier",
+    "Conversation reached processing limit - features must be implemented in new chat"
+  ],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Elegant gold gradient background texture with subtle shimmer effect (gold-bg.dim_1920x1080.png)\n- Luxurious gold foil texture pattern for cards and panels (gold-texture.dim_800x600.png)\n- Warm golden abstract waves background for hero sections (gold-waves.dim_1600x900.png)",
+  "existing_features": [
+    {
+      "id": "feature-integrate-stripe-payment-processing-to-enable-a-20-usd-pro-tier-subscription-with-checkout-flow-and-payment-confirmation",
+      "title": "Integrate Stripe payment processing to enable a $20 USD Pro tier subscription with checkout flow and payment confirmation",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-two-new-3d-games-to-the-built-in-games-section-using-three-js-and-react-three-fiber",
+      "title": "Add two new 3D games to the Built-in Games section using Three.js and React Three Fiber",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-entire-application-background-theme-to-use-a-gold-color-scheme-consistently-across-all-pages",
+      "title": "Update the entire application background theme to use a gold color scheme consistently across all pages",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-gold-toned-background-texture-images-to-support-the-new-gold-theme-across-the-application",
+      "title": "Generate gold-toned background texture images to support the new gold theme across the application",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    }
+  ],
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Chat feature with AI capabilities",
+      "summary": "Add Pro tier ($20 USD) with Stripe payment integration",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Restore the chat functionality with AI-powered responses that can handle greetings, math questions, science topics, and other educational queries using the existing useChatSessions hook pattern",
+      "summary": "Enhance AI chat to understand everything and provide comprehensive help",
       "reqIds": [
-        "REQ-1"
+        "AR-1"
       ],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Ensure the ChatPage component correctly integrates ChatSidebar and ChatView with session management and navigation",
+      "summary": "Add two new 3D games to Built-in Games section",
+      "reqIds": [
+        "AR-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add AI art generation feature to Art section",
+      "reqIds": [
+        "AR-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Extend music tracks and add voice recording capability",
+      "reqIds": [
+        "AR-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add standard calculator functionality to Math problem solver",
+      "reqIds": [
+        "AR-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add more languages to Translator and include dictionary feature",
+      "reqIds": [
+        "AR-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Change entire app background to gold theme",
+      "reqIds": [
+        "AR-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Enhance the AI chat system to provide comprehensive, context-aware responses across all topics with improved understanding",
       "reqIds": [
         "REQ-2"
       ],
       "status": "pending"
     },
     {
-      "id": "AR-4",
-      "summary": "Verify the chat route (/chat) is properly configured in the TanStack Router setup and accessible from the main navigation",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Fix any deployment issues that caused the previous version 46 build to fail, ensuring successful compilation and network deployment",
+      "id": "AR-12",
+      "summary": "Implement AI-powered art generation feature that creates images from text prompts in the Art section",
       "reqIds": [
         "REQ-4"
       ],
       "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Extend music track duration capabilities and add voice recording functionality to the Music section",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add standard calculator functionality with basic arithmetic operations to the Math problem solver",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Expand Translator to support additional languages and integrate dictionary definitions for translated words",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
     }
   ],
+  "gameProjectType": "3d",
   "projectName": "Nexora AI",
   "clarification_mode": "instant",
   "clarification_rounds": 0

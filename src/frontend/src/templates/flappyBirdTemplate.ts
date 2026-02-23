@@ -30,6 +30,7 @@ canvas {
   display: block;
   border: 3px solid #2c3e50;
   box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  cursor: pointer;
 }
 #gameOver {
   display: none;
@@ -67,21 +68,29 @@ canvas {
 #gameOver button:hover {
   background: #229954;
 }
-#instructions {
+#startPrompt {
   position: absolute;
-  top: 80px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 18px;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: bold;
   color: #fff;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-  z-index: 10;
+  text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+  z-index: 15;
+  text-align: center;
+  pointer-events: none;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.05); }
 }
 </style>
 </head>
 <body>
 <div id="score">0</div>
-<div id="instructions">Click or Press Space to Flap!</div>
+<div id="startPrompt">Tap to Start!</div>
 <canvas id="game" width="400" height="600"></canvas>
 <div id="gameOver">
   <h2>Game Over!</h2>
@@ -93,7 +102,7 @@ canvas {
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
-const instructionsEl = document.getElementById('instructions');
+const startPromptEl = document.getElementById('startPrompt');
 const gameOverEl = document.getElementById('gameOver');
 const finalScoreEl = document.getElementById('finalScore');
 const highScoreEl = document.getElementById('highScore');
@@ -232,11 +241,11 @@ function updatePipes() {
   }
 }
 
-function flap() {
+function startGame() {
   if (!gameStarted) {
     gameStarted = true;
     gameRunning = true;
-    instructionsEl.style.display = 'none';
+    startPromptEl.style.display = 'none';
   }
   
   if (gameRunning) {
@@ -281,14 +290,14 @@ function gameLoop() {
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space') {
     e.preventDefault();
-    flap();
+    startGame();
   }
 });
 
-canvas.addEventListener('click', flap);
+canvas.addEventListener('click', startGame);
 canvas.addEventListener('touchstart', (e) => {
   e.preventDefault();
-  flap();
+  startGame();
 });
 
 // Start game loop when images are loaded

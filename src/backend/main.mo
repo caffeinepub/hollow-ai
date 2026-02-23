@@ -1,29 +1,48 @@
 import Map "mo:core/Map";
 import Text "mo:core/Text";
-import Runtime "mo:core/Runtime";
-import Principal "mo:core/Principal";
 import Iter "mo:core/Iter";
+import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
 import MixinStorage "blob-storage/Mixin";
+import Stripe "stripe/stripe";
+import Migration "migration";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import OutCall "http-outcalls/outcall";
 
+// Add migration reference to wire migration into the main actor
+(with migration = Migration.run)
 actor {
-  // Initialize the access control system
+  // Persistent state for authentication
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
   include MixinStorage();
 
+  // User profile structure
   public type UserProfile = {
     name : Text;
     gamesPlayed : Nat;
     totalScore : Nat;
+    hasProSubscription : Bool;
+  };
+
+  // Payment tier definitions
+  public type PaymentTier = {
+    #free;
+    #pro;
   };
 
   let userProfiles = Map.empty<Principal, UserProfile>();
 
+  // Payment tier tracking - not currently used due to migration issue
+  func determineTier(profile : UserProfile) : PaymentTier {
+    if (profile.hasProSubscription) { #pro } else { #free };
+  };
+
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view profiles");
+      Runtime.trap("Unauthorized: Only users can save profiles");
     };
     userProfiles.get(caller);
   };
@@ -42,7 +61,17 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Extended GameType
+  public query func isCallerPro({ caller } : { caller : Principal }) : async Bool {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can check subscription status");
+    };
+    switch (userProfiles.get(caller)) {
+      case (null) { false };
+      case (?profile) { profile.hasProSubscription };
+    };
+  };
+
+  // Game management structure (unchanged)
   public type Game = {
     id : Text;
     title : Text;
@@ -53,10 +82,8 @@ actor {
     lastModified : Int;
   };
 
-  // Extended Game storage implementation
   let games = Map.empty<Text, Game>();
 
-  // No more templates or categories - categories are handled in frontend now
   public query func getGame(id : Text) : async ?Game {
     games.get(id);
   };
@@ -70,7 +97,6 @@ actor {
       Runtime.trap("Unauthorized: Only users can create games");
     };
 
-    // Removed invalid slice usage - just use title for id
     let id = title;
     let game : Game = {
       id;
@@ -95,17 +121,24 @@ actor {
 
         let updatedGame = {
           game with
-          title = switch (title) { case (?t) { t }; case (null) { game.title } };
-          description = switch (description) { case (?d) { d }; case (null) { game.description } };
-          gameCode = switch (gameCode) { case (?c) { c }; case (null) { game.gameCode } };
+          title = switch (title) {
+            case (?t) { t };
+            case (null) { game.title };
+          };
+          description = switch (description) {
+            case (?d) { d };
+            case (null) { game.description };
+          };
+          gameCode = switch (gameCode) {
+            case (?c) { c };
+            case (null) { game.gameCode };
+          };
           lastModified = 0;
         };
 
         games.add(id, updatedGame);
       };
-      case (null) {
-        Runtime.trap("Game not found");
-      };
+      case (null) { Runtime.trap("Game not found") };
     };
   };
 
@@ -117,9 +150,7 @@ actor {
         };
         games.remove(id);
       };
-      case (null) {
-        Runtime.trap("Game not found");
-      };
+      case (null) { Runtime.trap("Game not found") };
     };
   };
 
@@ -138,9 +169,7 @@ actor {
   public query func getCreatorGameCount(creator : Principal) : async Nat {
     var count = 0;
     for (game in games.values()) {
-      if (Principal.equal(game.creator, creator)) {
-        count += 1;
-      };
+      if (Principal.equal(game.creator, creator)) { count += 1 };
     };
     count;
   };
@@ -148,10 +177,44 @@ actor {
   public query ({ caller }) func getCallerGameCount() : async Nat {
     var count = 0;
     for (game in games.values()) {
-      if (Principal.equal(game.creator, caller)) {
-        count += 1;
-      };
+      if (Principal.equal(game.creator, caller)) { count += 1 };
     };
     count;
+  };
+
+  // Stripe integration for payment handling
+  var configuration : ?Stripe.StripeConfiguration = null;
+
+  public query func isStripeConfigured() : async Bool {
+    configuration != null;
+  };
+
+  public shared ({ caller }) func setStripeConfiguration(config : Stripe.StripeConfiguration) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can set configuration");
+    };
+    configuration := ?config;
+  };
+
+  func getStripeConfiguration() : Stripe.StripeConfiguration {
+    switch (configuration) {
+      case (null) { Runtime.trap("Stripe needs to be first configured") };
+      case (?value) { value };
+    };
+  };
+
+  public func getStripeSessionStatus(sessionId : Text) : async Stripe.StripeSessionStatus {
+    await Stripe.getSessionStatus(getStripeConfiguration(), sessionId, transform);
+  };
+
+  public shared ({ caller }) func createCheckoutSession(items : [Stripe.ShoppingItem], successUrl : Text, cancelUrl : Text) : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create checkout sessions");
+    };
+    await Stripe.createCheckoutSession(getStripeConfiguration(), caller, items, successUrl, cancelUrl, transform);
+  };
+
+  public query func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
+    OutCall.transform(input);
   };
 };

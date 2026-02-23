@@ -5,81 +5,89 @@
 @layer base {
     :root {
         --radius: 0.75rem;
-        /* Black theme - default dark mode */
-        --background: 0.12 0.01 280;
-        --foreground: 0.96 0.01 60;
-        --card: 0.16 0.01 280;
-        --card-foreground: 0.96 0.01 60;
-        --popover: 0.14 0.01 280;
-        --popover-foreground: 0.96 0.01 60;
-        /* Vibrant teal primary for educational feel */
-        --primary: 0.65 0.18 200;
-        --primary-foreground: 0.10 0.01 280;
-        --secondary: 0.22 0.02 280;
-        --secondary-foreground: 0.96 0.01 60;
-        --muted: 0.20 0.01 280;
-        --muted-foreground: 0.68 0.01 280;
-        /* Warm accent - coral */
-        --accent: 0.70 0.20 30;
-        --accent-foreground: 0.10 0.01 280;
+        /* Gold theme - light mode */
+        --background: 0.96 0.08 70;
+        --foreground: 0.20 0.02 70;
+        --card: 0.98 0.06 70;
+        --card-foreground: 0.20 0.02 70;
+        --popover: 0.98 0.06 70;
+        --popover-foreground: 0.20 0.02 70;
+        /* Rich gold primary */
+        --primary: 0.65 0.18 70;
+        --primary-foreground: 0.98 0.01 70;
+        --secondary: 0.88 0.06 70;
+        --secondary-foreground: 0.20 0.02 70;
+        --muted: 0.92 0.04 70;
+        --muted-foreground: 0.45 0.02 70;
+        /* Warm amber accent */
+        --accent: 0.70 0.20 50;
+        --accent-foreground: 0.98 0.01 70;
         --destructive: 0.65 0.24 25;
-        --destructive-foreground: 0.96 0.01 60;
-        --border: 0.26 0.01 280;
-        --input: 0.26 0.01 280;
-        --ring: 0.65 0.18 200;
-        --chart-1: 0.65 0.20 200;
-        --chart-2: 0.70 0.18 30;
-        --chart-3: 0.60 0.16 280;
-        --chart-4: 0.75 0.15 150;
-        --chart-5: 0.68 0.14 320;
+        --destructive-foreground: 0.98 0.01 60;
+        --border: 0.85 0.06 70;
+        --input: 0.85 0.06 70;
+        --ring: 0.65 0.18 70;
+        --success: 0.65 0.18 140;
+        --success-foreground: 0.98 0.01 60;
+        --warning: 0.70 0.20 50;
+        --warning-foreground: 0.98 0.01 70;
+        --chart-1: 0.65 0.20 70;
+        --chart-2: 0.70 0.18 50;
+        --chart-3: 0.60 0.16 90;
+        --chart-4: 0.75 0.15 40;
+        --chart-5: 0.68 0.14 60;
         /* Sidebar colors */
-        --sidebar: 0.14 0.01 280;
-        --sidebar-foreground: 0.92 0.01 60;
-        --sidebar-primary: 0.65 0.18 200;
-        --sidebar-primary-foreground: 0.10 0.01 280;
-        --sidebar-accent: 0.20 0.01 280;
-        --sidebar-accent-foreground: 0.92 0.01 60;
-        --sidebar-border: 0.24 0.01 280;
-        --sidebar-ring: 0.65 0.18 200;
+        --sidebar: 0.94 0.06 70;
+        --sidebar-foreground: 0.25 0.02 70;
+        --sidebar-primary: 0.65 0.18 70;
+        --sidebar-primary-foreground: 0.98 0.01 70;
+        --sidebar-accent: 0.90 0.05 70;
+        --sidebar-accent-foreground: 0.25 0.02 70;
+        --sidebar-border: 0.88 0.05 70;
+        --sidebar-ring: 0.65 0.18 70;
     }
 
     .dark {
-        /* Even darker mode option */
-        --background: 0.08 0.01 280;
-        --foreground: 0.98 0.01 60;
-        --card: 0.12 0.01 280;
-        --card-foreground: 0.98 0.01 60;
-        --popover: 0.10 0.01 280;
-        --popover-foreground: 0.98 0.01 60;
-        /* Bright teal for darker mode */
-        --primary: 0.68 0.20 200;
-        --primary-foreground: 0.08 0.01 280;
-        --secondary: 0.18 0.02 280;
-        --secondary-foreground: 0.98 0.01 60;
-        --muted: 0.16 0.01 280;
-        --muted-foreground: 0.70 0.01 280;
-        /* Warm coral accent */
-        --accent: 0.72 0.22 30;
-        --accent-foreground: 0.08 0.01 280;
+        /* Gold theme - dark mode */
+        --background: 0.15 0.04 70;
+        --foreground: 0.95 0.04 70;
+        --card: 0.18 0.04 70;
+        --card-foreground: 0.95 0.04 70;
+        --popover: 0.16 0.04 70;
+        --popover-foreground: 0.95 0.04 70;
+        /* Bright gold for dark mode */
+        --primary: 0.75 0.20 70;
+        --primary-foreground: 0.15 0.02 70;
+        --secondary: 0.25 0.04 70;
+        --secondary-foreground: 0.95 0.04 70;
+        --muted: 0.22 0.03 70;
+        --muted-foreground: 0.70 0.04 70;
+        /* Warm amber accent */
+        --accent: 0.72 0.22 50;
+        --accent-foreground: 0.15 0.02 70;
         --destructive: 0.68 0.26 25;
-        --destructive-foreground: 0.98 0.01 60;
-        --border: 0.22 0.01 280;
-        --input: 0.22 0.01 280;
-        --ring: 0.68 0.20 200;
-        --chart-1: 0.68 0.22 200;
-        --chart-2: 0.72 0.20 30;
-        --chart-3: 0.62 0.18 280;
-        --chart-4: 0.78 0.17 150;
-        --chart-5: 0.70 0.16 320;
+        --destructive-foreground: 0.95 0.04 60;
+        --border: 0.28 0.04 70;
+        --input: 0.28 0.04 70;
+        --ring: 0.75 0.20 70;
+        --success: 0.68 0.20 140;
+        --success-foreground: 0.95 0.04 60;
+        --warning: 0.72 0.22 50;
+        --warning-foreground: 0.15 0.02 70;
+        --chart-1: 0.75 0.22 70;
+        --chart-2: 0.72 0.20 50;
+        --chart-3: 0.62 0.18 90;
+        --chart-4: 0.78 0.17 40;
+        --chart-5: 0.70 0.16 60;
         /* Sidebar darker mode */
-        --sidebar: 0.10 0.01 280;
-        --sidebar-foreground: 0.94 0.01 60;
-        --sidebar-primary: 0.68 0.20 200;
-        --sidebar-primary-foreground: 0.08 0.01 280;
-        --sidebar-accent: 0.16 0.01 280;
-        --sidebar-accent-foreground: 0.94 0.01 60;
-        --sidebar-border: 0.20 0.01 280;
-        --sidebar-ring: 0.68 0.20 200;
+        --sidebar: 0.12 0.04 70;
+        --sidebar-foreground: 0.92 0.04 70;
+        --sidebar-primary: 0.75 0.20 70;
+        --sidebar-primary-foreground: 0.15 0.02 70;
+        --sidebar-accent: 0.20 0.03 70;
+        --sidebar-accent-foreground: 0.92 0.04 70;
+        --sidebar-border: 0.24 0.03 70;
+        --sidebar-ring: 0.75 0.20 70;
     }
 
     * {
@@ -90,6 +98,11 @@
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        background-image: url('/assets/generated/gold-bg.dim_1920x1080.png');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-blend-mode: overlay;
     }
     
     h1, h2, h3, h4, h5, h6 {

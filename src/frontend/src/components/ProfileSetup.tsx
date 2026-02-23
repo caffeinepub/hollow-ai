@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useSaveCallerUserProfile } from '../hooks/useUserProfile';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User } from 'lucide-react';
+import { useSaveCallerUserProfile } from '@/hooks/useUserProfile';
 
 interface ProfileSetupProps {
   open: boolean;
+  onComplete: () => void;
 }
 
-export function ProfileSetup({ open }: ProfileSetupProps) {
+export function ProfileSetup({ open, onComplete }: ProfileSetupProps) {
   const [name, setName] = useState('');
   const saveProfile = useSaveCallerUserProfile();
 
@@ -21,17 +22,26 @@ export function ProfileSetup({ open }: ProfileSetupProps) {
         name: name.trim(),
         gamesPlayed: BigInt(0),
         totalScore: BigInt(0),
+        hasProSubscription: false,
       });
     }
   };
 
+  // Close dialog when profile is saved successfully
+  if (saveProfile.isSuccess) {
+    onComplete();
+  }
+
   return (
-    <Dialog open={open}>
-      <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
+    <Dialog open={open} onOpenChange={() => {}}>
+      <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle>Welcome to Neroxa AI Games! 🎮</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Welcome to Neroxa AI!
+          </DialogTitle>
           <DialogDescription>
-            Let's get you set up. What should we call you?
+            Please enter your name to get started with your personalized experience.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -44,21 +54,20 @@ export function ProfileSetup({ open }: ProfileSetupProps) {
               onChange={(e) => setName(e.target.value)}
               disabled={saveProfile.isPending}
               autoFocus
-              className="min-h-[44px]"
             />
           </div>
           <Button
             type="submit"
-            className="w-full min-h-[44px]"
+            className="w-full"
             disabled={!name.trim() || saveProfile.isPending}
           >
             {saveProfile.isPending ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 Saving...
               </>
             ) : (
-              'Get Started'
+              'Continue'
             )}
           </Button>
         </form>

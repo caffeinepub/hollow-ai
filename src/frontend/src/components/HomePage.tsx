@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { 
   Calculator, 
@@ -10,6 +11,9 @@ import {
   Gamepad2 
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { PaymentSetup } from './PaymentSetup';
+import { useActor } from '@/hooks/useActor';
+import { useInternetIdentity } from '@/hooks/useInternetIdentity';
 
 interface NavBox {
   title: string;
@@ -79,9 +83,33 @@ const navBoxes: NavBox[] = [
 ];
 
 export function HomePage() {
+  const { actor } = useActor();
+  const { identity } = useInternetIdentity();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (actor && identity) {
+        try {
+          const adminStatus = await actor.isCallerAdmin();
+          setIsAdmin(adminStatus);
+        } catch (error) {
+          console.error('Failed to check admin status:', error);
+        }
+      }
+    };
+    checkAdmin();
+  }, [actor, identity]);
+
   return (
     <div className="container mx-auto px-4 py-8 sm:py-12">
       <div className="max-w-6xl mx-auto">
+        {isAdmin && (
+          <div className="mb-8">
+            <PaymentSetup />
+          </div>
+        )}
+
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-3 sm:mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             Welcome to Neroxa AI

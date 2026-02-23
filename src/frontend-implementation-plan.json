@@ -1,96 +1,281 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Rebuild chat feature with AI capabilities",
+  "title": "Implement comprehensive Pro tier upgrade with payment integration and enhanced features",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Restore the chat functionality with AI-powered responses using the existing useChatSessions hook pattern",
+      "summary": "Integrate Stripe payment processing to enable a $20 USD Pro tier subscription with checkout flow and payment confirmation",
       "acceptanceCriteria": [
-        "Chat interface loads without errors",
-        "Users can create new chat sessions",
-        "Users can send messages and receive AI-generated responses",
-        "Chat history persists in localStorage",
-        "Session list displays all conversations with timestamps"
+        "Pro tier pricing set to $20 USD",
+        "Stripe checkout integration functional",
+        "Payment confirmation displayed after successful transaction",
+        "User subscription status persisted in backend"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useChatSessions.ts",
-          "operation": "modify",
-          "description": "Verify and ensure the useChatSessions hook correctly manages chat sessions in localStorage with AI response generation for greetings, math questions, science topics, and educational queries. Confirm session creation, message handling, and history persistence are working as intended."
+          "path": "frontend/src/components/PaymentSetup.tsx",
+          "operation": "create",
+          "description": "Create PaymentSetup component to check if Stripe is configured using isStripeConfigured(). If not configured, display admin panel for entering Stripe secret key and allowed countries array using setStripeConfiguration(). Hide this component once Stripe is configured. Use the stripe component's usage instructions during implementation."
         },
         {
-          "path": "frontend/src/components/ChatView.tsx",
-          "operation": "modify",
-          "description": "Restore ChatView component to display conversation messages with user/assistant avatars, message input field with send functionality, typing indicators during AI response generation, and auto-scrolling to latest messages. Ensure it correctly integrates with useChatSessions hook for sending messages and receiving responses."
+          "path": "frontend/src/hooks/useCheckout.ts",
+          "operation": "create",
+          "description": "Create useCheckout hook with useCreateCheckoutSession mutation that calls createCheckoutSession() backend method. Parse JSON response to extract CheckoutSession with id and url fields. Validate that url is non-empty before returning. Include error handling for missing url. Follow the stripe component's usage instructions for implementation details."
         },
         {
-          "path": "frontend/src/components/ChatSidebar.tsx",
+          "path": "frontend/src/components/ProUpgrade.tsx",
+          "operation": "create",
+          "description": "Create ProUpgrade component that displays Pro tier benefits and pricing ($20 USD). Use useCreateCheckoutSession hook to initiate checkout with ShoppingItem containing productName='Pro Subscription', priceInCents=2000, quantity=1, currency='usd'. On successful session creation, redirect to session.url using window.location.href (not router navigation). Never navigate to /undefined - validate session.url exists. Verify the stripe component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/PaymentSuccess.tsx",
+          "operation": "create",
+          "description": "Create PaymentSuccess component to display payment confirmation message and Pro tier activation status. Extract sessionId from URL query params and optionally call getStripeSessionStatus() to verify payment completion. Show success message with navigation back to home or profile."
+        },
+        {
+          "path": "frontend/src/components/PaymentFailure.tsx",
+          "operation": "create",
+          "description": "Create PaymentFailure component to display payment cancellation or failure message. Provide options to retry payment or return to home page."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Restore ChatSidebar component to display the list of chat sessions with timestamps, provide a new chat creation button, handle session selection with active state highlighting, and include loading and empty states. Ensure proper integration with useChatSessions for session management."
+          "description": "Register two new routes: /payment-success routing to PaymentSuccess component and /payment-failure routing to PaymentFailure component using TanStack Router. Add route for /pro-upgrade to ProUpgrade component."
+        },
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "modify",
+          "description": "Update UserProfile type handling to include hasProSubscription boolean field from backend interface. Ensure getCallerUserProfile and saveCallerUserProfile properly serialize this field."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Add Pro badge or indicator next to user profile name when userProfile.hasProSubscription is true. Add navigation link or button to /pro-upgrade page for non-Pro users."
+        },
+        {
+          "path": "frontend/src/components/HomePage.tsx",
+          "operation": "modify",
+          "description": "Add PaymentSetup component to HomePage layout to prompt admin for Stripe configuration on first load if not yet configured. Only show for admin users using isCallerAdmin() check."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Ensure the ChatPage component correctly integrates ChatSidebar and ChatView with session management and navigation",
+      "summary": "Enhance the AI chat system to provide comprehensive, context-aware responses across all topics with improved understanding",
       "acceptanceCriteria": [
-        "Sidebar displays list of chat sessions",
-        "Clicking a session loads its conversation history",
-        "New chat button creates a fresh session",
-        "Sidebar is collapsible on mobile viewports"
+        "Chat responses demonstrate broader topic coverage",
+        "Responses are contextually relevant to user queries",
+        "Chat maintains conversation context across multiple exchanges"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ChatPage.tsx",
+          "path": "frontend/src/hooks/useChatSessions.ts",
           "operation": "modify",
-          "description": "Restore ChatPage component to properly integrate ChatSidebar and ChatView components. Implement session selection handling that updates the active conversation in ChatView. Ensure the sidebar is collapsible on mobile viewports with a close button. Handle navigation between sessions and new chat creation flow."
+          "description": "Enhance generateAIResponse function to support broader topic coverage beyond current educational topics. Add pattern matching for science, history, technology, arts, current events, general knowledge, and open-ended questions. Improve context awareness by analyzing previous messages in the session history to maintain conversational continuity. Expand response templates to be more comprehensive and informative across all supported topics."
+        },
+        {
+          "path": "frontend/src/components/ChatView.tsx",
+          "operation": "modify",
+          "description": "Update chat interface to display richer AI responses with improved formatting. Consider adding support for code blocks, lists, and emphasized text in AI responses if needed for enhanced comprehension."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Verify the chat route (/chat) is properly configured in the TanStack Router setup and accessible from the main navigation",
+      "summary": "Add two new 3D games to the Built-in Games section using Three.js and React Three Fiber",
       "acceptanceCriteria": [
-        "Chat route navigates to the ChatPage component",
-        "Chat card on HomePage links to /chat",
-        "URL routing works correctly for chat sessions"
+        "Two new 3D game templates created with Three.js/React Three Fiber",
+        "Games accessible from PredefinedGameSelector component",
+        "3D games render and are playable in GamePlayer component",
+        "Games follow existing tap-to-start pattern"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Verify that the /chat route is properly registered in the TanStack Router configuration and correctly points to the ChatPage component. Ensure route definitions are complete and functional."
+          "path": "frontend/src/templates/spaceshooter3dTemplate.ts",
+          "operation": "create",
+          "description": "Create a complete HTML template for a 3D space shooter game using Three.js and React Three Fiber. Include 3D spaceship model, enemy ships, asteroid obstacles, laser shooting mechanics, 3D camera controls, scoring system, and tap-to-start functionality. This is a 3D game template."
         },
         {
-          "path": "frontend/src/components/HomePage.tsx",
+          "path": "frontend/src/templates/racing3dTemplate.ts",
+          "operation": "create",
+          "description": "Create a complete HTML template for a 3D racing game using Three.js and React Three Fiber. Include 3D car model, racing track environment, opponent vehicles, steering controls (keyboard/touch), lap timing, speed boost mechanics, and tap-to-start functionality. This is a 3D game template."
+        },
+        {
+          "path": "frontend/src/components/PredefinedGameSelector.tsx",
           "operation": "modify",
-          "description": "Verify that the Chat navigation card on the HomePage correctly links to the /chat route and includes appropriate icon, description, and styling consistent with other feature cards."
+          "description": "Add two new game entries to the predefinedGames array: '3D Space Shooter' with 🚀 emoji and description, and '3D Racing' with 🏎️ emoji and description. Import the new template files and map them to the respective game selections. Ensure the dialog layout accommodates the additional games."
+        },
+        {
+          "path": "frontend/src/components/GamePlayer.tsx",
+          "operation": "modify",
+          "description": "Verify that GamePlayer iframe handles Three.js/React Three Fiber 3D game templates correctly. Ensure postMessage communication works for high score tracking with 3D games. Test fullscreen mode compatibility with WebGL rendering."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Fix any frontend compilation issues to ensure successful build and deployment",
+      "summary": "Implement AI-powered art generation feature that creates images from text prompts in the Art section",
       "acceptanceCriteria": [
-        "Build compiles without errors",
-        "No runtime errors in browser console"
+        "Text prompt input field added to ArtCanvas component",
+        "Generated images display in the art canvas area",
+        "Users can save or download AI-generated artwork",
+        "Generation process shows loading indicator"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ChatPage.tsx",
+          "path": "frontend/src/components/ArtCanvas.tsx",
           "operation": "modify",
-          "description": "Review and fix any TypeScript compilation errors, missing imports, or syntax issues in ChatPage component. Ensure all props are correctly typed and all dependencies are properly imported."
+          "description": "Add text prompt input field with generate button to ArtCanvas component. Integrate AI art generation hook to create images from text descriptions. Display generated images on the canvas, replacing or overlaying the drawing area. Add loading spinner during generation. Include save/download buttons for AI-generated artwork. Maintain existing drawing and sharing functionality alongside new AI generation feature."
         },
         {
-          "path": "frontend/src/components/ChatView.tsx",
+          "path": "frontend/src/hooks/useAIArtGeneration.ts",
+          "operation": "create",
+          "description": "Create hook for AI-powered art generation from text prompts. Implement prompt analysis to extract artistic styles, subjects, colors, and composition elements. Generate mock image data or leverage existing useMediaGeneration capabilities with art-specific prompt engineering. Return loading states and generated image data URLs or blobs for display and download."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Extend music track duration capabilities and add voice recording functionality to the Music section",
+      "acceptanceCriteria": [
+        "Music tracks can be extended beyond current duration limits",
+        "Voice recording interface added with record/stop controls",
+        "Recorded audio can be played back",
+        "Voice recordings can be downloaded or saved"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/MusicGenerator.tsx",
           "operation": "modify",
-          "description": "Review and fix any TypeScript compilation errors, missing imports, undefined variables, or syntax issues in ChatView component. Ensure proper integration with useChatSessions hook types and React best practices."
+          "description": "Add duration control slider or input to extend music track generation beyond current limits. Increase maximum tempo or pattern length in the beat sequencer. Add new voice recording section with record/stop/play buttons using MediaRecorder API. Display recording timer and waveform visualization during recording. Enable playback of recorded audio. Add download button for voice recordings as audio files."
         },
         {
-          "path": "frontend/src/components/ChatSidebar.tsx",
+          "path": "frontend/src/hooks/useVoiceRecording.ts",
+          "operation": "create",
+          "description": "Create hook for voice recording using Web Audio API and MediaRecorder. Handle microphone permission requests. Manage recording state (idle, recording, recorded). Capture audio chunks and create audio blob. Provide playback controls for recorded audio. Return download URL for recorded audio file."
+        },
+        {
+          "path": "frontend/src/hooks/useAudioGeneration.ts",
           "operation": "modify",
-          "description": "Review and fix any TypeScript compilation errors, missing imports, or syntax issues in ChatSidebar component. Ensure all event handlers and state management are properly typed and implemented."
+          "description": "Extend audio generation capabilities to support longer track durations. Adjust melody generation parameters to create extended compositions with multiple phrases or sections. Increase buffer size or synthesis duration as needed."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add standard calculator functionality with basic arithmetic operations to the Math problem solver",
+      "acceptanceCriteria": [
+        "Calculator interface displays with number pad and operation buttons",
+        "Basic operations (addition, subtraction, multiplication, division) functional",
+        "Calculator shows real-time input and calculation results",
+        "Calculator can be toggled alongside existing homework helper"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Calculator.tsx",
+          "operation": "create",
+          "description": "Create Calculator component with number pad (0-9), operation buttons (+, -, *, /), decimal point, clear, and equals buttons. Implement display showing current input and result. Handle arithmetic operations with proper order of operations. Support keyboard input for numbers and operations. Style with responsive grid layout."
+        },
+        {
+          "path": "frontend/src/components/MathProblemSolver.tsx",
+          "operation": "modify",
+          "description": "Add tab or toggle to switch between existing homework helper mode and new calculator mode. Integrate Calculator component into the MathProblemSolver layout. Ensure calculator is accessible alongside difficulty level selector and teacher mode. Maintain existing problem solving and step-by-step solution features."
+        },
+        {
+          "path": "frontend/src/hooks/useCalculator.ts",
+          "operation": "create",
+          "description": "Create hook to manage calculator state including current input, operation, previous value, and result. Implement calculation logic for basic arithmetic operations. Handle edge cases like division by zero, decimal precision, and sequential operations. Return state and handlers for number/operation button clicks and display updates."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Expand Translator to support additional languages and integrate dictionary definitions for translated words",
+      "acceptanceCriteria": [
+        "At least 5 new languages added to language selection dropdowns",
+        "Dictionary lookup displays word definitions for translated terms",
+        "Dictionary results show alongside translation output",
+        "Dictionary feature works for all supported languages"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/TranslatorChat.tsx",
+          "operation": "modify",
+          "description": "Add at least 5 new languages to the LANGUAGES array (e.g., Italian, Portuguese, Russian, Korean, Arabic). Update language selection dropdowns to include new languages. Add dictionary definition section below translation output. Display word definitions, parts of speech, and example usage alongside translations. Ensure dictionary results are contextually relevant to the source and target languages."
+        },
+        {
+          "path": "frontend/src/hooks/useTranslation.ts",
+          "operation": "modify",
+          "description": "Extend translation mock data to support new languages (Italian, Portuguese, Russian, Korean, Arabic). Add common phrases and vocabulary for each new language. Ensure bidirectional translation support for all language pairs."
+        },
+        {
+          "path": "frontend/src/hooks/useDictionarySearch.ts",
+          "operation": "create",
+          "description": "Create hook for dictionary lookup functionality. Implement mock dictionary data with definitions, parts of speech, synonyms, and example sentences for translated words. Support all languages in the translator. Return loading states and definition results. Handle cases where definitions are unavailable for certain terms or languages."
+        },
+        {
+          "path": "frontend/src/components/DictionaryView.tsx",
+          "operation": "create",
+          "description": "Create DictionaryView component to display word definitions returned from dictionary search. Show word, part of speech, definition text, and example usage. Style with card layout and typography hierarchy. Handle loading and empty states gracefully."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Update the entire application background theme to use a gold color scheme consistently across all pages",
+      "acceptanceCriteria": [
+        "Primary background colors changed to gold tones in theme configuration",
+        "Gold theme applied consistently across all pages and components",
+        "Text contrast remains readable against gold backgrounds",
+        "Dark mode variant uses appropriate gold shades"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Update CSS variables in :root and .dark to use gold color tones for --background, --foreground, --primary, --secondary, --accent, and other theme colors. Replace existing teal/coral theme with gold palette using OKLCH color space. Ensure sufficient contrast ratios for text readability. Define light gold shades for light mode and darker gold tones for dark mode. Update sidebar colors to complement gold theme."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Update Tailwind color scheme configuration to use gold-based colors. Modify background, foreground, primary, secondary, accent, and other color definitions to gold tones using OKLCH values. Ensure dark mode variants use appropriate darker gold shades. Update border, ring, and shadow colors to complement the gold theme."
+        },
+        {
+          "path": "frontend/src/components/HomePage.tsx",
+          "operation": "modify",
+          "description": "Update HomePage component styling to use gold theme colors from updated CSS variables. Ensure navigation cards, gradients, and hover effects align with the new gold color scheme. Test text contrast on gold backgrounds."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Update Header component styling to use gold theme colors. Ensure logo, buttons, and navigation elements complement the gold background. Verify theme toggle button works correctly with gold color scheme in both light and dark modes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Generate gold-toned background texture images to support the new gold theme across the application",
+      "acceptanceCriteria": [
+        "Generated gold texture images rendered as static assets in frontend/public/assets/generated",
+        "Background images integrated into theme styling",
+        "Images display correctly on all pages"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add background-image CSS rules referencing the generated gold texture images at frontend/public/assets/generated/gold-bg.dim_1920x1080.png, frontend/public/assets/generated/gold-texture.dim_800x600.png, and frontend/public/assets/generated/gold-waves.dim_1600x900.png. Apply these backgrounds to body, main content areas, or specific page sections. Use background-size, background-position, and background-repeat properties for optimal display. Ensure backgrounds work in both light and dark modes."
+        },
+        {
+          "path": "frontend/src/components/HomePage.tsx",
+          "operation": "modify",
+          "description": "Integrate gold wave background image (frontend/public/assets/generated/gold-waves.dim_1600x900.png) into hero section or main container. Use as CSS background-image or img element. Ensure proper sizing and positioning for visual appeal."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Optionally integrate gold gradient background (frontend/public/assets/generated/gold-bg.dim_1920x1080.png) into header styling for subtle shimmer effect. Ensure it doesn't interfere with logo or navigation visibility."
         }
       ]
     }

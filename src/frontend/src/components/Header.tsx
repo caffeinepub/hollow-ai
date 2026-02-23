@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { Moon, Sun, LogOut, Home } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Moon, Sun, LogOut, Home, Crown } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useGetCallerUserProfile } from '../hooks/useUserProfile';
@@ -15,6 +16,7 @@ export function Header() {
 
   const isAuthenticated = !!identity;
   const isHomePage = routerState.location.pathname === '/';
+  const hasProSubscription = userProfile?.hasProSubscription || false;
 
   const handleSignOut = async () => {
     await clear();
@@ -38,9 +40,29 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           {isAuthenticated && userProfile && (
-            <span className="hidden sm:inline text-sm text-muted-foreground mr-2">
-              {userProfile.name}
-            </span>
+            <div className="hidden sm:flex items-center gap-2 mr-2">
+              <span className="text-sm text-muted-foreground">
+                {userProfile.name}
+              </span>
+              {hasProSubscription && (
+                <Badge variant="outline" className="text-warning border-warning">
+                  <Crown className="h-3 w-3 mr-1" />
+                  Pro
+                </Badge>
+              )}
+            </div>
+          )}
+          {isAuthenticated && !hasProSubscription && (
+            <Link to="/pro-upgrade">
+              <Button
+                variant="outline"
+                size="sm"
+                className="hidden sm:flex border-warning text-warning hover:bg-warning/10"
+              >
+                <Crown className="h-4 w-4 mr-1" />
+                Upgrade to Pro
+              </Button>
+            </Link>
           )}
           {!isHomePage && (
             <Link to="/">

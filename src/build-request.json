@@ -1,100 +1,198 @@
 {
   "kind": "build_request",
-  "title": "Rebuild chat feature with AI capabilities",
+  "title": "Implement comprehensive Pro tier upgrade with payment integration and enhanced features",
   "projectName": "Nexora AI",
-  "priority": "high",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Restore the chat functionality with AI-powered responses that can handle greetings, math questions, science topics, and other educational queries using the existing useChatSessions hook pattern",
-      "target": "frontend",
+      "text": "Integrate Stripe payment processing to enable a $20 USD Pro tier subscription with checkout flow and payment confirmation",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-20"
         ],
         "quotes": [
-          "remake it"
+          "Add Pro tier ($20 USD) with Stripe payment integration"
         ]
       },
       "acceptanceCriteria": [
-        "Chat interface loads without errors",
-        "Users can create new chat sessions",
-        "Users can send messages and receive AI-generated responses",
-        "Chat history persists in localStorage",
-        "Session list displays all conversations with timestamps"
+        "Pro tier pricing set to $20 USD",
+        "Stripe checkout integration functional",
+        "Payment confirmation displayed after successful transaction",
+        "User subscription status persisted in backend"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure the ChatPage component correctly integrates ChatSidebar and ChatView with session management and navigation",
+      "text": "Enhance the AI chat system to provide comprehensive, context-aware responses across all topics with improved understanding",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-20"
         ],
         "quotes": [
-          "remake it"
+          "Enhance AI chat to understand everything and provide comprehensive help"
         ]
       },
       "acceptanceCriteria": [
-        "Sidebar displays list of chat sessions",
-        "Clicking a session loads its conversation history",
-        "New chat button creates a fresh session",
-        "Sidebar is collapsible on mobile viewports"
+        "Chat responses demonstrate broader topic coverage",
+        "Responses are contextually relevant to user queries",
+        "Chat maintains conversation context across multiple exchanges"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Verify the chat route (/chat) is properly configured in the TanStack Router setup and accessible from the main navigation",
+      "text": "Add two new 3D games to the Built-in Games section using Three.js and React Three Fiber",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-20"
         ],
         "quotes": [
-          "remake it"
+          "Add two new 3D games to Built-in Games section"
         ]
       },
       "acceptanceCriteria": [
-        "Chat route navigates to the ChatPage component",
-        "Chat card on HomePage links to /chat",
-        "URL routing works correctly for chat sessions"
+        "Two new 3D game templates created with Three.js/React Three Fiber",
+        "Games accessible from PredefinedGameSelector component",
+        "3D games render and are playable in GamePlayer component",
+        "Games follow existing tap-to-start pattern"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Fix any deployment issues that caused the previous version 46 build to fail, ensuring successful compilation and network deployment",
-      "target": "both",
+      "text": "Implement AI-powered art generation feature that creates images from text prompts in the Art section",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-20"
         ],
         "quotes": [
-          "remake it"
+          "Add AI art generation feature to Art section"
         ]
       },
       "acceptanceCriteria": [
-        "Build compiles without errors",
-        "Deployment to Internet Computer succeeds",
-        "Application is accessible via canister URL",
-        "No runtime errors in browser console"
+        "Text prompt input field added to ArtCanvas component",
+        "Generated images display in the art canvas area",
+        "Users can save or download AI-generated artwork",
+        "Generation process shows loading indicator"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Extend music track duration capabilities and add voice recording functionality to the Music section",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Extend music tracks and add voice recording capability"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Music tracks can be extended beyond current duration limits",
+        "Voice recording interface added with record/stop controls",
+        "Recorded audio can be played back",
+        "Voice recordings can be downloaded or saved"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Add standard calculator functionality with basic arithmetic operations to the Math problem solver",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Add standard calculator functionality to Math problem solver"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Calculator interface displays with number pad and operation buttons",
+        "Basic operations (addition, subtraction, multiplication, division) functional",
+        "Calculator shows real-time input and calculation results",
+        "Calculator can be toggled alongside existing homework helper"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Expand Translator to support additional languages and integrate dictionary definitions for translated words",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Add more languages to Translator and include dictionary feature"
+        ]
+      },
+      "acceptanceCriteria": [
+        "At least 5 new languages added to language selection dropdowns",
+        "Dictionary lookup displays word definitions for translated terms",
+        "Dictionary results show alongside translation output",
+        "Dictionary feature works for all supported languages"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Update the entire application background theme to use a gold color scheme consistently across all pages",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Change entire app background to gold theme"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Primary background colors changed to gold tones in theme configuration",
+        "Gold theme applied consistently across all pages and components",
+        "Text contrast remains readable against gold backgrounds",
+        "Dark mode variant uses appropriate gold shades"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Generate gold-toned background texture images to support the new gold theme across the application",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Change entire app background to gold theme"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated gold texture images rendered as static assets in frontend/public/assets/generated",
+        "Background images integrated into theme styling",
+        "Images display correctly on all pages"
       ]
     }
   ],
   "constraints": [
-    "Maintain existing localStorage-based chat session storage pattern",
-    "Preserve the existing useChatSessions hook implementation for AI response generation",
-    "Keep the current UI component structure with ChatSidebar and ChatView",
-    "Do not modify immutable paths: useInternetIdentity, useActor, main.tsx, or ui components"
+    "User account currently has Email disabled, which blocks Stripe payment processing",
+    "Must use Three.js with React Three Fiber for 3D game implementations",
+    "Must maintain existing game templates and UI patterns (tap-to-start, game selector dialogs)",
+    "All generated images must be stored as static assets in frontend/public/assets/generated"
   ],
   "nonGoals": [
-    "Adding new AI capabilities beyond what exists in useChatSessions",
-    "Changing the chat UI design or layout",
-    "Implementing backend persistence for chat messages",
-    "Adding real-time chat features or WebSocket connections"
+    "Backend refactoring or schema changes",
+    "Modifying existing game templates (Jumper Blox, Shooter Royale, Minegions)",
+    "Changing authentication system from Internet Identity",
+    "Adding external AI service integrations (OpenAI, Anthropic, etc.)",
+    "Implementing real-time chat features with WebSockets"
   ],
   "imageRequirements": {
-    "required": [],
+    "required": [
+      "Elegant gold gradient background texture with subtle shimmer effect (gold-bg.dim_1920x1080.png)",
+      "Luxurious gold foil texture pattern for cards and panels (gold-texture.dim_800x600.png)",
+      "Warm golden abstract waves background for hero sections (gold-waves.dim_1600x900.png)"
+    ],
     "edits": []
   }
 }

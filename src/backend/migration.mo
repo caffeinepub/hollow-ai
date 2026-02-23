@@ -1,63 +1,42 @@
 import Map "mo:core/Map";
 import Principal "mo:core/Principal";
-import List "mo:core/List";
-import Text "mo:core/Text";
-import Nat64 "mo:core/Nat64";
-import Storage "blob-storage/Storage";
-import Time "mo:core/Time";
 
 module {
-  type UserId = Principal;
-  type MessageId = Text;
-  type SessionId = Text;
-  type ArtworkId = Text;
-  type MusicId = Text;
-  type GameId = Text;
-
-  type Message = {
-    id : MessageId;
-    content : Text;
-    timestamp : Nat64;
-  };
-
-  type Session = {
-    id : SessionId;
-    messages : List.List<Message>;
-    lastActive : Nat64;
-  };
-
-  type GameMetadata = {
-    id : GameId;
-    title : Text;
-    description : Text;
-    thumbnail : Storage.ExternalBlob;
-    category : Text;
-    playable : Bool;
-  };
-
-  type UserData = {
-    id : UserId;
-    sessions : Map.Map<SessionId, Session>;
+  type OldUserProfile = {
+    name : Text;
+    gamesPlayed : Nat;
+    totalScore : Nat;
   };
 
   type OldActor = {
-    users : Map.Map<UserId, UserData>;
-    artworks : Map.Map<ArtworkId, Storage.ExternalBlob>;
-    music : Map.Map<MusicId, Storage.ExternalBlob>;
-    games : Map.Map<GameId, GameMetadata>;
+    userProfiles : Map.Map<Principal, OldUserProfile>;
+    games : Map.Map<Text, { id : Text; title : Text; description : Text; creator : Principal; gameCode : Text; creationTime : Int; lastModified : Int }>;
   };
 
-  type Word = {
-    word : Text;
-    definition : Text;
+  type NewUserProfile = {
+    name : Text;
+    gamesPlayed : Nat;
+    totalScore : Nat;
+    hasProSubscription : Bool;
   };
 
   type NewActor = {
-    wordMap : Map.Map<Text, Word>;
+    userProfiles : Map.Map<Principal, NewUserProfile>;
+    games : Map.Map<Text, { id : Text; title : Text; description : Text; creator : Principal; gameCode : Text; creationTime : Int; lastModified : Int }>;
   };
 
-  public func run(_old : OldActor) : NewActor {
-    let newWordMap = Map.empty<Text, Word>();
-    { wordMap = newWordMap };
+  public func run(old : OldActor) : NewActor {
+    let newUserProfiles = old.userProfiles.map<Principal, OldUserProfile, NewUserProfile>(
+      func(_principal, oldProfile) {
+        {
+          oldProfile with
+          hasProSubscription = false;
+        };
+      }
+    );
+    {
+      old with
+      userProfiles = newUserProfiles;
+    };
   };
 };
